@@ -1,0 +1,48 @@
+.nav {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 30;
+  margin-top: 28px;
+  background: var(--cream);
+  border-bottom: 1px solid var(--line);
+}
+
+.inner {
+  display: flex;
+  gap: 32px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.inner::-webkit-scrollbar {
+  display: none;
+}
+
+.inner a {
+  flex: none;
+  padding: 18px 0 16px;
+  border-bottom: 2px solid transparent;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(57, 33, 12, 0.6);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.inner a:hover {
+  color: var(--brown);
+}
+
+.inner a.on {
+  color: var(--brown);
+  border-bottom-color: var(--brand);
+}
+
+@media (max-width: 720px) {
+  .inner {
+    gap: 22px;
+  }
+
+  .inner a {
+    font-size: 14px;
+  }
+}

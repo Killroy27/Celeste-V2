@@ -1,0 +1,41 @@
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.circle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 16px;
+  border: var(--outline);
+  border-radius: 999px;
+  background: var(--outline-bg);
+  color: var(--brown);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.circle:hover {
+  background: var(--outline-bg-hover);
+  box-shadow: var(--outline-shadow);
+}
+
+.on svg {
+  color: #c98a1c;
+}
+
+@media (max-width: 720px) {
+  .circle span {
+    display: none;
+  }
+
+  .circle {
+    width: 42px;
+    padding: 0;
+    justify-content: center;
+  }
+}

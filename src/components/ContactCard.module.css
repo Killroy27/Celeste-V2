@@ -1,40 +1,40 @@
 .card {
   position: sticky;
-  top: calc(var(--header-h) + 24px);
-  padding: 26px;
-  background: var(--card);
+  top: calc(var(--header-h) + 80px);
+  overflow: hidden;
   border: var(--outline);
-  border-radius: 24px;
+  border-radius: 26px;
+  background: var(--card);
   box-shadow: var(--outline-shadow);
-  scroll-margin-top: calc(var(--header-h) + 16px);
+  scroll-margin-top: calc(var(--header-h) + 80px);
+}
+
+/* Liseré doré en tête de carte. */
+.ribbon {
+  height: 5px;
+  background: linear-gradient(90deg, var(--brand), #f6d79c, var(--brand));
+}
+
+.body {
+  padding: 24px;
 }
 
 .who {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding-bottom: 20px;
-  margin-bottom: 18px;
-  border-bottom: 1px solid var(--line);
 }
 
 .who strong {
   display: block;
-  font-size: 17px;
+  font-family: var(--font-display), Didot, serif;
+  font-size: 22px;
+  line-height: 1.15;
 }
 
 .who span {
-  display: block;
   font-size: 14px;
-  color: var(--text2);
-}
-
-.who small {
-  display: block;
-  margin-top: 2px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #9a6512;
+  color: rgba(57, 33, 12, 0.7);
 }
 
 .avatar {
@@ -55,78 +55,106 @@
   color: #9a6512;
 }
 
+.priceBox {
+  margin: 20px 0 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--cream);
+}
+
+.priceValue {
+  display: block;
+  font-family: var(--font-display), serif;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.priceNote {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(57, 33, 12, 0.7);
+}
+
+.second {
+  margin-top: 10px;
+}
+
 .form {
   display: grid;
-  gap: 14px;
-}
-
-.price {
-  font-size: 15px;
-  color: var(--text2);
-}
-
-.price strong {
-  font-family: var(--font-display), serif;
-  font-size: 26px;
-  color: var(--brown);
+  gap: 12px;
 }
 
 .row2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.check {
-  display: flex;
-  align-items: center;
   gap: 10px;
-  font-size: 14px;
-  cursor: pointer;
 }
 
-.check input {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--brown);
-}
-
-.note {
-  margin: 0;
-  font-size: 12px;
-  line-height: 18px;
-  text-align: center;
-  color: var(--text2);
-}
-
-.secondary {
-  justify-self: center;
+.cancel {
+  border: 0;
+  background: none;
   font-size: 14px;
   font-weight: 600;
   text-decoration: underline;
-  text-decoration-color: var(--brand);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.reassure {
+  margin: 20px 0 0;
+  padding: 16px 0 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: rgba(57, 33, 12, 0.78);
+}
+
+.reassure li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reassure li::before {
+  content: "✓";
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #fbefd8;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .done {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   text-align: center;
-  animation: pop 0.4s var(--ease);
+}
+
+.done strong {
+  font-size: 17px;
 }
 
 .done p {
-  margin: 0 0 8px;
+  margin: 0;
+  font-size: 14px;
+  color: rgba(57, 33, 12, 0.75);
 }
 
-@keyframes pop {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
+.textLink {
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--brand);
+  text-underline-offset: 4px;
 }
 
 .mobileBar {
@@ -167,6 +195,6 @@
 
   .mobileWho small {
     font-size: 13px;
-    color: var(--text2);
+    color: rgba(57, 33, 12, 0.7);
   }
 }

@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Avatar, ContactCard } from "@/components/ContactCard";
-import { SaveButton } from "@/components/SaveButton";
+import { FicheActions } from "@/components/FicheActions";
+import { SectionNav } from "@/components/SectionNav";
 import { VendorCard } from "@/components/VendorCard";
 import { getCategory, getVendor, priceLabel, vendors, vendorsIn } from "@/lib/content";
 import { availabilityFor, criteriaFor, faqFor, personFor, specsFor } from "@/lib/vendorDetail";
@@ -22,16 +23,21 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return { title: `${v.name}, ${cat.singular} à ${v.city}`, description: v.description, openGraph: { images: [v.photo] } };
 }
 
-const statusClass: Record<string, string> = {
-  Disponible: "free",
-  "Capacité limitée": "limited",
-  "À confirmer": "tbc",
-  Complet: "full",
-};
+function Section({ id, eyebrow, title, children }: { id: string; eyebrow: string; title: string; children: React.ReactNode }) {
+  return (
+    <section id={id} className={styles.section} aria-labelledby={`${id}-t`}>
+      <p className={styles.eyebrow}>{eyebrow}</p>
+      <h2 id={`${id}-t`} className={styles.title}>
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
 
-// Fiche prestataire selon le cahier des charges (§10.1 socle commun, §10.2 champs métier, §7.5 et §8 Best Match,
-// §12 rendez-vous, §14 conditions, §17 calendrier, §24 avis). On met en avant la personne derrière la prestation,
-// et toute prise de contact passe par Céleste (§22) : pas de téléphone ni de site affichés.
+// Fiche prestataire : structure et ambiance du projet Céleste d'origine (en-tête net, Partager / Favori,
+// mosaïque, onglets collés, carte sobre), contenu du cahier des charges (§10.1, §10.2, §12, §14, §17, §24),
+// et la personne derrière la prestation au centre. Les échanges passent par Céleste (§22).
 export default async function VendorPage({ params }: Params) {
   const v = getVendor((await params).slug);
   if (!v) notFound();
@@ -42,149 +48,91 @@ export default async function VendorPage({ params }: Params) {
   const calendar = availabilityFor(v);
   const criteria = criteriaFor(v);
   const faq = faqFor(v, first);
-  const nextFree = calendar.find((c) => c.status === "Disponible")?.month;
   const similar = vendorsIn(v.category).filter((x) => x.slug !== v.slug).slice(0, 3);
+  const unit = priceLabel(v).includes("/") ? ` ${priceLabel(v).split(" ").slice(-2).join(" ")}` : "";
+
+  const steps = [
+    ["Vous écrivez à " + first, "Votre date, votre lieu, vos envies. Pas besoin de compte pour commencer."],
+    [first + " vous envoie une offre", "Formule, options et prix détaillés. Vous pouvez demander une adaptation."],
+    ["Vous signez en ligne", "Contrat électronique et 30 % d'acompte : votre date est réservée."],
+    ["Le jour J", "Le solde est réglé en une à trois fois, selon l'échéancier choisi."],
+  ];
 
   return (
     <div className={styles.page}>
       <div className="container">
+        {/* En-tête */}
         <nav aria-label="Fil d'Ariane" className={styles.crumbs}>
-          <Link href="/">Accueil</Link>
+          <Link href="/decouvrir">Découvrir</Link>
           <span aria-hidden="true">/</span>
           <Link href={`/prestataires/${cat.slug}`}>{cat.plural}</Link>
           <span aria-hidden="true">/</span>
           <span aria-current="page">{v.name}</span>
         </nav>
+        <div className={styles.headRow}>
+          <div>
+            <h1 className={styles.name}>{v.name}</h1>
+            <p className={styles.subtitle}>
+              {cat.plural} · {v.area} · avec {first} {person.lastName}
+            </p>
+          </div>
+          <FicheActions slug={v.slug} name={v.name} />
+        </div>
+        <p className={styles.meta}>
+          <strong>★ {v.rating}</strong>
+          <span className={styles.sep}>|</span>
+          <a href="#avis">{v.reviewsCount} avis</a>
+          <span className={styles.sep}>·</span>
+          <span>{v.area}</span>
+          {v.verified && (
+            <>
+              <span className={styles.sep}>·</span>
+              <span>Identité vérifiée</span>
+            </>
+          )}
+        </p>
 
-        <div className={styles.gallery}>
-          {v.gallery.map((src, i) => (
-            <div key={src + i} className={styles.shot}>
+        {/* Mosaïque : une grande photo, deux petites */}
+        <div className={styles.mosaic}>
+          {v.gallery.slice(0, 3).map((src, i) => (
+            <div key={src + i} className={styles.tile}>
               <Image
                 src={src}
                 alt={i === 0 ? `${v.name}, ${cat.singular}` : ""}
                 fill
                 priority={i === 0}
-                sizes={i === 0 ? "(max-width: 900px) 100vw, 640px" : "(max-width: 900px) 50vw, 320px"}
+                sizes={i === 0 ? "(max-width: 900px) 100vw, 800px" : "30vw"}
                 style={{ objectFit: "cover", objectPosition: i === 0 ? (v.pos ?? "50% 40%") : "50% 40%" }}
               />
+              {i === 2 && <span className={styles.seeAll}>Voir les photos</span>}
             </div>
           ))}
-          <span className={styles.allPhotos}>Toutes les photos</span>
         </div>
 
+        <SectionNav
+          items={[
+            { id: "prestations", label: "Prestations" },
+            { id: "details", label: "Détails" },
+            { id: "disponibilites", label: "Disponibilités" },
+            { id: "rencontre", label: `${first}` },
+            { id: "deroule", label: "Déroulé" },
+            { id: "avis", label: "Avis" },
+            { id: "questions", label: "Questions" },
+          ]}
+        />
+
         <div className={styles.layout}>
-          <div className={styles.main}>
-            {/* En-tête : la prestation, puis la personne */}
-            <header className={styles.head}>
-              <div className={styles.titleRow}>
-                <h1 className="display h2">{v.name}</h1>
-                <SaveButton slug={v.slug} name={v.name} className={styles.save} />
-              </div>
-              <p className={styles.sub}>
-                <strong>★ {v.rating}</strong>
-                <a href="#avis">{v.reviewsCount} avis</a>
-                <span>·</span>
-                <span>
-                  {cat.plural} · {v.area}
-                </span>
-                {v.verified && <span className={styles.badge}>Vérifié</span>}
-              </p>
-              <div className={styles.host}>
-                <Avatar person={person} size={52} />
-                <span>
-                  Avec <strong>{first} {person.lastName}</strong>
-                  <small>
-                    {person.role} · depuis {person.since}
-                  </small>
-                </span>
-              </div>
-            </header>
-
-            {/* L'essentiel en un coup d'œil */}
-            <ul className={styles.facts}>
-              <li>
-                <Image src="/icons/price-tag.png" alt="" width={40} height={40} />
-                <span>
-                  <strong>À partir de {priceLabel(v)}</strong>
-                  <small>Formules ou offre sur mesure</small>
-                </span>
-              </li>
-              <li>
-                <Image src="/icons/map-pin.png" alt="" width={40} height={40} />
-                <span>
-                  <strong>Basé à {v.area}</strong>
-                  <small>Se déplace dans toute l&apos;Île-de-France</small>
-                </span>
-              </li>
-              <li>
-                <Image src="/icons/calendar.png" alt="" width={40} height={40} />
-                <span>
-                  <strong>{nextFree ? `Disponible en ${nextFree.toLowerCase()}` : "Calendrier à jour"}</strong>
-                  <small>
-                    <a href="#disponibilites">Voir le calendrier</a>
-                  </small>
-                </span>
-              </li>
-            </ul>
-
-            {/* Best Match sur la fiche (CDC §8) */}
-            <div className={styles.match}>
-              <Image src="/icons/match-puzzle.png" alt="" width={56} height={56} />
-              <div>
-                <strong>Êtes-vous faits pour travailler avec {first} ?</strong>
-                <span>Votre score Best Match en deux minutes : date, zone, style et budget.</span>
-              </div>
-              <Link href="/matchs" className="btn btn-sm btn-outline">
-                Calculer notre compatibilité
-              </Link>
-            </div>
-
-            {/* La personne (socle commun : bio / équipe) */}
-            <section className={styles.block} aria-labelledby="rencontre">
-              <h2 id="rencontre" className={styles.h2}>
-                Rencontrez {first}
-              </h2>
-              <div className={styles.meet}>
-                <Avatar person={person} size={112} />
-                <div>
-                  <blockquote className={styles.quote}>« {person.bio} »</blockquote>
-                  <ul className={styles.meetFacts}>
-                    <li>
-                      <span>Métier</span>
-                      {person.role}
-                    </li>
-                    <li>
-                      <span>Équipe</span>
-                      {person.team}
-                    </li>
-                    <li>
-                      <span>Langues</span>
-                      {person.languages}
-                    </li>
-                    {v.verified && (
-                      <li>
-                        <span>Statut</span>
-                        Identité et entreprise vérifiées
-                      </li>
-                    )}
-                  </ul>
-                </div>
-              </div>
-              <p className={styles.text}>{v.description}</p>
-            </section>
-
-            {/* Formules */}
-            <section className={styles.block} aria-labelledby="formules">
-              <h2 id="formules" className={styles.h2}>
-                Les formules de {first}
-              </h2>
+          <div>
+            <Section id="prestations" eyebrow="Formules" title={`Les prestations de ${first}`}>
               <div className={styles.packages}>
                 {v.packages.map((p, i) => (
                   <div key={p.name} className={`${styles.pack} ${i === 1 ? styles.packStar : ""}`}>
-                    {i === 1 && <span className={styles.packTag}>La plus choisie</span>}
-                    <strong>{p.name}</strong>
+                    <div className={styles.packHead}>
+                      <strong>{p.name}</strong>
+                      {i === 1 && <span className={styles.packTag}>La plus choisie</span>}
+                    </div>
                     <span className={styles.packPrice}>
-                      {p.price.toLocaleString("fr-FR")} €{priceLabel(v).includes("/") ? ` ${priceLabel(v).split(" ").slice(-2).join(" ")}` : ""}
+                      {p.price.toLocaleString("fr-FR")} €{unit}
                     </span>
                     <ul>
                       {p.includes.map((x) => (
@@ -194,15 +142,16 @@ export default async function VendorPage({ params }: Params) {
                   </div>
                 ))}
               </div>
-              <p className={styles.textSmall}>Aucune formule ne vous correspond ? Décrivez votre projet : {first} peut vous proposer une offre sur mesure.</p>
-            </section>
+              <p className={styles.note}>
+                Rien ne vous correspond tout à fait ? Décrivez votre projet à {first} : une offre sur mesure est possible.{" "}
+                <Link href="/matchs" className={styles.link}>
+                  Ou vérifiez votre compatibilité avec le Best Match
+                </Link>
+              </p>
+            </Section>
 
-            {/* Champs spécifiques au métier (CDC §10.2) */}
             {specs.length > 0 && (
-              <section className={styles.block} aria-labelledby="details">
-                <h2 id="details" className={styles.h2}>
-                  Le détail de la prestation
-                </h2>
+              <Section id="details" eyebrow={cat.plural} title="Le détail de la prestation">
                 <dl className={styles.specs}>
                   {specs.map(([k, val]) => (
                     <div key={k}>
@@ -211,40 +160,82 @@ export default async function VendorPage({ params }: Params) {
                     </div>
                   ))}
                 </dl>
-              </section>
+              </Section>
             )}
 
-            {/* Calendrier (CDC §17) et rendez-vous (CDC §12) */}
-            <section id="disponibilites" className={styles.block} aria-labelledby="dispo-title">
-              <h2 id="dispo-title" className={styles.h2}>
-                Disponibilités
-              </h2>
+            <Section id="disponibilites" eyebrow="Calendrier" title="Disponibilités">
               <ul className={styles.calendar}>
                 {calendar.map((c) => (
-                  <li key={c.month} className={styles[statusClass[c.status]]}>
-                    <span>{c.month}</span>
-                    <strong>{c.status}</strong>
+                  <li key={c.month} data-status={c.status}>
+                    <span className={styles.month}>{c.month}</span>
+                    <span className={styles.status}>
+                      <i aria-hidden="true" />
+                      {c.status}
+                    </span>
                   </li>
                 ))}
               </ul>
               <div id="rendez-vous" className={styles.visit}>
-                <Image src="/icons/calendar.png" alt="" width={48} height={48} />
-                <div>
-                  <strong>Envie de vous rencontrer avant de décider ?</strong>
-                  <span>Proposez un créneau : {first} le confirme, ou vous propose une autre date. Le rappel arrive tout seul.</span>
-                </div>
+                <p>
+                  <strong>Envie de vous rencontrer avant de décider ?</strong> Proposez un créneau : {first} le confirme ou vous propose une autre date.
+                </p>
                 <a href="#contact" className="btn btn-sm btn-outline">
                   Proposer un rendez-vous
                 </a>
               </div>
-            </section>
+            </Section>
 
-            {/* Avis détaillés (CDC §24) */}
-            <section id="avis" className={styles.block} aria-labelledby="avis-title">
-              <h2 id="avis-title" className={styles.h2}>
-                ★ {v.rating} · {v.reviewsCount} avis de couples
-              </h2>
-              <p className={styles.textSmall}>Seuls les couples qui ont réservé {first} sur Céleste peuvent laisser un avis.</p>
+            <Section id="rencontre" eyebrow="La personne derrière la prestation" title={`Rencontrez ${first}`}>
+              <div className={styles.host}>
+                <div className={styles.hostCard}>
+                  <Avatar person={person} size={96} />
+                  <strong>
+                    {first} {person.lastName}
+                  </strong>
+                  <span>{person.role}</span>
+                  <dl>
+                    <div>
+                      <dt>Avis</dt>
+                      <dd>★ {v.rating}</dd>
+                    </div>
+                    <div>
+                      <dt>Depuis</dt>
+                      <dd>{person.since}</dd>
+                    </div>
+                    <div>
+                      <dt>Équipe</dt>
+                      <dd>{person.team}</dd>
+                    </div>
+                  </dl>
+                </div>
+                <div className={styles.hostText}>
+                  <blockquote>« {person.bio} »</blockquote>
+                  <p>{v.description}</p>
+                  <ul>
+                    <li>Langues : {person.languages}</li>
+                    <li>Répond en général en {v.responseTime}</li>
+                    {v.verified && <li>Identité et entreprise vérifiées par Céleste</li>}
+                  </ul>
+                  <a href="#contact" className={styles.link}>
+                    Écrire à {first}
+                  </a>
+                </div>
+              </div>
+            </Section>
+
+            <Section id="deroule" eyebrow="En quatre étapes" title="Comment ça se passe">
+              <ol className={styles.steps}>
+                {steps.map(([t, d], i) => (
+                  <li key={t}>
+                    <span className={styles.stepN}>{i + 1}</span>
+                    <strong>{t}</strong>
+                    <span>{d}</span>
+                  </li>
+                ))}
+              </ol>
+            </Section>
+
+            <Section id="avis" eyebrow="Ce qu'en disent les couples" title={`★ ${v.rating} · ${v.reviewsCount} avis`}>
               <ul className={styles.criteria}>
                 {criteria.map(([label, score]) => (
                   <li key={label}>
@@ -266,54 +257,14 @@ export default async function VendorPage({ params }: Params) {
                         <small>Mariés en {r.date}</small>
                       </span>
                     </figcaption>
-                    <div aria-label={`${r.rating} étoiles sur 5`} className={styles.stars}>
-                      {"★".repeat(r.rating)}
-                      <span>{"★".repeat(5 - r.rating)}</span>
-                    </div>
                     <blockquote>{r.text}</blockquote>
                   </figure>
                 ))}
               </div>
-            </section>
+              <p className={styles.note}>Seuls les couples qui ont réservé sur Céleste peuvent laisser un avis.</p>
+            </Section>
 
-            {/* Zone */}
-            <section className={styles.block} aria-labelledby="zone">
-              <h2 id="zone" className={styles.h2}>
-                Où travaille {first}
-              </h2>
-              <p className={styles.text}>Basé à {v.area}, se déplace dans toute l&apos;Île-de-France. Frais de déplacement éventuels précisés dans l&apos;offre.</p>
-              <div className={styles.map}>
-                <Image src="/photos/map-paris.jpg" alt={`Carte de la zone d'intervention autour de ${v.area}`} fill sizes="(max-width: 900px) 100vw, 760px" style={{ objectFit: "cover" }} />
-                <span className={styles.pin}>{v.area}</span>
-              </div>
-            </section>
-
-            {/* Conditions (CDC §14) */}
-            <section className={styles.block} aria-labelledby="conditions">
-              <h2 id="conditions" className={styles.h2}>
-                Réserver en confiance
-              </h2>
-              <ul className={styles.terms}>
-                <li>
-                  <strong>Paiement</strong>
-                  <span>Contrat signé en ligne, 30 % d&apos;acompte à la réservation, puis le solde en une à trois fois.</span>
-                </li>
-                <li>
-                  <strong>Annulation</strong>
-                  <span>Plus de 30 jours avant : remboursement intégral. Entre 30 et 7 jours : 50 %. Conditions affichées avant de réserver.</span>
-                </li>
-                <li>
-                  <strong>Date bloquée</strong>
-                  <span>Quand la discussion est avancée, votre date peut être bloquée 48 heures, le temps de décider.</span>
-                </li>
-              </ul>
-            </section>
-
-            {/* FAQ du prestataire */}
-            <section className={styles.block} aria-labelledby="faq-v">
-              <h2 id="faq-v" className={styles.h2}>
-                Vos questions à {first}
-              </h2>
+            <Section id="questions" eyebrow="Réservation" title="Questions fréquentes">
               <div className={styles.faq}>
                 {faq.map(([q, a]) => (
                   <details key={q} className={styles.qa}>
@@ -321,8 +272,16 @@ export default async function VendorPage({ params }: Params) {
                     <p>{a}</p>
                   </details>
                 ))}
+                <details className={styles.qa}>
+                  <summary>Que se passe-t-il en cas d&apos;annulation ?</summary>
+                  <p>Plus de 30 jours avant l&apos;événement : remboursement intégral. Entre 30 et 7 jours : 50 %. Les conditions sont affichées avant de réserver.</p>
+                </details>
+                <details className={styles.qa}>
+                  <summary>Où intervient {first} ?</summary>
+                  <p>Basé à {v.area}, se déplace dans toute l&apos;Île-de-France. Frais de déplacement éventuels précisés dans l&apos;offre.</p>
+                </details>
               </div>
-            </section>
+            </Section>
           </div>
 
           <aside className={styles.aside}>
@@ -332,8 +291,9 @@ export default async function VendorPage({ params }: Params) {
 
         {similar.length > 0 && (
           <section className={styles.similar} aria-labelledby="similaires">
-            <h2 id="similaires" className={styles.h2}>
-              D&apos;autres {cat.plural.toLowerCase()} qui pourraient vous plaire
+            <p className={styles.eyebrow}>Dans le même métier</p>
+            <h2 id="similaires" className={styles.title}>
+              D&apos;autres {cat.plural.toLowerCase()} à découvrir
             </h2>
             <div className={styles.similarGrid}>
               {similar.map((s) => (
