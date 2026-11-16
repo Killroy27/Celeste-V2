@@ -78,9 +78,10 @@
   gap: 8px;
   height: 40px;
   padding: 0 18px;
-  border: 1px solid var(--line);
+  border: var(--outline);
   border-radius: 999px;
-  background: var(--card);
+  background: var(--outline-bg);
+  box-shadow: var(--outline-shadow);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -100,7 +101,7 @@
 }
 
 .filters:hover {
-  border-color: var(--brown);
+  background: var(--outline-bg-hover);
 }
 
 @media (max-width: 720px) {

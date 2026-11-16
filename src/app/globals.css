@@ -15,6 +15,13 @@
   --sticky: 0 1px 0 rgba(57, 33, 12, 0.06), 0 8px 20px rgba(57, 33, 12, 0.06);
 
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Contour signature Céleste : celui du bouton Best Match du hero.
+     À utiliser pour tout élément dont le contour ressort (boutons, chevrons, cartes, badges). */
+  --outline: 1.5px solid var(--brand);
+  --outline-bg: #fffaf0;
+  --outline-bg-hover: #fff3db;
+  --outline-shadow: 0 10px 28px rgba(201, 138, 28, 0.16);
   --gutter: 40px;
   --header-h: 80px;
 }
@@ -189,13 +196,13 @@ img {
 }
 
 .btn-outline {
-  background: var(--card);
-  border: 1px solid var(--strong);
+  background: var(--outline-bg);
+  border: var(--outline);
+  box-shadow: var(--outline-shadow);
 }
 
 .btn-outline:hover {
-  background: var(--card);
-  border-color: var(--brown);
+  background: var(--outline-bg-hover);
 }
 
 .btn-block {
@@ -214,7 +221,7 @@ img {
 
 .card-surface {
   background: var(--card);
-  border: 1px solid var(--line);
+  border: var(--outline);
   border-radius: 20px;
 }
 
@@ -258,9 +265,9 @@ img {
   align-items: center;
   height: 40px;
   padding: 0 16px;
-  border: 1px solid var(--line);
+  border: var(--outline);
   border-radius: 999px;
-  background: var(--card);
+  background: var(--outline-bg);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -268,7 +275,7 @@ img {
 }
 
 .chip:hover {
-  border-color: var(--brown);
+  background: var(--outline-bg-hover);
 }
 
 .chip[aria-pressed="true"],

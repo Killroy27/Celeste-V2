@@ -1,7 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { categories } from "@/lib/content";
 import { SHOW_SOCIAL_PLACEHOLDERS, socials } from "@/lib/site";
-import { Logo } from "./Logo";
 import { SocialIcon } from "./SocialIcons";
 import { AppleLogo, GooglePlayLogo } from "./StoreBadges";
 import styles from "./Footer.module.css";
@@ -21,12 +21,12 @@ const columns = [
     title: "Prestataires",
     links: [
       ["Rejoindre Céleste", "/devenir-prestataire"],
-      ["Zéro abonnement : comment ça marche", "/devenir-prestataire#tarifs"],
+      ["Zéro abonnement", "/devenir-prestataire#tarifs"],
       ["Créer mon profil", "/devenir-prestataire#inscription"],
     ],
   },
   {
-    title: "Céleste",
+    title: "La Maison",
     links: [
       ["À propos", "/a-propos"],
       ["Questions fréquentes", "/comment-ca-marche#faq"],
@@ -41,48 +41,38 @@ const legal = [
   ["Conditions générales", "/cgu"],
 ];
 
+// Pied de page éditorial : une invitation, la navigation, puis la signature de la Maison.
 export function Footer() {
   const shownSocials = socials.filter((s) => s.href || SHOW_SOCIAL_PLACEHOLDERS);
 
   return (
     <footer className={styles.footer}>
       <div className="container">
-        {/* Marque, promesse, réseaux et contact */}
-        <div className={styles.lead}>
-          <div className={styles.brand}>
-            <Link href="/" aria-label="Céleste, accueil" className={styles.logo}>
-              <Logo />
-            </Link>
-            <p className={styles.tagline}>
-              La Maison des Célébrations. Lieux et prestataires du mariage, réunis en un seul endroit, de la première idée au jour J.
-            </p>
-            {shownSocials.length > 0 && (
-              <ul className={styles.socials} aria-label="Céleste sur les réseaux">
-                {shownSocials.map((s) => (
-                  <li key={s.name}>
-                    <a href={s.href ?? "#"} aria-label={`Céleste sur ${s.name}`} target={s.href ? "_blank" : undefined} rel={s.href ? "noopener noreferrer" : undefined}>
-                      <SocialIcon name={s.name} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
+        {/* 1. L'invitation */}
+        <div className={styles.invite}>
+          <div>
+            <p className={styles.kicker}>La Maison des Célébrations</p>
+            <h2 className={styles.inviteTitle}>
+              Votre mariage <em>commence ici.</em>
+            </h2>
           </div>
-
-          <div className={styles.contact}>
-            <span className={styles.contactTitle}>Une question sur votre mariage ?</span>
-            <p>Notre équipe vous répond par e-mail, que vous soyez futurs mariés ou prestataire.</p>
-            <Link href="/contact" className={styles.contactBtn}>
-              Nous écrire
+          <div className={styles.inviteCtas}>
+            <Link href="/matchs" className="btn">
+              Trouver mon Best Match
+            </Link>
+            <Link href="/devenir-prestataire" className="btn btn-outline">
+              Rejoindre Céleste
             </Link>
           </div>
         </div>
 
-        {/* Navigation */}
-        <div className={styles.grid}>
+        <hr className={styles.rule} />
+
+        {/* 2. La navigation */}
+        <div className={styles.nav}>
           {columns.map((c) => (
             <nav key={c.title} aria-label={c.title} className={styles.col}>
-              <h2>{c.title}</h2>
+              <h3>{c.title}</h3>
               <ul>
                 {c.links.map(([label, href]) => (
                   <li key={href}>
@@ -92,9 +82,8 @@ export function Footer() {
               </ul>
             </nav>
           ))}
-
-          <nav aria-label="Métiers" className={`${styles.col} ${styles.cats}`}>
-            <h2>Métiers</h2>
+          <nav aria-label="Métiers" className={`${styles.col} ${styles.trades}`}>
+            <h3>Métiers</h3>
             <ul>
               {categories.map((c) => (
                 <li key={c.slug}>
@@ -103,26 +92,46 @@ export function Footer() {
               ))}
             </ul>
           </nav>
+        </div>
 
-          <div className={styles.col}>
-            <h2>Application</h2>
-            <p className={styles.appText}>Bientôt sur iOS et Android.</p>
-            <div className={styles.stores}>
-              <span className={styles.store}>
-                <AppleLogo size={16} />
-                App Store
-              </span>
-              <span className={styles.store}>
-                <GooglePlayLogo size={16} />
-                Google Play
-              </span>
-            </div>
+        <hr className={styles.rule} />
+
+        {/* 3. La signature */}
+        <div className={styles.signature}>
+          <Link href="/" aria-label="Céleste, accueil" className={styles.mark}>
+            <Image src="/brand/monogram.png" alt="" width={46} height={48} />
+            <Image src="/brand/wordmark.png" alt="Céleste" width={158} height={40} />
+          </Link>
+          <p className={styles.motto}>Lieux et prestataires du mariage, réunis en un seul endroit.</p>
+
+          {shownSocials.length > 0 && (
+            <ul className={styles.socials} aria-label="Céleste sur les réseaux">
+              {shownSocials.map((s) => (
+                <li key={s.name}>
+                  <a href={s.href ?? "#"} aria-label={`Céleste sur ${s.name}`} target={s.href ? "_blank" : undefined} rel={s.href ? "noopener noreferrer" : undefined}>
+                    <SocialIcon name={s.name} size={17} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div className={styles.app}>
+            <span>Application bientôt disponible</span>
+            <span className={styles.store}>
+              <AppleLogo size={15} />
+              App Store
+            </span>
+            <span className={styles.store}>
+              <GooglePlayLogo size={15} />
+              Google Play
+            </span>
           </div>
         </div>
 
-        {/* Barre légale */}
+        {/* 4. La barre légale */}
         <div className={styles.bar}>
-          <span>© {new Date().getFullYear()} Céleste · La Maison des Célébrations</span>
+          <span>© {new Date().getFullYear()} Céleste</span>
           <nav aria-label="Informations légales" className={styles.legal}>
             {legal.map(([label, href]) => (
               <Link key={href} href={href}>
@@ -130,13 +139,8 @@ export function Footer() {
               </Link>
             ))}
           </nav>
-          <span className={styles.locale}>Français · EUR €</span>
+          <span>Français · EUR €</span>
         </div>
-      </div>
-
-      {/* Signature : le nom en très grand, ton sur ton */}
-      <div className={styles.signature} aria-hidden="true">
-        Céleste
       </div>
     </footer>
   );

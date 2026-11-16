@@ -188,7 +188,7 @@
   flex-direction: column;
   border-radius: 24px;
   background: var(--card);
-  border: 1px solid var(--line);
+  border: var(--outline);
   overflow: hidden;
 }
 
@@ -232,7 +232,7 @@
   max-width: 480px;
   height: 60px;
   padding: 6px 6px 6px 22px;
-  border: 1.5px solid var(--line);
+  border: var(--outline);
   border-radius: 999px;
   background: var(--card);
   box-shadow: var(--shadow);
@@ -308,9 +308,10 @@
   gap: 8px;
   height: 44px;
   padding: 0 16px;
-  border: 1px solid var(--line);
+  border: var(--outline);
   border-radius: 12px;
-  background: var(--card);
+  background: var(--outline-bg);
+  box-shadow: var(--outline-shadow);
   font-size: 14px;
   font-weight: 600;
   color: var(--brown);

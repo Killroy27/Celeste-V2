@@ -9,9 +9,9 @@
   gap: 10px;
   height: 44px;
   padding: 0 6px 0 14px;
-  border: 1px solid var(--line);
+  border: var(--outline);
   border-radius: 999px;
-  background: var(--card);
+  background: var(--outline-bg);
   cursor: pointer;
   transition: box-shadow 0.2s;
 }

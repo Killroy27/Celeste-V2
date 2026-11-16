@@ -1,131 +1,70 @@
-/* Pied de page : même univers crème et Bodoni, plus d'air, une vraie signature. */
+/* Pied de page éditorial : invitation, navigation, signature. Filets dorés, beaucoup d'air. */
 .footer {
-  position: relative;
-  overflow: hidden;
   background: var(--sunken);
-  border-top: 1px solid var(--line);
-  padding-top: 88px;
+  padding-top: 112px;
 }
 
-/* ---------- Marque et contact ---------- */
-
-.lead {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 64px;
-  align-items: end;
-  padding-bottom: 56px;
-  border-bottom: 1px solid var(--line);
-}
-
-.brand {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-}
-
-.logo {
-  transform: scale(1.25);
-  transform-origin: left center;
-}
-
-.tagline {
+.rule {
+  height: 1px;
   margin: 0;
-  max-width: 460px;
+  border: 0;
+  background: linear-gradient(90deg, rgba(238, 176, 72, 0), rgba(238, 176, 72, 0.7) 20%, rgba(238, 176, 72, 0.7) 80%, rgba(238, 176, 72, 0));
+}
+
+/* ---------- 1. Invitation ---------- */
+
+.invite {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  padding-bottom: 72px;
+}
+
+.kicker {
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #a8741a;
+}
+
+.inviteTitle {
+  margin: 0;
+  font-family: var(--font-display), Didot, serif;
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.inviteTitle em {
+  font-weight: 500;
+  color: #a8741a;
+}
+
+.inviteCtas {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* ---------- 2. Navigation ---------- */
+
+.nav {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) 1.7fr;
+  gap: 48px;
+  padding: 64px 0;
+}
+
+.col h3 {
+  margin: 0 0 22px;
   font-family: var(--font-display), Didot, serif;
   font-size: 22px;
-  line-height: 1.4;
-}
-
-.socials {
-  margin: 4px 0 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.socials a {
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--card);
-  color: var(--brown);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s, border-color 0.2s, transform 0.2s;
-}
-
-.socials a:hover {
-  background: var(--brand);
-  border-color: var(--brand);
-  transform: translateY(-2px);
-}
-
-.contact {
-  justify-self: end;
-  width: 100%;
-  max-width: 420px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 28px;
-  border-radius: 24px;
-  background: var(--card);
-  border: 1px solid var(--line);
-}
-
-.contactTitle {
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.contact p {
-  margin: 0;
-  font-size: 15px;
-  line-height: 24px;
-  color: var(--text2);
-}
-
-.contactBtn {
-  margin-top: 8px;
-  display: inline-flex;
-  align-items: center;
-  height: 46px;
-  padding: 0 22px;
-  border: 1.5px solid var(--brand);
-  border-radius: 999px;
-  background: #fffaf0;
-  font-size: 15px;
-  font-weight: 700;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.contactBtn:hover {
-  background: #fff3db;
-  transform: translateY(-1px);
-}
-
-/* ---------- Navigation ---------- */
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr) 1.6fr 1fr;
-  gap: 40px;
-  padding: 56px 0;
-}
-
-.col h2 {
-  margin: 0 0 18px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: 600;
 }
 
 .col ul {
@@ -133,151 +72,197 @@
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 12px;
+  gap: 13px;
 }
 
 .col a {
+  position: relative;
   font-size: 15px;
-  color: rgba(57, 33, 12, 0.78);
+  color: rgba(57, 33, 12, 0.8);
   transition: color 0.2s;
+}
+
+/* Soulignement doré qui se déroule au survol. */
+.col a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1.5px;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease);
 }
 
 .col a:hover {
   color: var(--brown);
-  text-decoration: underline;
-  text-decoration-color: var(--brand);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
 }
 
-/* Les neuf métiers sur deux colonnes pour garder une hauteur égale. */
-.cats ul {
+.col a:hover::after {
+  transform: scaleX(1);
+}
+
+.trades ul {
   grid-template-columns: 1fr 1fr;
-  column-gap: 20px;
+  column-gap: 28px;
 }
 
-.appText {
-  margin: 0 0 14px;
-  font-size: 15px;
-  color: rgba(57, 33, 12, 0.78);
+/* ---------- 3. Signature ---------- */
+
+.signature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 72px 0 64px;
+  text-align: center;
 }
 
-.stores {
-  display: grid;
-  gap: 8px;
-  justify-items: start;
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mark img:first-child {
+  width: 46px;
+  height: auto;
+}
+
+.mark img:last-child {
+  width: 158px;
+  height: auto;
+}
+
+.motto {
+  margin: 0;
+  font-family: var(--font-display), Didot, serif;
+  font-size: 20px;
+  font-style: italic;
+  color: rgba(57, 33, 12, 0.8);
+}
+
+.socials {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.socials a {
+  width: 44px;
+  height: 44px;
+  border: var(--outline);
+  border-radius: 999px;
+  background: var(--outline-bg);
+  color: var(--brown);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.socials a:hover {
+  background: var(--brand);
+  box-shadow: var(--outline-shadow);
+  transform: translateY(-2px);
+}
+
+.app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  font-size: 14px;
+  color: var(--text2);
 }
 
 .store {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  height: 40px;
+  gap: 7px;
+  height: 38px;
   padding: 0 14px;
-  border: 1px solid var(--line);
+  border: var(--outline);
   border-radius: 12px;
-  background: var(--card);
+  background: var(--outline-bg);
   font-size: 13px;
   font-weight: 600;
+  color: var(--brown);
 }
 
-/* ---------- Barre légale ---------- */
+/* ---------- 4. Barre légale ---------- */
 
 .bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px 32px;
+  gap: 12px 32px;
   flex-wrap: wrap;
-  padding: 24px 0;
-  border-top: 1px solid var(--line);
-  font-size: 14px;
+  padding: 22px 0 28px;
+  border-top: 1px solid rgba(57, 33, 12, 0.08);
+  font-size: 13px;
   color: var(--text2);
 }
 
 .legal {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 24px;
+  gap: 8px 26px;
 }
 
 .legal a:hover {
   color: var(--brown);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.locale {
-  padding: 6px 12px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--card);
-  font-size: 13px;
-}
-
-/* ---------- Signature ---------- */
-
-.signature {
-  margin-top: 8px;
-  margin-bottom: -0.2em;
-  font-family: var(--font-display), Didot, serif;
-  font-size: clamp(96px, 21vw, 340px);
-  font-weight: 700;
-  line-height: 0.82;
-  letter-spacing: -0.03em;
-  text-align: center;
-  color: rgba(57, 33, 12, 0.06);
-  user-select: none;
-  pointer-events: none;
-  white-space: nowrap;
 }
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 1100px) {
-  .grid {
+@media (max-width: 1000px) {
+  .nav {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .cats {
-    grid-column: span 2;
-  }
-}
-
-@media (max-width: 860px) {
-  .lead {
-    grid-template-columns: 1fr;
-    gap: 36px;
-    align-items: start;
+  .trades {
+    grid-column: 1 / -1;
   }
 
-  .contact {
-    justify-self: start;
-    max-width: none;
+  .trades ul {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 640px) {
   .footer {
-    padding-top: 64px;
+    padding-top: 80px;
   }
 
-  .logo {
-    transform: none;
+  .invite {
+    padding-bottom: 48px;
   }
 
-  .tagline {
-    font-size: 19px;
+  .inviteCtas,
+  .inviteCtas a {
+    width: 100%;
   }
 
-  .grid {
+  .nav {
     grid-template-columns: 1fr 1fr;
-    gap: 36px 20px;
-    padding: 44px 0;
+    gap: 40px 20px;
+    padding: 48px 0;
   }
 
-  .cats {
-    grid-column: span 2;
+  .trades ul {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .signature {
+    padding: 56px 0 48px;
   }
 
   .bar {

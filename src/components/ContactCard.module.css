@@ -1,0 +1,172 @@
+.card {
+  position: sticky;
+  top: calc(var(--header-h) + 24px);
+  padding: 26px;
+  background: var(--card);
+  border: var(--outline);
+  border-radius: 24px;
+  box-shadow: var(--outline-shadow);
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 20px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.who strong {
+  display: block;
+  font-size: 17px;
+}
+
+.who span {
+  display: block;
+  font-size: 14px;
+  color: var(--text2);
+}
+
+.who small {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #9a6512;
+}
+
+.avatar {
+  position: relative;
+  flex: none;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 2px solid var(--brand);
+  background: var(--outline-bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.initials {
+  font-family: var(--font-display), serif;
+  font-weight: 700;
+  color: #9a6512;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.price {
+  font-size: 15px;
+  color: var(--text2);
+}
+
+.price strong {
+  font-family: var(--font-display), serif;
+  font-size: 26px;
+  color: var(--brown);
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--brown);
+}
+
+.note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  color: var(--text2);
+}
+
+.secondary {
+  justify-self: center;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--brand);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  animation: pop 0.4s var(--ease);
+}
+
+.done p {
+  margin: 0 0 8px;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+.mobileBar {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .card {
+    position: static;
+    margin-top: 32px;
+  }
+
+  .mobileBar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom));
+    background: var(--card);
+    border-top: 1px solid var(--line);
+  }
+
+  .mobileWho {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobileWho strong {
+    display: block;
+    font-size: 15px;
+  }
+
+  .mobileWho small {
+    font-size: 13px;
+    color: var(--text2);
+  }
+}

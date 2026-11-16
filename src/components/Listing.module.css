@@ -9,7 +9,7 @@
   display: grid;
   gap: 20px;
   background: var(--card);
-  border: 1px solid var(--line);
+  border: var(--outline);
   border-radius: 20px;
   box-shadow: var(--shadow);
   animation: drop 0.3s var(--ease);
@@ -117,7 +117,7 @@
 .sort select {
   height: 40px;
   padding: 0 12px;
-  border: 1px solid var(--line);
+  border: var(--outline);
   border-radius: 999px;
   background: var(--card);
   font-size: 14px;
