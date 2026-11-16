@@ -251,8 +251,24 @@
   font-weight: 700;
 }
 
+.linkBtn {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f1408;
+  text-decoration: underline;
+  text-decoration-color: var(--brand);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
 .choose {
   flex: none;
+  cursor: pointer;
+  color: #1f1408;
   padding: 9px 16px;
   border: var(--outline);
   border-radius: 999px;

@@ -92,6 +92,19 @@
   gap: 10px;
 }
 
+.formTitle {
+  font-family: var(--font-display), serif;
+  font-size: 20px;
+}
+
+.small {
+  margin: 0;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  color: rgba(57, 33, 12, 0.7);
+}
+
 .cancel {
   border: 0;
   background: none;

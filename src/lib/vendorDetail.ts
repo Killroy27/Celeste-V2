@@ -220,3 +220,88 @@ export function teamFor(v: Vendor, p: Person): { name: string; role: string }[] 
   const h = hash(v.slug);
   return Array.from({ length: Math.min(size, 4) - 1 }, (_, i) => ({ name: mates[(h + i) % mates.length], role: "Équipe" }));
 }
+
+// Action principale adaptée au métier (CDC §12 visites et rendez-vous ; types du projet d'origine :
+// visite, dégustation, réunion, appel). Une seule action principale par écran (CDC §27).
+export type ActionKind = "message" | "visit" | "tasting" | "trial";
+
+export type VendorActions = {
+  primary: { kind: ActionKind; label: string; title: string; submit: string; note: string };
+  secondary: { kind: ActionKind | "meeting"; label: string };
+};
+
+export function actionsFor(v: Vendor, first: string): VendorActions {
+  const message = {
+    kind: "message" as const,
+    label: `Écrire à ${first}`,
+    title: `Votre message à ${first}`,
+    submit: `Envoyer à ${first}`,
+    note: `Sans engagement. Votre espace Céleste est créé à l'envoi, pour recevoir la réponse de ${first}.`,
+  };
+  switch (v.category) {
+    case "lieux":
+      return {
+        primary: {
+          kind: "visit",
+          label: "Demander une visite",
+          title: "Visiter le domaine",
+          submit: "Envoyer la demande de visite",
+          note: `${first} confirme le créneau ou vous en propose un autre. Le rappel arrive tout seul.`,
+        },
+        secondary: { kind: "message", label: `Écrire à ${first}` },
+      };
+    case "traiteurs":
+    case "patisserie":
+      return {
+        primary: {
+          kind: "tasting",
+          label: "Réserver une dégustation",
+          title: "Goûter avant de décider",
+          submit: "Demander la dégustation",
+          note: `${first} vous propose une date de dégustation. Sans engagement.`,
+        },
+        secondary: { kind: "message", label: `Écrire à ${first}` },
+      };
+    case "beaute":
+      return {
+        primary: {
+          kind: "trial",
+          label: "Réserver un essai",
+          title: "Votre essai maquillage et coiffure",
+          submit: "Demander l'essai",
+          note: `${first} confirme la date de l'essai, à domicile.`,
+        },
+        secondary: { kind: "message", label: `Écrire à ${first}` },
+      };
+    default:
+      return { primary: message, secondary: { kind: "meeting", label: "Proposer un rendez-vous" } };
+  }
+}
+
+// Thème de chaque photo, pour la visite photo de la galerie (prototype basé sur le nom du fichier).
+const photoThemes: Record<string, string> = {
+  aisle: "Cérémonie",
+  confetti: "Cérémonie",
+  hero: "Cérémonie",
+  field: "Le couple",
+  beach: "Le couple",
+  rain: "Le couple",
+  kente: "Le couple",
+  bride: "Préparatifs",
+  bridesmaids: "Préparatifs",
+  groom: "Préparatifs",
+  photog: "En coulisses",
+  florist: "En coulisses",
+  chef: "En coulisses",
+  dance: "La soirée",
+  dj: "La soirée",
+  chateau: "Réception",
+  deco: "Réception",
+  cake: "Détails",
+  rings: "Détails",
+};
+
+export function themeOf(src: string) {
+  const key = src.split("/").pop()?.replace(/\.\w+$/, "") ?? "";
+  return photoThemes[key] ?? "Autres";
+}

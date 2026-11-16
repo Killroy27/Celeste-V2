@@ -34,7 +34,7 @@ export function GalleryTrigger({ index, className, label, children }: { index?: 
 
 /* ---------- Visionneuse : grille de toutes les photos, puis plein écran ---------- */
 
-export type Photo = { src: string; alt: string };
+export type Photo = { src: string; alt: string; theme?: string };
 
 export function GalleryViewer({ photos, title }: { photos: Photo[]; title: string }) {
   const v = useSyncExternalStore(subscribe, () => view, () => view);
@@ -77,8 +77,15 @@ export function GalleryViewer({ photos, title }: { photos: Photo[]; title: strin
   if (v.mode === "closed" || !shown) return null;
 
   if (v.mode === "grid") {
+    // Visite photo (façon Airbnb) : un aperçu par thème en haut, puis chaque thème en section à faire défiler.
+    const order = ["Cérémonie", "Le couple", "Préparatifs", "Réception", "La soirée", "Détails", "En coulisses", "Autres"];
+    const groups = order
+      .map((t) => ({ theme: t, items: photos.map((p, i) => ({ ...p, i })).filter((p) => (p.theme ?? "Autres") === t) }))
+      .filter((g) => g.items.length > 0);
+    const slug = (t: string) => "theme-" + t.toLowerCase().normalize("NFD").replace(/[^a-z]/g, "");
+
     return (
-      <div className={styles.gridView} role="dialog" aria-modal="true" aria-label={`Toutes les photos de ${title}`}>
+      <div className={styles.gridView} role="dialog" aria-modal="true" aria-label={`Visite photo de ${title}`}>
         <div className={styles.gridBar}>
           <button type="button" className={styles.round} onClick={close} aria-label="Fermer la galerie">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -90,11 +97,53 @@ export function GalleryViewer({ photos, title }: { photos: Photo[]; title: strin
           </span>
           <span />
         </div>
-        <div className={styles.gridBody}>
-          {photos.map((p, i) => (
-            <button key={p.src + i} type="button" className={`${styles.gridItem} ${i % 3 === 0 ? styles.gridWide : ""}`} onClick={() => openPhoto(i)} aria-label={`Agrandir la photo ${i + 1}`}>
-              <Image src={p.src} alt={p.alt} fill sizes={i % 3 === 0 ? "(max-width: 720px) 100vw, 900px" : "(max-width: 720px) 50vw, 450px"} style={{ objectFit: "cover" }} />
-            </button>
+
+        <div className={styles.tour}>
+          <h2 className={styles.tourTitle}>Visite photo</h2>
+          <ul className={styles.themes}>
+            {groups.map((g) => (
+              <li key={g.theme}>
+                <a
+                  href={`#${slug(g.theme)}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById(slug(g.theme))?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
+                >
+                  <span className={styles.themeThumb}>
+                    <Image src={g.items[0].src} alt="" fill sizes="160px" style={{ objectFit: "cover" }} />
+                  </span>
+                  <strong>{g.theme}</strong>
+                  <small>
+                    {g.items.length} photo{g.items.length > 1 ? "s" : ""}
+                  </small>
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          {groups.map((g) => (
+            <section key={g.theme} id={slug(g.theme)} className={styles.group}>
+              <div className={styles.groupHead}>
+                <h3>{g.theme}</h3>
+                <span>
+                  {g.items.length} photo{g.items.length > 1 ? "s" : ""}
+                </span>
+              </div>
+              <div className={styles.groupGrid}>
+                {g.items.map((p, k) => (
+                  <button
+                    key={p.src + p.i}
+                    type="button"
+                    className={`${styles.gridItem} ${k % 3 === 0 ? styles.gridWide : ""}`}
+                    onClick={() => openPhoto(p.i)}
+                    aria-label={`Agrandir : ${g.theme}, photo ${k + 1}`}
+                  >
+                    <Image src={p.src} alt={p.alt} fill sizes={k % 3 === 0 ? "(max-width: 720px) 100vw, 760px" : "(max-width: 720px) 50vw, 380px"} style={{ objectFit: "cover" }} />
+                  </button>
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       </div>
@@ -124,6 +173,7 @@ export function GalleryViewer({ photos, title }: { photos: Photo[]; title: strin
           Toutes les photos
         </button>
         <span className={styles.counter}>
+          {p.theme ? `${p.theme} · ` : ""}
           {v.index + 1} / {photos.length}
         </span>
         <button type="button" className={styles.textBtn} onClick={close} aria-label="Fermer la galerie">

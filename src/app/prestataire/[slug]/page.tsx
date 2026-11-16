@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Avatar, ContactCard } from "@/components/ContactCard";
+import { Avatar, ContactButton, ContactCard } from "@/components/ContactCard";
 import { FicheActions } from "@/components/FicheActions";
 import { GalleryTrigger, GalleryViewer } from "@/components/gallery/Gallery";
 import { SectionNav } from "@/components/SectionNav";
 import { VendorCard } from "@/components/VendorCard";
 import { VendorMapLazy } from "@/components/VendorMapLazy";
 import { getCategory, getVendor, priceLabel, vendors, vendorsIn } from "@/lib/content";
-import { availabilityFor, coordsFor, criteriaFor, faqFor, personFor, specsFor, teamFor } from "@/lib/vendorDetail";
+import { actionsFor, availabilityFor, coordsFor, criteriaFor, faqFor, personFor, specsFor, teamFor, themeOf } from "@/lib/vendorDetail";
 import styles from "./page.module.css";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -69,6 +69,7 @@ export default async function VendorPage({ params }: Params) {
   const person = personFor(v);
   const first = person.firstName;
   const team = teamFor(v, person);
+  const actions = actionsFor(v, first);
   const specs = specsFor(v);
   const calendar = availabilityFor(v);
   const criteria = criteriaFor(v);
@@ -77,9 +78,10 @@ export default async function VendorPage({ params }: Params) {
   const similar = vendorsIn(v.category).filter((x) => x.slug !== v.slug).slice(0, 4);
   const unit = priceLabel(v).includes("/") ? ` ${priceLabel(v).split(" ").slice(-2).join(" ")}` : "";
   // Toutes les photos du prestataire (prototype : sa galerie, complétée par la photothèque du métier).
-  const photos = [...v.gallery, ...vendorsIn(v.category).flatMap((x) => x.gallery)]
+  const photos = [...v.gallery, ...vendorsIn(v.category).flatMap((x) => x.gallery), ...vendors.flatMap((x) => x.gallery)]
     .filter((p, i, a) => a.indexOf(p) === i)
-    .map((src, i) => ({ src, alt: `${v.name} · photo ${i + 1}` }));
+    .slice(0, 12)
+    .map((src, i) => ({ src, alt: `${v.name} · photo ${i + 1}`, theme: themeOf(src) }));
   const portfolio = photos.slice(0, 5);
   const hidden = photos.length - portfolio.length;
 
@@ -179,9 +181,9 @@ export default async function VendorPage({ params }: Params) {
                         {p.price.toLocaleString("fr-FR")} €{unit}
                       </b>
                     </div>
-                    <a href="#contact" className={styles.choose}>
+                    <ContactButton kind="message" className={styles.choose}>
                       Choisir
-                    </a>
+                    </ContactButton>
                   </li>
                 ))}
               </ul>
@@ -239,11 +241,11 @@ export default async function VendorPage({ params }: Params) {
               </ul>
               <div id="rendez-vous" className={styles.visit}>
                 <span>
-                  <strong>Envie de vous rencontrer avant de décider ?</strong> Proposez un créneau, {first} le confirme ou en propose un autre.
+                  <strong>{actions.primary.kind === "message" ? "Envie de vous rencontrer avant de décider ?" : actions.primary.title + " ?"}</strong> Proposez un créneau, {first} le confirme ou en propose un autre.
                 </span>
-                <a href="#contact" className={styles.choose}>
-                  Proposer un rendez-vous
-                </a>
+                <ContactButton kind={actions.primary.kind === "message" ? "meeting" : actions.primary.kind} className={styles.choose}>
+                  {actions.primary.kind === "message" ? "Proposer un rendez-vous" : actions.primary.label}
+                </ContactButton>
               </div>
             </Section>
 
@@ -362,7 +364,7 @@ export default async function VendorPage({ params }: Params) {
           </div>
 
           <aside className={styles.aside}>
-            <ContactCard vendor={v} person={person} />
+            <ContactCard vendor={v} person={person} actions={actions} />
           </aside>
         </div>
 
