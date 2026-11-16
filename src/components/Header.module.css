@@ -65,6 +65,14 @@
   opacity: 0.65;
 }
 
+.links a[aria-current="page"] {
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--brand);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 8px;
+}
+
 .pill {
   position: absolute;
   left: 50%;

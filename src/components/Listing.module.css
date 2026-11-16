@@ -1,0 +1,143 @@
+.wrap {
+  padding-bottom: 96px;
+  scroll-margin-top: var(--header-h);
+}
+
+.panel {
+  margin-top: 20px;
+  padding: 24px;
+  display: grid;
+  gap: 20px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  animation: drop 0.3s var(--ease);
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.group {
+  display: grid;
+  gap: 10px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.check input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--brown);
+}
+
+.panelActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.reset {
+  border: 0;
+  background: none;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.reset:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 28px 0 24px;
+  flex-wrap: wrap;
+}
+
+.total {
+  font-weight: 600;
+}
+
+.activeFilters {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--sunken);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sort {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text2);
+}
+
+.sort select {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brown);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 64px 16px;
+  text-align: center;
+}
+
+.empty p {
+  margin: 0;
+}
+
+.empty button {
+  margin-top: 12px;
+}

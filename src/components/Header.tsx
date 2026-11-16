@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { MenuIcon, SearchIcon, UserIcon } from "./icons";
+import { AccountMenu } from "./AccountMenu";
+import { SearchIcon } from "./icons";
 import { Logo } from "./Logo";
 import { SearchDialog } from "./SearchDialog";
 import styles from "./Header.module.css";
@@ -12,9 +14,17 @@ type Props = {
   watchId?: string;
 };
 
+const nav = [
+  ["Découvrir", "/decouvrir"],
+  ["Inspirations", "/inspirations"],
+  ["Comment ça marche", "/comment-ca-marche"],
+] as const;
+
 // En-tête sur une seule ligne. Les métiers vivent avec le catalogue, là où ils filtrent quelque chose.
 export function Header({ watchId = "hero-search" }: Props) {
-  const [compact, setCompact] = useState(false);
+  const pathname = usePathname();
+  // Hors de l'accueil, pas de grande barre de recherche : la pilule est affichée d'emblée.
+  const [compact, setCompact] = useState(pathname !== "/");
   const [raised, setRaised] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -40,7 +50,7 @@ export function Header({ watchId = "hero-search" }: Props) {
     });
     io.observe(target);
     return () => io.disconnect();
-  }, [watchId]);
+  }, [watchId, pathname]);
 
   return (
     <>
@@ -52,9 +62,11 @@ export function Header({ watchId = "hero-search" }: Props) {
 
           <div className={`${styles.center} ${compact ? styles.isCompact : ""}`}>
             <nav className={styles.links} aria-label="Navigation principale" aria-hidden={compact} inert={compact}>
-              <Link href="/decouvrir">Découvrir</Link>
-              <Link href="/inspirations">Inspirations</Link>
-              <Link href="/comment-ca-marche">Comment ça marche</Link>
+              {nav.map(([label, href]) => (
+                <Link key={href} href={href} aria-current={pathname.startsWith(href) ? "page" : undefined}>
+                  {label}
+                </Link>
+              ))}
             </nav>
             <button
               type="button"
@@ -82,12 +94,7 @@ export function Header({ watchId = "hero-search" }: Props) {
             <Link href="/matchs" className={styles.cta}>
               Trouver mes matchs
             </Link>
-            <button type="button" className={styles.account} aria-label="Menu du compte">
-              <MenuIcon />
-              <span className={styles.avatar}>
-                <UserIcon />
-              </span>
-            </button>
+            <AccountMenu />
           </div>
         </div>
       </header>

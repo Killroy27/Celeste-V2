@@ -1,0 +1,85 @@
+.card {
+  position: sticky;
+  top: calc(var(--header-h) + 24px);
+  padding: 28px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--lift);
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+
+.price {
+  font-size: 15px;
+  color: var(--text2);
+}
+
+.price strong {
+  font-family: var(--font-display), serif;
+  font-size: 30px;
+  color: var(--brown);
+}
+
+.fields {
+  display: grid;
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.note {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  animation: pop 0.4s var(--ease);
+}
+
+.done p {
+  margin: 0 0 8px;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+.mobileBar {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .card {
+    position: static;
+    margin-top: 32px;
+  }
+
+  .mobileBar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom));
+    background: var(--card);
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+  }
+
+  .mobileBar strong {
+    font-size: 17px;
+  }
+}

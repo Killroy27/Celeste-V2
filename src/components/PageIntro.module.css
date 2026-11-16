@@ -1,0 +1,35 @@
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 40px;
+  padding-bottom: 32px;
+}
+
+.intro .lead {
+  max-width: 680px;
+}
+
+.center {
+  align-items: center;
+  text-align: center;
+  padding-top: 64px;
+}
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.crumbs > span {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.crumbs a:hover {
+  color: var(--brown);
+  text-decoration: underline;
+}

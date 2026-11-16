@@ -32,13 +32,16 @@
 
 .cat {
   flex: none;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 4px;
   padding: 0 2px;
-  border-bottom: 3px solid transparent;
   color: var(--text2);
   font-size: 13px;
   font-weight: 500;
@@ -82,6 +85,18 @@
   font-weight: 600;
   cursor: pointer;
   transition: border-color 0.2s;
+}
+
+.n {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--brown);
+  color: var(--card);
+  font-size: 11px;
+  line-height: 20px;
+  text-align: center;
 }
 
 .filters:hover {

@@ -1,0 +1,129 @@
+.themes {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 24px;
+  scrollbar-width: none;
+}
+
+.themes > * {
+  flex: none;
+}
+
+.board {
+  columns: 4 260px;
+  column-gap: 16px;
+  animation: in 0.4s var(--ease);
+}
+
+@keyframes in {
+  from {
+    opacity: 0;
+  }
+}
+
+.pin {
+  position: relative;
+  display: block;
+  margin-bottom: 16px;
+  border-radius: 18px;
+  overflow: hidden;
+  break-inside: avoid;
+  background: var(--sunken);
+}
+
+.pin img {
+  transition: transform 0.5s var(--ease);
+}
+
+.pin:hover img {
+  transform: scale(1.04);
+}
+
+.pinLabel,
+.pinCta {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 13px;
+  font-weight: 600;
+  transition: opacity 0.25s;
+}
+
+.pinCta {
+  opacity: 0;
+  background: var(--brand);
+}
+
+.pin:hover .pinCta,
+.pin:focus-visible .pinCta {
+  opacity: 1;
+}
+
+.pin:hover .pinLabel,
+.pin:focus-visible .pinLabel {
+  opacity: 0;
+}
+
+.carnet {
+  background: var(--card);
+}
+
+.articles {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px 28px;
+}
+
+.article {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scroll-margin-top: calc(var(--header-h) + 24px);
+}
+
+.article p {
+  margin: 0;
+  line-height: 23px;
+}
+
+.photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 8px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.soon {
+  font-size: 13px;
+  font-weight: 600;
+  color: #b07a1c;
+}
+
+@media (max-width: 1000px) {
+  .articles {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .board {
+    columns: 2;
+    column-gap: 10px;
+  }
+
+  .pin {
+    margin-bottom: 10px;
+    max-height: 260px;
+  }
+
+  .articles {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,96 @@
+.root {
+  position: relative;
+}
+
+.trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 6px 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.trigger:hover,
+.trigger[aria-expanded="true"] {
+  box-shadow: var(--shadow);
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--sunken);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--card);
+  border-radius: 999px;
+  background: var(--brand);
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  z-index: 70;
+  width: 240px;
+  padding: 8px 0;
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: var(--lift);
+  display: flex;
+  flex-direction: column;
+  animation: drop 0.2s var(--ease);
+}
+
+.menu a {
+  padding: 12px 18px;
+  font-size: 14px;
+}
+
+.menu a:hover {
+  background: var(--sunken);
+}
+
+.strong {
+  font-weight: 600;
+}
+
+.menu hr {
+  width: 100%;
+  margin: 8px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@media (max-width: 720px) {
+  .trigger {
+    padding: 0 4px;
+    gap: 0;
+  }
+
+  .trigger > svg {
+    display: none;
+  }
+}
