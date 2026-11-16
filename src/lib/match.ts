@@ -77,10 +77,10 @@ export const priorities = [
 ];
 
 export const mustOptions = [
-  { value: "date", label: "Notre date" },
-  { value: "zone", label: "Notre région" },
-  { value: "budget", label: "Notre budget" },
-  { value: "capacity", label: "Le nombre d'invités" },
+  { value: "date", label: "Notre date", sub: "Libre le jour J" },
+  { value: "zone", label: "Notre région", sub: "Se déplace jusqu'à nous" },
+  { value: "budget", label: "Notre budget", sub: "Reste dans notre enveloppe" },
+  { value: "capacity", label: "Le nombre d'invités", sub: "Accueille tout le monde" },
 ];
 
 /* ---------- Mini-tests par métier (§7.1 : 1 à 2 questions, cartes visuelles, un tap) ---------- */

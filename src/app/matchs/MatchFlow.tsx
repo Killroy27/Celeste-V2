@@ -290,33 +290,56 @@ export function MatchFlow() {
 
           {step.id === "priorities" && (
             <Question title="Ce qui compte le plus pour vous" hint="Choisissez jusqu'à 3 priorités, puis ce qui est vraiment indispensable.">
-              <div className={styles.chips}>
+              <div className={styles.prioGrid}>
                 {priorities.map((p) => {
-                  const on = dna.priorities.includes(p.value);
+                  const rank = dna.priorities.indexOf(p.value);
+                  const on = rank >= 0;
+                  const full = !on && dna.priorities.length >= 3;
+                  const icon = exploreCategories.find((c) => c.slug === p.value)?.icon;
                   return (
                     <button
                       key={p.value}
                       type="button"
-                      className="chip"
+                      className={styles.prio}
                       aria-pressed={on}
+                      data-full={full || undefined}
                       onClick={() =>
                         update((d) => ({
                           priorities: d.priorities.includes(p.value) ? d.priorities.filter((x) => x !== p.value) : d.priorities.length < 3 ? [...d.priorities, p.value] : d.priorities,
                         }))
                       }
                     >
-                      {p.label}
+                      {icon && <Image src={icon} alt="" width={40} height={40} className={styles.prioIcon} />}
+                      <span>{p.label}</span>
+                      <b className={styles.prioRank} aria-hidden>
+                        {on ? rank + 1 : ""}
+                      </b>
                     </button>
                   );
                 })}
               </div>
-              <p className={styles.subQ}>Non négociable :</p>
-              <div className={styles.chips}>
+              <p className={styles.prioCount}>{dna.priorities.length === 0 ? "Aucune priorité pour l'instant" : `${dna.priorities.length} sur 3 · dans l'ordre de vos clics`}</p>
+              <p className={styles.subQ}>Non négociable</p>
+              <div className={styles.musts}>
                 {mustOptions.map((m) => {
                   const on = dna.musts.includes(m.value);
                   return (
-                    <button key={m.value} type="button" className="chip" aria-pressed={on} onClick={() => update((d) => ({ musts: d.musts.includes(m.value) ? d.musts.filter((x) => x !== m.value) : [...d.musts, m.value] }))}>
-                      {m.label}
+                    <button
+                      key={m.value}
+                      type="button"
+                      role="switch"
+                      aria-checked={on}
+                      className={styles.must}
+                      onClick={() => update((d) => ({ musts: d.musts.includes(m.value) ? d.musts.filter((x) => x !== m.value) : [...d.musts, m.value] }))}
+                    >
+                      <span className={styles.mustIcon} aria-hidden>
+                        <MustIcon kind={m.value} />
+                      </span>
+                      <span className={styles.mustText}>
+                        <strong>{m.label}</strong>
+                        <small>{m.sub}</small>
+                      </span>
+                      <span className={styles.switch} aria-hidden />
                     </button>
                   );
                 })}
@@ -721,8 +744,17 @@ function Results({ dna, category, matches, onRefine, onCategory, onEditDna }: { 
           {exploreCategories
             .filter((c) => c.slug !== category)
             .map((c) => (
-              <button key={c.slug} type="button" className="chip" onClick={() => onCategory(c.slug)}>
-                {c.plural}
+              <button key={c.slug} type="button" className={styles.nextCat} onClick={() => onCategory(c.slug)}>
+                <span className={styles.nextPhoto}>
+                  <Image src={c.cover} alt="" fill sizes="72px" style={{ objectFit: "cover" }} />
+                </span>
+                <span className={styles.nextText}>
+                  <strong>{c.plural}</strong>
+                  <small>{(miniTests[c.slug]?.length ?? 1) > 1 ? "2 questions" : "1 question"}</small>
+                </span>
+                <svg className={styles.nextArrow} viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
               </button>
             ))}
         </div>
@@ -731,6 +763,37 @@ function Results({ dna, category, matches, onRefine, onCategory, onEditDna }: { 
         </p>
       </section>
     </div>
+  );
+}
+
+function MustIcon({ kind }: { kind: string }) {
+  const p = { fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  return (
+    <svg viewBox="0 0 24 24" width="20" height="20">
+      {kind === "date" && (
+        <g {...p}>
+          <rect x="3.5" y="5" width="17" height="15" rx="3" />
+          <path d="M3.5 10h17M8 3v4M16 3v4" />
+        </g>
+      )}
+      {kind === "zone" && (
+        <g {...p}>
+          <path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z" />
+          <circle cx="12" cy="9.5" r="2.5" />
+        </g>
+      )}
+      {kind === "budget" && (
+        <g {...p}>
+          <path d="M17 6.5A6.5 6.5 0 1 0 17 17.5M4 10.5h9M4 13.5h9" />
+        </g>
+      )}
+      {kind === "capacity" && (
+        <g {...p}>
+          <circle cx="9" cy="8" r="3.2" />
+          <path d="M3 19c.6-3.2 3-5 6-5s5.4 1.8 6 5M16 5.2a3 3 0 0 1 0 5.6M18 14.4c1.6.6 2.7 2.2 3 4.6" />
+        </g>
+      )}
+    </svg>
   );
 }
 
