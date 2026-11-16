@@ -1,4 +1,4 @@
-import { homeRows, reviewPool } from "@/lib/content";
+import { homeRows } from "@/lib/content";
 import { Carousel, Slide } from "../Carousel";
 import { VendorCard } from "../VendorCard";
 import styles from "./Rows.module.css";
@@ -29,30 +29,5 @@ export function VendorRows() {
         ))}
       </Carousel>
     </div>
-  );
-}
-
-export function ReviewRow() {
-  return (
-    <Carousel title="Avis des couples">
-      {reviewPool.map((r) => (
-        <Slide key={r.author + r.date}>
-          <figure className={styles.review}>
-            <div className={styles.stars} aria-label={`${r.rating} étoiles sur 5`}>
-              {"★".repeat(r.rating)}
-              <span>{"★".repeat(5 - r.rating)}</span>
-            </div>
-            <blockquote>{r.text}</blockquote>
-            <figcaption>
-              <span className={styles.avatar}>{r.author.charAt(0)}</span>
-              <span>
-                <strong>{r.author}</strong>
-                <small>Mariés en {r.date}</small>
-              </span>
-            </figcaption>
-          </figure>
-        </Slide>
-      ))}
-    </Carousel>
   );
 }

@@ -1,21 +1,17 @@
 import { Hero } from "@/components/Hero";
-import { ReviewRow, VendorRows } from "@/components/home/Rows";
-import { AppSoon, BestMatch, BrowseLinks, HowItWorks, ProBand, Stats } from "@/components/home/Sections";
+import { VendorRows } from "@/components/home/Rows";
+import { Duo, Reviews, WhyCeleste } from "@/components/home/Sections";
 
-// Ordre pensé pour l'action : chercher ou faire son Best Match en haut, parcourir le catalogue,
-// puis comprendre Céleste. Un seul fond, aucune bande : les sections se séparent par l'espace.
+// Chercher ou faire son Best Match en haut, parcourir le catalogue,
+// puis en trois temps : ce que fait Céleste, la preuve, les deux portes de sortie.
 export default function Home() {
   return (
     <>
       <Hero />
       <VendorRows />
-      <BestMatch />
-      <AppSoon />
-      <HowItWorks />
-      <ReviewRow />
-      <Stats />
-      <ProBand />
-      <BrowseLinks />
+      <WhyCeleste />
+      <Reviews />
+      <Duo />
     </>
   );
 }

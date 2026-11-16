@@ -31,6 +31,7 @@ export function Carousel({ title, href, children, label }: { title: string; href
 
   return (
     <section className={styles.row} aria-label={label ?? title}>
+      {title && (
       <div className={`container ${styles.head}`}>
         <h2 className={styles.title}>{title}</h2>
         {href && (
@@ -39,6 +40,7 @@ export function Carousel({ title, href, children, label }: { title: string; href
           </Link>
         )}
       </div>
+      )}
       <div className={styles.viewport}>
         <div ref={track} className={styles.track}>
           {children}
