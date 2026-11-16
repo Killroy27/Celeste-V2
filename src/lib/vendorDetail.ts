@@ -177,3 +177,46 @@ export function faqFor(v: Vendor, first: string): [string, string][] {
     ["Notre date peut-elle être bloquée ?", "Quand la discussion est avancée, la date peut être bloquée 48 heures, le temps de vous décider sereinement."],
   ];
 }
+
+// Coordonnées approximatives des zones d'activité (prototype, à remplacer par la localisation saisie par le prestataire).
+const places: Record<string, [number, number]> = {
+  "Paris 2e": [48.8686, 2.3417],
+  "Paris 3e": [48.8637, 2.3615],
+  "Paris 4e": [48.8543, 2.3576],
+  "Paris 5e": [48.8445, 2.3497],
+  "Paris 6e": [48.8491, 2.3329],
+  "Paris 7e": [48.8562, 2.3121],
+  "Paris 8e": [48.8727, 2.3125],
+  "Paris 9e": [48.8771, 2.3375],
+  "Paris 10e": [48.8761, 2.3608],
+  "Paris 11e": [48.8591, 2.3797],
+  "Paris 12e": [48.8396, 2.3958],
+  "Paris 13e": [48.8322, 2.3561],
+  "Paris 15e": [48.8421, 2.2928],
+  "Paris 16e": [48.8637, 2.2769],
+  "Paris 17e": [48.8873, 2.3067],
+  "Paris 18e": [48.8925, 2.3444],
+  "Paris 19e": [48.8871, 2.3848],
+  "Paris 20e": [48.8638, 2.4011],
+  Yvelines: [48.8049, 1.9800],
+  "Seine-et-Marne": [48.6150, 2.8900],
+  "Val-d'Oise": [49.0500, 2.1000],
+  Montreuil: [48.8611, 2.4436],
+  Versailles: [48.8049, 2.1204],
+  Boulogne: [48.8397, 2.2399],
+  "Saint-Denis": [48.9362, 2.3574],
+  Vincennes: [48.8474, 2.4392],
+  Neuilly: [48.8846, 2.2697],
+};
+
+export function coordsFor(v: Vendor): [number, number] {
+  return places[v.area] ?? [48.8566, 2.3522];
+}
+
+// Coéquipiers affichés avec la personne principale (prototype).
+const mates = ["Léo", "Maëlle", "Kofi", "Sarah", "Hugo", "Awa"];
+export function teamFor(v: Vendor, p: Person): { name: string; role: string }[] {
+  const size = p.team === "En solo" ? 1 : parseInt(p.team.replace(/\D/g, ""), 10) || 1;
+  const h = hash(v.slug);
+  return Array.from({ length: Math.min(size, 4) - 1 }, (_, i) => ({ name: mates[(h + i) % mates.length], role: "Équipe" }));
+}

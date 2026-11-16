@@ -6,8 +6,9 @@ import { Avatar, ContactCard } from "@/components/ContactCard";
 import { FicheActions } from "@/components/FicheActions";
 import { SectionNav } from "@/components/SectionNav";
 import { VendorCard } from "@/components/VendorCard";
+import { VendorMapLazy } from "@/components/VendorMapLazy";
 import { getCategory, getVendor, priceLabel, vendors, vendorsIn } from "@/lib/content";
-import { availabilityFor, criteriaFor, faqFor, personFor, specsFor } from "@/lib/vendorDetail";
+import { availabilityFor, coordsFor, criteriaFor, faqFor, personFor, specsFor, teamFor } from "@/lib/vendorDetail";
 import styles from "./page.module.css";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -23,76 +24,103 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return { title: `${v.name}, ${cat.singular} à ${v.city}`, description: v.description, openGraph: { images: [v.photo] } };
 }
 
-function Section({ id, eyebrow, title, children }: { id: string; eyebrow: string; title: string; children: React.ReactNode }) {
+/* Icônes au trait fin, comme Airbnb et Fresha (pas d'icônes 3D sur la fiche). */
+const ico = {
+  shield: "M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3zm-3 9l2 2 4-4",
+  chat: "M4 5h16v11H8l-4 4V5z",
+  card: "M3 6h18v12H3zM3 10h18",
+  calendar: "M4 6h16v14H4zM4 10h16M9 3v4M15 3v4",
+  undo: "M9 14L4 9l5-5M4 9h10a6 6 0 010 12h-3",
+  pin: "M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11zm0-8.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z",
+};
+
+function Ico({ d }: { d: string }) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d={d} />
+    </svg>
+  );
+}
+
+const pastel = ["#EDE7F6", "#E3F0E8", "#FDE8E4", "#E4EEF8", "#FBEFD8", "#F1E8E1"];
+const pastelInk = ["#5B3E96", "#2F6B47", "#A3473A", "#2F5D8A", "#8A5A0E", "#6B4A33"];
+
+function Section({ id, title, aside, children }: { id: string; title: string; aside?: React.ReactNode; children: React.ReactNode }) {
   return (
     <section id={id} className={styles.section} aria-labelledby={`${id}-t`}>
-      <p className={styles.eyebrow}>{eyebrow}</p>
-      <h2 id={`${id}-t`} className={styles.title}>
-        {title}
-      </h2>
+      <div className={styles.sectionHead}>
+        <h2 id={`${id}-t`} className={styles.title}>
+          {title}
+        </h2>
+        {aside}
+      </div>
       {children}
     </section>
   );
 }
 
-// Fiche prestataire : structure et ambiance du projet Céleste d'origine (en-tête net, Partager / Favori,
-// mosaïque, onglets collés, carte sobre), contenu du cahier des charges (§10.1, §10.2, §12, §14, §17, §24),
-// et la personne derrière la prestation au centre. Les échanges passent par Céleste (§22).
+// Fiche prestataire. Fond blanc neutre, couleur apportée par le contenu (photos, carte, avatars),
+// accent doré réservé à l'action principale. Contenu issu du cahier des charges (§10, §12, §14, §17, §22, §24).
 export default async function VendorPage({ params }: Params) {
   const v = getVendor((await params).slug);
   if (!v) notFound();
   const cat = getCategory(v.category)!;
   const person = personFor(v);
   const first = person.firstName;
+  const team = teamFor(v, person);
   const specs = specsFor(v);
   const calendar = availabilityFor(v);
   const criteria = criteriaFor(v);
   const faq = faqFor(v, first);
-  const similar = vendorsIn(v.category).filter((x) => x.slug !== v.slug).slice(0, 3);
+  const [lat, lng] = coordsFor(v);
+  const similar = vendorsIn(v.category).filter((x) => x.slug !== v.slug).slice(0, 4);
   const unit = priceLabel(v).includes("/") ? ` ${priceLabel(v).split(" ").slice(-2).join(" ")}` : "";
-
-  const steps = [
-    ["Vous écrivez à " + first, "Votre date, votre lieu, vos envies. Pas besoin de compte pour commencer."],
-    [first + " vous envoie une offre", "Formule, options et prix détaillés. Vous pouvez demander une adaptation."],
-    ["Vous signez en ligne", "Contrat électronique et 30 % d'acompte : votre date est réservée."],
-    ["Le jour J", "Le solde est réglé en une à trois fois, selon l'échéancier choisi."],
-  ];
+  const portfolio = [...v.gallery, ...vendorsIn(v.category).flatMap((x) => x.gallery)].filter((p, i, a) => a.indexOf(p) === i).slice(0, 5);
 
   return (
     <div className={styles.page}>
       <div className="container">
-        {/* En-tête */}
         <nav aria-label="Fil d'Ariane" className={styles.crumbs}>
           <Link href="/decouvrir">Découvrir</Link>
-          <span aria-hidden="true">/</span>
+          <span aria-hidden="true">›</span>
           <Link href={`/prestataires/${cat.slug}`}>{cat.plural}</Link>
-          <span aria-hidden="true">/</span>
+          <span aria-hidden="true">›</span>
           <span aria-current="page">{v.name}</span>
         </nav>
+
         <div className={styles.headRow}>
           <div>
-            <h1 className={styles.name}>{v.name}</h1>
-            <p className={styles.subtitle}>
-              {cat.plural} · {v.area} · avec {first} {person.lastName}
+            <h1 className={styles.name}>
+              {v.name}
+              {v.verified && (
+                <span className={styles.verified} title="Identité vérifiée">
+                  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="#EEB048" d="M12 2l2.4 1.8 3-.2 1 2.8 2.5 1.7-.8 2.9.8 2.9-2.5 1.7-1 2.8-3-.2L12 22l-2.4-1.8-3 .2-1-2.8-2.5-1.7.8-2.9-.8-2.9 2.5-1.7 1-2.8 3 .2z" />
+                    <path d="M8.5 12.2l2.3 2.3 4.7-4.8" fill="none" stroke="#39210C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              )}
+            </h1>
+            <p className={styles.meta}>
+              <strong>{v.rating}</strong>
+              <span className={styles.stars} aria-hidden="true">
+                ★★★★★
+              </span>
+              <a href="#avis">({v.reviewsCount})</a>
+              <span className={styles.sep}>·</span>
+              <span className={styles.open}>Répond en {v.responseTime}</span>
+              <span className={styles.sep}>·</span>
+              <span>
+                {cat.plural} · {v.area}
+              </span>
+              <a href="#lieu" className={styles.metaLink}>
+                Voir la zone
+              </a>
             </p>
           </div>
           <FicheActions slug={v.slug} name={v.name} />
         </div>
-        <p className={styles.meta}>
-          <strong>★ {v.rating}</strong>
-          <span className={styles.sep}>|</span>
-          <a href="#avis">{v.reviewsCount} avis</a>
-          <span className={styles.sep}>·</span>
-          <span>{v.area}</span>
-          {v.verified && (
-            <>
-              <span className={styles.sep}>·</span>
-              <span>Identité vérifiée</span>
-            </>
-          )}
-        </p>
 
-        {/* Mosaïque : une grande photo, deux petites */}
         <div className={styles.mosaic}>
           {v.gallery.slice(0, 3).map((src, i) => (
             <div key={src + i} className={styles.tile}>
@@ -104,7 +132,7 @@ export default async function VendorPage({ params }: Params) {
                 sizes={i === 0 ? "(max-width: 900px) 100vw, 800px" : "30vw"}
                 style={{ objectFit: "cover", objectPosition: i === 0 ? (v.pos ?? "50% 40%") : "50% 40%" }}
               />
-              {i === 2 && <span className={styles.seeAll}>Voir les photos</span>}
+              {i === 2 && <a href="#portfolio" className={styles.seeAll}>Afficher toutes les photos</a>}
             </div>
           ))}
         </div>
@@ -112,46 +140,68 @@ export default async function VendorPage({ params }: Params) {
         <SectionNav
           items={[
             { id: "prestations", label: "Prestations" },
-            { id: "details", label: "Détails" },
+            { id: "equipe", label: "Équipe" },
             { id: "disponibilites", label: "Disponibilités" },
-            { id: "rencontre", label: `${first}` },
-            { id: "deroule", label: "Déroulé" },
             { id: "avis", label: "Avis" },
-            { id: "questions", label: "Questions" },
+            { id: "portfolio", label: "Portfolio" },
+            { id: "lieu", label: "Zone" },
+            { id: "a-savoir", label: "À savoir" },
           ]}
         />
 
         <div className={styles.layout}>
           <div>
-            <Section id="prestations" eyebrow="Formules" title={`Les prestations de ${first}`}>
-              <div className={styles.packages}>
+            {/* Prestations : une liste, comme Fresha */}
+            <Section id="prestations" title="Prestations">
+              <ul className={styles.services}>
                 {v.packages.map((p, i) => (
-                  <div key={p.name} className={`${styles.pack} ${i === 1 ? styles.packStar : ""}`}>
-                    <div className={styles.packHead}>
-                      <strong>{p.name}</strong>
-                      {i === 1 && <span className={styles.packTag}>La plus choisie</span>}
+                  <li key={p.name}>
+                    <div>
+                      <strong>
+                        {p.name}
+                        {i === 1 && <span className={styles.popular}>La plus choisie</span>}
+                      </strong>
+                      <span>{p.includes.join(" · ")}</span>
+                      <b>
+                        {p.price.toLocaleString("fr-FR")} €{unit}
+                      </b>
                     </div>
-                    <span className={styles.packPrice}>
-                      {p.price.toLocaleString("fr-FR")} €{unit}
-                    </span>
-                    <ul>
-                      {p.includes.map((x) => (
-                        <li key={x}>{x}</li>
-                      ))}
-                    </ul>
-                  </div>
+                    <a href="#contact" className={styles.choose}>
+                      Choisir
+                    </a>
+                  </li>
                 ))}
-              </div>
+              </ul>
               <p className={styles.note}>
-                Rien ne vous correspond tout à fait ? Décrivez votre projet à {first} : une offre sur mesure est possible.{" "}
+                Une demande particulière ? {first} peut vous proposer une offre sur mesure.{" "}
                 <Link href="/matchs" className={styles.link}>
-                  Ou vérifiez votre compatibilité avec le Best Match
+                  Vérifier notre compatibilité avec le Best Match
                 </Link>
               </p>
             </Section>
 
-            {specs.length > 0 && (
-              <Section id="details" eyebrow={cat.plural} title="Le détail de la prestation">
+            {/* Équipe : la personne d'abord */}
+            <Section id="equipe" title="Équipe">
+              <ul className={styles.team}>
+                <li>
+                  <Avatar person={person} size={88} />
+                  <span className={styles.teamRating}>★ {v.rating}</span>
+                  <strong>{first}</strong>
+                  <small>{person.role}</small>
+                </li>
+                {team.map((m, i) => (
+                  <li key={m.name}>
+                    <span className={styles.mate} style={{ background: pastel[(i + 2) % pastel.length], color: pastelInk[(i + 2) % pastelInk.length] }}>
+                      {m.name[0]}
+                    </span>
+                    <strong>{m.name}</strong>
+                    <small>{m.role}</small>
+                  </li>
+                ))}
+              </ul>
+              <blockquote className={styles.quote}>« {person.bio} »</blockquote>
+              <p className={styles.text}>{v.description}</p>
+              {specs.length > 0 && (
                 <dl className={styles.specs}>
                   {specs.map(([k, val]) => (
                     <div key={k}>
@@ -160,90 +210,48 @@ export default async function VendorPage({ params }: Params) {
                     </div>
                   ))}
                 </dl>
-              </Section>
-            )}
+              )}
+            </Section>
 
-            <Section id="disponibilites" eyebrow="Calendrier" title="Disponibilités">
+            {/* Disponibilités */}
+            <Section id="disponibilites" title="Disponibilités">
               <ul className={styles.calendar}>
                 {calendar.map((c) => (
                   <li key={c.month} data-status={c.status}>
+                    <span className={styles.dot} />
                     <span className={styles.month}>{c.month}</span>
-                    <span className={styles.status}>
-                      <i aria-hidden="true" />
-                      {c.status}
-                    </span>
+                    <span className={styles.status}>{c.status}</span>
                   </li>
                 ))}
               </ul>
               <div id="rendez-vous" className={styles.visit}>
-                <p>
-                  <strong>Envie de vous rencontrer avant de décider ?</strong> Proposez un créneau : {first} le confirme ou vous propose une autre date.
-                </p>
-                <a href="#contact" className="btn btn-sm btn-outline">
+                <span>
+                  <strong>Envie de vous rencontrer avant de décider ?</strong> Proposez un créneau, {first} le confirme ou en propose un autre.
+                </span>
+                <a href="#contact" className={styles.choose}>
                   Proposer un rendez-vous
                 </a>
               </div>
             </Section>
 
-            <Section id="rencontre" eyebrow="La personne derrière la prestation" title={`Rencontrez ${first}`}>
-              <div className={styles.host}>
-                <div className={styles.hostCard}>
-                  <Avatar person={person} size={96} />
-                  <strong>
-                    {first} {person.lastName}
-                  </strong>
-                  <span>{person.role}</span>
-                  <dl>
-                    <div>
-                      <dt>Avis</dt>
-                      <dd>★ {v.rating}</dd>
-                    </div>
-                    <div>
-                      <dt>Depuis</dt>
-                      <dd>{person.since}</dd>
-                    </div>
-                    <div>
-                      <dt>Équipe</dt>
-                      <dd>{person.team}</dd>
-                    </div>
-                  </dl>
-                </div>
-                <div className={styles.hostText}>
-                  <blockquote>« {person.bio} »</blockquote>
-                  <p>{v.description}</p>
-                  <ul>
-                    <li>Langues : {person.languages}</li>
-                    <li>Répond en général en {v.responseTime}</li>
-                    {v.verified && <li>Identité et entreprise vérifiées par Céleste</li>}
-                  </ul>
-                  <a href="#contact" className={styles.link}>
-                    Écrire à {first}
-                  </a>
-                </div>
+            {/* Avis */}
+            <Section id="avis" title={`Avis`} aside={<span className={styles.count}>{v.reviewsCount}</span>}>
+              <div className={styles.score}>
+                <span className={styles.scoreValue}>{v.rating}</span>
+                <span className={styles.scoreStars} aria-hidden="true">
+                  ★★★★★
+                </span>
+                <span className={styles.scoreLabel}>Recommandé par les couples</span>
+                <small>Basé sur {v.reviewsCount} avis de couples ayant réservé</small>
               </div>
-            </Section>
-
-            <Section id="deroule" eyebrow="En quatre étapes" title="Comment ça se passe">
-              <ol className={styles.steps}>
-                {steps.map(([t, d], i) => (
-                  <li key={t}>
-                    <span className={styles.stepN}>{i + 1}</span>
-                    <strong>{t}</strong>
-                    <span>{d}</span>
-                  </li>
-                ))}
-              </ol>
-            </Section>
-
-            <Section id="avis" eyebrow="Ce qu'en disent les couples" title={`★ ${v.rating} · ${v.reviewsCount} avis`}>
               <ul className={styles.criteria}>
                 {criteria.map(([label, score]) => (
                   <li key={label}>
                     <span>{label}</span>
+                    <strong>{score.toLocaleString("fr-FR")}</strong>
                     <span className={styles.bar}>
                       <i style={{ width: `${(score / 5) * 100}%` }} />
                     </span>
-                    <strong>{score.toLocaleString("fr-FR")}</strong>
                   </li>
                 ))}
               </ul>
@@ -251,20 +259,82 @@ export default async function VendorPage({ params }: Params) {
                 {v.reviews.map((r, i) => (
                   <figure key={i} className={styles.review}>
                     <figcaption>
-                      <span className={styles.revAvatar}>{r.author.charAt(0)}</span>
+                      <span className={styles.revAvatar} style={{ background: pastel[i % pastel.length], color: pastelInk[i % pastelInk.length] }}>
+                        {r.author
+                          .split(" & ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </span>
                       <span>
                         <strong>{r.author}</strong>
-                        <small>Mariés en {r.date}</small>
+                        <span className={styles.revStars} aria-label={`${r.rating} étoiles sur 5`}>
+                          {"★".repeat(r.rating)}
+                        </span>
                       </span>
                     </figcaption>
                     <blockquote>{r.text}</blockquote>
+                    <small>Mariés en {r.date} · avec {first}</small>
                   </figure>
                 ))}
               </div>
-              <p className={styles.note}>Seuls les couples qui ont réservé sur Céleste peuvent laisser un avis.</p>
             </Section>
 
-            <Section id="questions" eyebrow="Réservation" title="Questions fréquentes">
+            {/* Portfolio */}
+            <Section id="portfolio" title="Portfolio" aside={<span className={styles.count}>{portfolio.length + 24}</span>}>
+              <div className={styles.portfolio}>
+                {portfolio.map((src, i) => (
+                  <div key={src} className={styles.pf}>
+                    <Image src={src} alt="" fill sizes="(max-width: 900px) 50vw, 260px" style={{ objectFit: "cover" }} />
+                    {i === portfolio.length - 1 && <span className={styles.more}>+24</span>}
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            {/* Zone : vraie carte en couleur */}
+            <Section id="lieu" title={`Où travaille ${first}`}>
+              <div className={styles.map}>
+                <VendorMapLazy lat={lat} lng={lng} label={`★ ${v.rating}`} />
+              </div>
+              <p className={styles.address}>
+                {v.area}, Île-de-France · se déplace dans un rayon d&apos;environ 25 km, et au-delà sur demande.
+              </p>
+            </Section>
+
+            {/* À savoir */}
+            <Section id="a-savoir" title="À savoir">
+              <div className={styles.infos}>
+                <div>
+                  <Ico d={ico.shield} />
+                  <strong>{v.verified ? "Prestataire vérifié" : "Vérification en cours"}</strong>
+                  <span>Entreprise et identité contrôlées par Céleste.</span>
+                </div>
+                <div>
+                  <Ico d={ico.chat} />
+                  <strong>Échanges sur Céleste</strong>
+                  <span>Messages, offres et contrat restent au même endroit.</span>
+                </div>
+                <div>
+                  <Ico d={ico.card} />
+                  <strong>Paiement en ligne</strong>
+                  <span>30 % d&apos;acompte, puis le solde en une à trois fois.</span>
+                </div>
+                <div>
+                  <Ico d={ico.undo} />
+                  <strong>Annulation</strong>
+                  <span>Intégralement remboursée plus de 30 jours avant. Conditions affichées avant de réserver.</span>
+                </div>
+                <div>
+                  <Ico d={ico.calendar} />
+                  <strong>Date bloquée 48 h</strong>
+                  <span>Quand la discussion avance, le temps de décider sereinement.</span>
+                </div>
+                <div>
+                  <Ico d={ico.pin} />
+                  <strong>Déplacements</strong>
+                  <span>Frais éventuels précisés dans l&apos;offre.</span>
+                </div>
+              </div>
               <div className={styles.faq}>
                 {faq.map(([q, a]) => (
                   <details key={q} className={styles.qa}>
@@ -272,14 +342,6 @@ export default async function VendorPage({ params }: Params) {
                     <p>{a}</p>
                   </details>
                 ))}
-                <details className={styles.qa}>
-                  <summary>Que se passe-t-il en cas d&apos;annulation ?</summary>
-                  <p>Plus de 30 jours avant l&apos;événement : remboursement intégral. Entre 30 et 7 jours : 50 %. Les conditions sont affichées avant de réserver.</p>
-                </details>
-                <details className={styles.qa}>
-                  <summary>Où intervient {first} ?</summary>
-                  <p>Basé à {v.area}, se déplace dans toute l&apos;Île-de-France. Frais de déplacement éventuels précisés dans l&apos;offre.</p>
-                </details>
               </div>
             </Section>
           </div>
@@ -291,13 +353,12 @@ export default async function VendorPage({ params }: Params) {
 
         {similar.length > 0 && (
           <section className={styles.similar} aria-labelledby="similaires">
-            <p className={styles.eyebrow}>Dans le même métier</p>
             <h2 id="similaires" className={styles.title}>
-              D&apos;autres {cat.plural.toLowerCase()} à découvrir
+              {cat.plural} à proximité
             </h2>
             <div className={styles.similarGrid}>
               {similar.map((s) => (
-                <VendorCard key={s.slug} vendor={s} />
+                <VendorCard key={s.slug} vendor={s} landscape />
               ))}
             </div>
           </section>

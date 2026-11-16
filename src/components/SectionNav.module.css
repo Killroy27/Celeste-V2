@@ -3,8 +3,8 @@
   top: var(--header-h);
   z-index: 30;
   margin-top: 28px;
-  background: var(--cream);
-  border-bottom: 1px solid var(--line);
+  background: #fff;
+  border-bottom: 1px solid #ece7e1;
 }
 
 .inner {
