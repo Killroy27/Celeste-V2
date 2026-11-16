@@ -1,83 +1,287 @@
+/* Pied de page : même univers crème et Bodoni, plus d'air, une vraie signature. */
 .footer {
+  position: relative;
+  overflow: hidden;
   background: var(--sunken);
   border-top: 1px solid var(--line);
-  padding: 64px 0 32px;
-  font-size: 14px;
+  padding-top: 88px;
 }
 
-.top {
+/* ---------- Marque et contact ---------- */
+
+.lead {
   display: grid;
-  grid-template-columns: 1.4fr repeat(3, 1fr);
-  gap: 40px;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 64px;
+  align-items: end;
+  padding-bottom: 56px;
+  border-bottom: 1px solid var(--line);
 }
 
-.brand p {
-  max-width: 300px;
-  margin: 16px 0 0;
-  line-height: 22px;
-  color: var(--text2);
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
 }
 
-.group h2 {
-  margin: 0 0 14px;
-  font-size: 14px;
+.logo {
+  transform: scale(1.25);
+  transform-origin: left center;
+}
+
+.tagline {
+  margin: 0;
+  max-width: 460px;
+  font-family: var(--font-display), Didot, serif;
+  font-size: 22px;
+  line-height: 1.4;
+}
+
+.socials {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.socials a {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--brown);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.socials a:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+
+.contact {
+  justify-self: end;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 28px;
+  border-radius: 24px;
+  background: var(--card);
+  border: 1px solid var(--line);
+}
+
+.contactTitle {
+  font-size: 18px;
   font-weight: 700;
 }
 
-.group ul {
+.contact p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--text2);
+}
+
+.contactBtn {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  height: 46px;
+  padding: 0 22px;
+  border: 1.5px solid var(--brand);
+  border-radius: 999px;
+  background: #fffaf0;
+  font-size: 15px;
+  font-weight: 700;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.contactBtn:hover {
+  background: #fff3db;
+  transform: translateY(-1px);
+}
+
+/* ---------- Navigation ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) 1.6fr 1fr;
+  gap: 40px;
+  padding: 56px 0;
+}
+
+.col h2 {
+  margin: 0 0 18px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.col ul {
   margin: 0;
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
-.group a,
-.cats a {
-  color: var(--text2);
+.col a {
+  font-size: 15px;
+  color: rgba(57, 33, 12, 0.78);
   transition: color 0.2s;
 }
 
-.group a:hover,
-.cats a:hover {
+.col a:hover {
+  color: var(--brown);
+  text-decoration: underline;
+  text-decoration-color: var(--brand);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+/* Les neuf métiers sur deux colonnes pour garder une hauteur égale. */
+.cats ul {
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+}
+
+.appText {
+  margin: 0 0 14px;
+  font-size: 15px;
+  color: rgba(57, 33, 12, 0.78);
+}
+
+.stores {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+
+.store {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ---------- Barre légale ---------- */
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 32px;
+  flex-wrap: wrap;
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--text2);
+}
+
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+.legal a:hover {
   color: var(--brown);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.cats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 22px;
-  margin-top: 44px;
-  padding-top: 24px;
-  border-top: 1px solid var(--line);
+.locale {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  font-size: 13px;
 }
 
-.bottom {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 24px;
-  color: var(--text2);
+/* ---------- Signature ---------- */
+
+.signature {
+  margin-top: 8px;
+  margin-bottom: -0.2em;
+  font-family: var(--font-display), Didot, serif;
+  font-size: clamp(96px, 21vw, 340px);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: rgba(57, 33, 12, 0.06);
+  user-select: none;
+  pointer-events: none;
+  white-space: nowrap;
 }
 
-@media (max-width: 900px) {
-  .top {
-    grid-template-columns: 1fr 1fr;
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 
-  .brand {
-    grid-column: 1 / -1;
+  .cats {
+    grid-column: span 2;
   }
 }
 
-@media (max-width: 520px) {
-  .top {
+@media (max-width: 860px) {
+  .lead {
     grid-template-columns: 1fr;
+    gap: 36px;
+    align-items: start;
   }
 
-  .bottom {
+  .contact {
+    justify-self: start;
+    max-width: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer {
+    padding-top: 64px;
+  }
+
+  .logo {
+    transform: none;
+  }
+
+  .tagline {
+    font-size: 19px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px 20px;
+    padding: 44px 0;
+  }
+
+  .cats {
+    grid-column: span 2;
+  }
+
+  .bar {
     flex-direction: column;
+    align-items: flex-start;
   }
 }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { faq } from "@/lib/content";
 import { Carousel, Slide } from "../Carousel";
 import { Reveal } from "../Reveal";
+import { AppleLogo, GooglePlayLogo } from "../StoreBadges";
 import { NotifyForm } from "./NotifyForm";
 import styles from "./Sections.module.css";
 
@@ -201,28 +202,6 @@ export function Proof() {
 
 /* ---------- 4. La version mobile arrive bientôt ---------- */
 
-function AppleLogo() {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        fill="#000000"
-        d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.7-1-2.7-4.1zM13.9 4.9c.7-.9 1.2-2 1-3.2-1 0-2.3.7-3 1.6-.7.8-1.2 2-1.1 3.1 1.2.1 2.3-.6 3.1-1.5z"
-      />
-    </svg>
-  );
-}
-
-function GooglePlayLogo() {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
-      <path fill="#4285F4" d="M3.6 1.6c-.3.3-.4.7-.4 1.2v18.4c0 .5.1.9.4 1.2l.1.1L13.9 12v-.2L3.7 1.5l-.1.1z" />
-      <path fill="#FBBC04" d="M17.3 15.4 13.9 12v-.2l3.4-3.4.1.1 4 2.3c1.2.7 1.2 1.7 0 2.4l-4 2.3-.1-.1z" />
-      <path fill="#EA4335" d="M17.4 15.3 13.9 11.9 3.6 22.4c.4.4 1 .4 1.7 0l12.1-7.1" />
-      <path fill="#34A853" d="M17.4 8.5 5.3 1.6c-.7-.4-1.3-.4-1.7 0l10.3 10.3 3.5-3.4z" />
-    </svg>
-  );
-}
-
 export function AppSoon() {
   return (
     <section className={styles.block} aria-labelledby="app">
@@ -307,11 +286,12 @@ export function AppSoon() {
 
 // Ailleurs : un abonnement annuel, sans aucun client garanti.
 // Sur Céleste : rien à payer pour être présent, une commission seulement quand un couple signe (CDC §1.3).
+// Psychologie de vente : on ne répète pas le mot « payer ». Un seul « 0 € », bien placé.
 const proReasons = [
-  ["Aucun abonnement", "Votre profil et les demandes des couples : 0 €, toute l'année."],
-  ["Vous payez seulement quand vous signez", "Pas de réservation, pas de commission."],
+  ["0 € d'abonnement", "Votre profil et les demandes des couples sont offerts, toute l'année."],
   ["Des couples qui vous correspondent", "Date, zone, budget et style connus avant de répondre."],
-  ["Vous êtes payé sereinement", "Contrat signé et acompte encaissés en ligne, avant le jour J."],
+  ["Vos tarifs restent les vôtres", "Adaptez votre formule au budget du couple, sans brader votre travail."],
+  ["Des réservations sécurisées", "Contrat signé et acompte encaissés en ligne, avant le jour J."],
 ];
 
 export function ProBand() {
@@ -321,10 +301,10 @@ export function ProBand() {
         <Reveal className={styles.copy}>
           <span className={styles.kicker}>Lieux et prestataires du mariage</span>
           <h2 id="pros" className={styles.big}>
-            Payez quand un couple vous choisit. Pas avant.
+            Vous gagnez d&apos;abord. Nous ensuite.
           </h2>
           <p className={styles.say}>
-            Ailleurs, vous payez un abonnement à l&apos;année, sans aucun client garanti. Sur Céleste, nous gagnons seulement quand vous gagnez.
+            Ailleurs, un abonnement à l&apos;année et aucun client garanti. Ici, votre profil est offert : Céleste avance seulement quand un couple vous choisit.
           </p>
           <ul className={styles.proReasons}>
             {proReasons.map(([t, d]) => (
@@ -335,7 +315,7 @@ export function ProBand() {
             ))}
           </ul>
           <Link href="/devenir-prestataire" className="btn">
-            Créer mon profil gratuitement
+            Recevoir mes premières demandes
           </Link>
         </Reveal>
         <Reveal className={styles.proPhoto}>
