@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { MatchQuiz } from "./MatchQuiz";
+import { MatchFlow } from "./MatchFlow";
 
 export const metadata: Metadata = {
   title: "Trouver mon Best Match",
-  description: "Quatre questions pour découvrir les prestataires de mariage qui vous ressemblent.",
+  description: "Votre Wedding DNA en quelques images, puis les prestataires qui vous ressemblent, avec un score expliqué.",
 };
 
 export default function MatchsPage() {
-  return (
-    <Suspense>
-      <MatchQuiz />
-    </Suspense>
-  );
+  return <MatchFlow />;
 }

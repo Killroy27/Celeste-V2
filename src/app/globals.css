@@ -321,3 +321,9 @@ img {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Parcours plein écran (Best Match, espaces connectés) : ils remplacent l'en-tête et le pied de page du site. */
+body:has([data-espace]) [data-site-header],
+body:has([data-espace]) > footer {
+  display: none;
+}
