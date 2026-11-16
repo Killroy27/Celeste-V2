@@ -60,9 +60,9 @@ export function QuoteCard({ vendor: v }: { vendor: Vendor }) {
               </label>
             </div>
             <button type="submit" className="btn btn-block">
-              Demander un devis gratuit
+              Demander un devis
             </button>
-            <p className={styles.note}>Gratuit et sans engagement · Réponse en {v.responseTime}</p>
+            <p className={styles.note}>Sans engagement · Répond en général en {v.responseTime}</p>
           </form>
         )}
       </div>

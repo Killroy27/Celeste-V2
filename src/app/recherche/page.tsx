@@ -25,7 +25,7 @@ export default async function SearchPage({ searchParams }: Props) {
         }
         lead={
           results.length
-            ? `${results.length} prestataire${results.length > 1 ? "s" : ""} disponible${results.length > 1 ? "s" : ""}. Demandez vos devis gratuitement, réponse sous 48 h.`
+            ? `${results.length} prestataire${results.length > 1 ? "s" : ""} disponible${results.length > 1 ? "s" : ""}. Comparez leurs offres et demandez un devis sans engagement.`
             : undefined
         }
       />

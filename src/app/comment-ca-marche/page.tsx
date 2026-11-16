@@ -13,15 +13,15 @@ export const metadata: Metadata = {
 const detailed = [
   { icon: "/icons/moodboard.png", n: "1", title: "Inspirez-vous et enregistrez", text: "Parcourez les inspirations et les fiches prestataires. Un ♡ suffit pour garder un coup de cœur, retrouvé dans votre espace.", photo: "/photos/florist.jpg" },
   { icon: "/icons/match-puzzle.png", n: "2", title: "Faites votre Best Match", text: "Pas sûrs de ce que vous voulez ? Le test en quatre questions vous propose les prestataires qui correspondent à votre style et à votre budget.", photo: "/photos/field.jpg" },
-  { icon: "/icons/chat-bubbles.png", n: "3", title: "Demandez et comparez les devis", text: "Une demande, plusieurs devis détaillés sous 48 h. Formules, options et prix sont présentés côte à côte, sans jargon.", photo: "/photos/chef.jpg" },
-  { icon: "/icons/contract-pen.png", n: "4", title: "Réservez et payez en sécurité", text: "Contrat signé en ligne, acompte protégé sur un compte séquestré et paiement en plusieurs fois sans frais.", photo: "/photos/rings.jpg" },
+  { icon: "/icons/chat-bubbles.png", n: "3", title: "Demandez et comparez les devis", text: "Une demande, des offres détaillées présentées côte à côte. Et si le budget coince, le prestataire peut adapter sa formule.", photo: "/photos/chef.jpg" },
+  { icon: "/icons/contract-pen.png", n: "4", title: "Réservez et payez en sécurité", text: "Contrat signé en ligne, puis 30 % d'acompte et le solde en une à trois échéances, directement sur Céleste.", photo: "/photos/rings.jpg" },
 ];
 
 const guarantees = [
-  { icon: "/icons/verified-seal.png", title: "Prestataires vérifiés", text: "SIRET, assurance et références contrôlés avant publication." },
-  { icon: "/icons/shield-lock.png", title: "Acompte protégé", text: "Versé au prestataire selon l'échéancier signé, jamais avant." },
+  { icon: "/icons/verified-seal.png", title: "Prestataires vérifiés", text: "Entreprise et identité professionnelle contrôlées avant le badge Vérifié." },
+  { icon: "/icons/match-puzzle.png", title: "Un Best Match honnête", text: "Aucun prestataire ne peut payer pour améliorer son score de compatibilité." },
   { icon: "/icons/five-stars.png", title: "Avis authentiques", text: "Seuls les couples ayant réservé via Céleste peuvent laisser un avis." },
-  { icon: "/icons/euro-coins.png", title: "Gratuit pour les mariés", text: "Aucun frais de service, aucune commission cachée sur vos devis." },
+  { icon: "/icons/euro-coins.png", title: "Des prix transparents", text: "Le prix, les éventuels frais et le total sont affichés avant de payer." },
 ];
 
 export default function HowPage() {
@@ -50,7 +50,7 @@ export default function HowPage() {
       <section className="section" aria-labelledby="garanties">
         <div className="container">
           <h2 id="garanties" className="display h2" style={{ textAlign: "center" }}>
-            Nos garanties
+            Nos engagements
           </h2>
           <div className={styles.guarantees}>
             {guarantees.map((g) => (

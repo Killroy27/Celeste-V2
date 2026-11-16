@@ -4,15 +4,15 @@ import Link from "next/link";
 import { PageIntro } from "@/components/PageIntro";
 import { SimpleForm } from "@/components/SimpleForm";
 
-export const metadata: Metadata = { title: "Contact", description: "Une question sur Céleste ? Écrivez-nous, nous répondons sous 24 h ouvrées." };
+export const metadata: Metadata = { title: "Contact", description: "Une question sur Céleste ? Écrivez-nous, notre équipe vous répond par e-mail." };
 
 export default function ContactPage() {
   return (
     <>
-      <PageIntro crumbs={[["Contact"]]} title="Une question ? Écrivez-nous" lead="Notre équipe répond sous 24 h ouvrées, du lundi au samedi." />
+      <PageIntro crumbs={[["Contact"]]} title="Une question ? Écrivez-nous" lead="Notre équipe vous répond par e-mail, dans les meilleurs délais." />
       <div className="container" style={{ paddingBottom: 96, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 40, alignItems: "start" }}>
         <div className="card-surface" style={{ padding: 28 }}>
-          <SimpleForm submit="Envoyer mon message" doneTitle="Message envoyé" doneText="Merci ! Nous vous répondons par e-mail sous 24 h ouvrées.">
+          <SimpleForm submit="Envoyer mon message" doneTitle="Message envoyé" doneText="Merci ! Nous vous répondons par e-mail très vite.">
             <label className="field">
               Vous êtes
               <select name="profil" defaultValue="couple">

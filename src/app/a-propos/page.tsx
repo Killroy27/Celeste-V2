@@ -7,7 +7,7 @@ import { stats } from "@/lib/content";
 export const metadata: Metadata = { title: "À propos", description: "Céleste, la Maison des Célébrations : notre mission et nos engagements." };
 
 const values = [
-  { icon: "/icons/favorite-heart.png", title: "Le couple d'abord", text: "Gratuit pour les mariés, sans publicité intrusive ni revente de données." },
+  { icon: "/icons/favorite-heart.png", title: "Le couple d'abord", text: "Des prix affichés avant de payer, et un Best Match qu'aucun prestataire ne peut acheter." },
   { icon: "/icons/verified-seal.png", title: "La confiance", text: "Chaque prestataire est vérifié, chaque avis vient d'un couple qui a réservé." },
   { icon: "/icons/kente-cloth.png", title: "Toutes les cultures", text: "Des prestataires qui savent célébrer toutes les traditions, et les marier entre elles." },
 ];

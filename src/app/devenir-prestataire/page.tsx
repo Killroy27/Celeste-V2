@@ -1,25 +1,25 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { SimpleForm } from "@/components/SimpleForm";
-import { categories, proPlans } from "@/lib/content";
+import { categories, proPricing } from "@/lib/content";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "Devenir prestataire",
-  description: "Recevez des demandes de couples qualifiées, gérez devis, contrats et acomptes au même endroit.",
+  description: "Recevez des couples compatibles avec votre offre. Créer votre profil ne coûte rien : Céleste se rémunère sur les réservations signées.",
 };
 
 const benefits = [
-  { icon: "/icons/notification-bell.png", title: "Des demandes qualifiées", text: "Date, budget, nombre d'invités et style connus avant même de répondre." },
-  { icon: "/icons/contract-pen.png", title: "Devis et contrats en ligne", text: "Modèles prêts à l'emploi, signature électronique, relances automatiques." },
-  { icon: "/icons/shield-lock.png", title: "Acomptes sécurisés", text: "Paiements encaissés par Céleste et reversés selon votre échéancier." },
-  { icon: "/icons/bar-chart.png", title: "Statistiques claires", text: "Vues, demandes, taux de conversion : sachez ce qui fonctionne." },
+  { icon: "/icons/notification-bell.png", title: "Des demandes qualifiées", text: "Date, zone, budget et style du couple connus avant de répondre. Et seuls quelques prestataires compatibles peuvent répondre." },
+  { icon: "/icons/chat-bubbles.png", title: "Vendez sans brader", text: "Le couple a un budget serré ? Adaptez votre formule, la durée ou les options, plutôt que de baisser votre prix." },
+  { icon: "/icons/contract-pen.png", title: "Contrats et paiements intégrés", text: "Offre acceptée, contrat signé en ligne, acompte et échéances encaissés sur Céleste." },
+  { icon: "/icons/calendar.png", title: "Vos disponibilités sous contrôle", text: "Un calendrier sur 24 mois, et votre capacité réelle : une ou plusieurs équipes le même jour." },
 ];
 
 const proSteps = [
-  ["Créez votre fiche", "Photos, formules, zone d'intervention : 15 minutes suffisent."],
-  ["Faites-vous vérifier", "SIRET et assurance contrôlés sous 48 h, badge « Vérifié » à la clé."],
-  ["Recevez vos premières demandes", "Répondez depuis votre espace ou votre téléphone, où que vous soyez."],
+  ["Créez votre profil", "Photos, formules, options, zone d'intervention et disponibilités. Une seule saisie, réutilisée partout."],
+  ["Faites-vous vérifier", "Justificatif professionnel et identité contrôlés : le badge « Vérifié » rassure les couples."],
+  ["Répondez aux opportunités", "Proposez une offre structurée, négociez dans la messagerie, signez et encaissez sur Céleste."],
 ];
 
 export default function ProPage() {
@@ -30,13 +30,13 @@ export default function ProPage() {
           <div className={styles.heroText}>
             <span className="eyebrow">Espace prestataires</span>
             <h1 className="display h1">Faites grandir votre activité avec Céleste</h1>
-            <p className="lead">Rejoignez 2 400 prestataires vérifiés et recevez des demandes de couples qui vous ressemblent, sans commission sur vos prestations.</p>
+            <p className="lead">Céleste ne vend pas de contacts : la plateforme vous présente des couples compatibles avec votre offre et ne gagne que lorsque vous signez une réservation.</p>
             <div className={styles.heroCtas}>
               <a href="#inscription" className="btn">
-                Créer ma fiche gratuitement
+                Créer mon profil
               </a>
               <a href="#tarifs" className="link-underline">
-                Voir les tarifs
+                Comment Céleste se rémunère
               </a>
             </div>
           </div>
@@ -56,7 +56,7 @@ export default function ProPage() {
       <section className="section" aria-labelledby="avantages">
         <div className="container">
           <h2 id="avantages" className="display h2" style={{ textAlign: "center" }}>
-            Tout ce qu&apos;il faut pour vendre, au même endroit
+            De la demande à l&apos;encaissement, au même endroit
           </h2>
           <div className={styles.benefits}>
             {benefits.map((b) => (
@@ -75,7 +75,7 @@ export default function ProPage() {
           <div>
             <span className="eyebrow">En trois étapes</span>
             <h2 id="etapes-pro" className="display h2" style={{ marginTop: 10 }}>
-              En ligne dès cette semaine
+              Trois étapes pour vos premières réservations
             </h2>
           </div>
           <ol className={styles.proSteps}>
@@ -95,29 +95,28 @@ export default function ProPage() {
       <section id="tarifs" className="section" aria-labelledby="tarifs-title">
         <div className="container">
           <h2 id="tarifs-title" className="display h2" style={{ textAlign: "center" }}>
-            Des tarifs simples, sans commission
+            Vous gagnez d&apos;abord. Céleste ensuite.
           </h2>
           <p className="lead" style={{ textAlign: "center", marginTop: 12 }}>
-            Sans engagement, résiliable à tout moment.
+            Pas d&apos;achat de contacts, pas de visibilité à acheter pour mieux apparaître dans le Best Match.
           </p>
           <div className={styles.plans}>
-            {proPlans.map((p) => (
-              <div key={p.name} className={`${styles.plan} ${p.highlight ? styles.planStar : ""}`}>
-                {p.highlight && <span className={styles.planTag}>Le plus choisi</span>}
-                <h3 className="h3">{p.name}</h3>
+            {proPricing.map((p, i) => (
+              <div key={p.title} className={`${styles.plan} ${i === 2 ? styles.planStar : ""}`}>
                 <div className={styles.planPrice}>
-                  <strong>{p.price}</strong> <span>{p.period}</span>
+                  <strong>{p.value}</strong>
                 </div>
-                <ul>
-                  {p.features.map((f) => (
-                    <li key={f}>{f}</li>
-                  ))}
-                </ul>
-                <a href="#inscription" className={`btn btn-block ${p.highlight ? "" : "btn-outline"}`}>
-                  {p.cta}
-                </a>
+                <h3 className="h3">{p.title}</h3>
+                <p className="muted" style={{ margin: 0, lineHeight: "24px" }}>
+                  {p.text}
+                </p>
               </div>
             ))}
+          </div>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 40 }}>
+            <a href="#inscription" className="btn">
+              Créer mon profil
+            </a>
           </div>
         </div>
       </section>
@@ -130,7 +129,7 @@ export default function ProPage() {
               Créez votre fiche
             </h2>
             <p className="lead" style={{ marginTop: 12 }}>
-              Laissez-nous vos coordonnées : un membre de l&apos;équipe vous rappelle sous 24 h pour mettre votre fiche en ligne avec vous.
+              Laissez-nous vos coordonnées : un membre de l&apos;équipe vous recontacte pour mettre votre profil en ligne avec vous.
             </p>
             <figure className={styles.quote}>
               <blockquote>« Depuis Céleste, je n&apos;ai plus de demandes à côté de mon style. Les couples arrivent avec un projet clair. »</blockquote>
@@ -138,7 +137,7 @@ export default function ProPage() {
             </figure>
           </div>
           <div className="card-surface" style={{ padding: 28 }}>
-            <SimpleForm submit="Envoyer ma demande" doneTitle="Merci, c'est noté !" doneText="Nous vous rappelons sous 24 h pour créer votre fiche ensemble.">
+            <SimpleForm submit="Envoyer ma demande" doneTitle="Merci, c'est noté !" doneText="Nous vous recontactons très vite pour créer votre profil ensemble.">
               <div className={styles.row2}>
                 <label className="field">
                   Prénom et nom

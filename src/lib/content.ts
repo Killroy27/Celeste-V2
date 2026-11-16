@@ -165,7 +165,7 @@ const packageTemplates: Record<string, [string, number, string[]][]> = {
 const responseTimes = ["moins de 2 h", "moins de 6 h", "moins de 12 h", "moins de 24 h"];
 
 function describe(name: string, cat: Category, style: string, area: string) {
-  return `${name} accompagne les couples ${area.startsWith("Paris") ? "à Paris et en Île-de-France" : `dans le secteur ${area} et partout en Île-de-France`}. Style ${style.toLowerCase()}, écoute attentive et devis détaillé sous 48 h : ${cat.intro.charAt(0).toLowerCase()}${cat.intro.slice(1)}`;
+  return `${name} accompagne les couples ${area.startsWith("Paris") ? "à Paris et en Île-de-France" : `dans le secteur ${area} et partout en Île-de-France`}. Style ${style.toLowerCase()}, écoute attentive et offres détaillées : ${cat.intro.charAt(0).toLowerCase()}${cat.intro.slice(1)}`;
 }
 
 const photosByCategory: Record<string, string[]> = {
@@ -213,11 +213,60 @@ export const vendorsIn = (cat: string) => vendors.filter((v) => v.category === c
 export const featuredVendors = vendorsIn("photographes");
 
 const rate = (v: Vendor) => parseFloat(v.rating.replace(",", "."));
-export const homeRows = {
-  recommended: [...vendors].sort((a, b) => rate(b) - rate(a) || b.reviewsCount - a.reviewsCount).filter((v, i, arr) => arr.findIndex((x) => x.category === v.category) === i),
-  newcomers: [...vendors].sort((a, b) => a.reviewsCount - b.reviewsCount).slice(0, 8),
-  trending: [...vendors].filter((v) => ["lieux", "traiteurs", "dj", "decoration"].includes(v.category)).sort((a, b) => b.reviewsCount - a.reviewsCount).slice(0, 8),
-};
+
+/**
+ * Classement des catégories pour l'accueil. Prototype : volume d'avis × note moyenne.
+ * L'algorithme définitif sera conçu par Céleste (réservations, conversion, saisonnalité…).
+ */
+export function rankCategories() {
+  return categories
+    .map((c) => {
+      const list = vendorsIn(c.slug);
+      const reviews = list.reduce((t, v) => t + v.reviewsCount, 0);
+      const avg = list.reduce((t, v) => t + rate(v), 0) / (list.length || 1);
+      return { category: c, score: reviews * avg };
+    })
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map((x) => x.category);
+}
+
+/** Pioche à tour de rôle dans chaque catégorie restante, meilleurs prestataires d'abord. */
+export function mixCategories(slugs: string[], max = 10) {
+  const queues = slugs.map((s) => [...vendorsIn(s)].sort((a, b) => rate(b) - rate(a) || b.reviewsCount - a.reviewsCount));
+  const out: Vendor[] = [];
+  while (out.length < max && queues.some((q) => q.length)) {
+    for (const q of queues) {
+      const v = q.shift();
+      if (v && out.length < max) out.push(v);
+    }
+  }
+  return out;
+}
+
+/** Les quatre rangées de l'accueil : trois meilleures catégories, puis un mélange des autres. */
+export function homeRows() {
+  const ranked = rankCategories();
+  const top = ranked.slice(0, 3);
+  const rest = ranked.slice(3);
+  return [
+    ...top.map((c) => {
+      const list = [...vendorsIn(c.slug)].sort((a, b) => rate(b) - rate(a) || b.reviewsCount - a.reviewsCount);
+      // Le lieu affiché suit la réalité de l'offre : Paris si la majorité y est, sinon l'Île-de-France.
+      const place = list.filter((v) => v.city === "Paris").length * 2 > list.length ? "Paris" : "Île-de-France";
+      return {
+        title: `${c.plural} · ${place}`,
+        href: `/recherche?quoi=${encodeURIComponent(c.singular)}&ou=${encodeURIComponent(place)}`,
+        list,
+      };
+    }),
+    {
+      title: "Pour compléter votre mariage · Île-de-France",
+      href: "/decouvrir",
+      list: mixCategories(rest.map((c) => c.slug)),
+    },
+  ];
+}
 
 export function searchVendors({ quoi = "", ou = "" }: { quoi?: string; ou?: string }) {
   const norm = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().trim();
@@ -237,16 +286,17 @@ export function searchVendors({ quoi = "", ou = "" }: { quoi?: string; ou?: stri
 
 export const steps = [
   { icon: "/icons/favorite-heart.png", title: "Inspirez-vous", text: "Parcourez des milliers de mariages réels et enregistrez vos coups de cœur en un clic." },
-  { icon: "/icons/chat-bubbles.png", title: "Comparez les devis", text: "Une seule demande, plusieurs devis détaillés sous 48 h, présentés côte à côte." },
-  { icon: "/icons/shield-lock.png", title: "Réservez sereinement", text: "Contrat et paiement sécurisés sur Céleste, acompte protégé jusqu'au jour J." },
+  { icon: "/icons/chat-bubbles.png", title: "Comparez les devis", text: "Une seule demande, des offres détaillées présentées côte à côte." },
+  { icon: "/icons/shield-lock.png", title: "Réservez sereinement", text: "Contrat signé en ligne, 30 % d'acompte puis le solde en une à trois fois." },
 ];
 
+// Faits issus du cahier des charges (aucun chiffre d'activité inventé).
 export const stats = [
-  { value: "2 400", label: "prestataires vérifiés" },
-  { value: "4,9/5", label: "note moyenne des couples" },
-  { value: "48 h", label: "pour recevoir vos devis" },
-  { value: "0 €", label: "de frais pour les mariés" },
-];
+  { value: "30 %", label: "d'acompte, puis le solde en 1 à 3 fois" },
+  { value: "24 mois", label: "de disponibilités visibles par prestataire" },
+  { value: "100 %", label: "des avis laissés par des couples qui ont réservé" },
+  { value: "1", label: "seul espace pour tout organiser" },
+]
 
 export const testimonials = [
   { couple: "Aïcha & Kwame", place: "Château des Lys, juin 2026", photo: "/photos/kente.jpg", text: "Nous cherchions des prestataires capables de mêler nos deux cultures. En une semaine, tout était réservé, et nos familles ont adoré." },
@@ -289,16 +339,17 @@ export const inspirations: { src: string; label: string; theme: string; h: numbe
 ];
 
 export const faq = [
-  { q: "Céleste est-il gratuit pour les mariés ?", a: "Oui. Rechercher, enregistrer vos coups de cœur, demander des devis et échanger avec les prestataires est entièrement gratuit pour les couples." },
-  { q: "Comment les prestataires sont-ils vérifiés ?", a: "Chaque prestataire envoie son SIRET, une attestation d'assurance et des références. Le badge « Vérifié » n'apparaît qu'après contrôle par notre équipe." },
-  { q: "Combien de temps pour recevoir un devis ?", a: "La plupart des prestataires répondent en moins de 24 h, et tous s'engagent à répondre sous 48 h. Le délai moyen de chacun est affiché sur sa fiche." },
-  { q: "Mon acompte est-il protégé ?", a: "Quand vous réservez sur Céleste, l'acompte est conservé sur un compte séquestré et versé au prestataire selon l'échéancier prévu au contrat." },
-  { q: "Puis-je payer en plusieurs fois ?", a: "Oui, la plupart des prestations peuvent être réglées en 3 ou 4 fois sans frais, directement depuis votre espace." },
-  { q: "Que se passe-t-il en cas d'annulation ?", a: "Les conditions d'annulation de chaque prestataire sont affichées avant la réservation. En cas de défaillance d'un prestataire, notre équipe vous aide à trouver une solution de remplacement." },
-];
+  { q: "Combien coûte Céleste pour les mariés ?", a: "Rechercher, enregistrer vos coups de cœur, faire votre Best Match et échanger avec les prestataires ne coûte rien. Si des frais s'appliquent à une réservation, ils sont affichés clairement avant le paiement, jamais au dernier moment." },
+  { q: "Comment fonctionne le Best Match ?", a: "Quelques questions sur votre date, votre zone, votre budget et votre style. Céleste calcule un pourcentage de compatibilité et vous explique pourquoi. Aucun prestataire ne peut payer pour améliorer son score." },
+  { q: "Que veut dire le badge « Vérifié » ?", a: "Le prestataire a fourni son SIRET ou un justificatif professionnel, l'identité de son représentant légal et, lorsque c'est pertinent, son assurance. Le badge Céleste Select, lui, récompense les meilleurs résultats et ne s'achète pas." },
+  { q: "Puis-je négocier une offre ?", a: "Oui. Indiquez votre budget ou demandez une adaptation : le prestataire peut ajuster sa formule, la durée ou les options, et vous envoyer une nouvelle version de son offre." },
+  { q: "Comment se passe le paiement ?", a: "Après la signature du contrat en ligne, vous réglez sur Céleste : en une fois, ou 30 % d'acompte à la réservation puis le solde en une à trois échéances." },
+  { q: "Et en cas d'annulation ?", a: "Les conditions d'annulation sont affichées avant la réservation. En cas de force majeure justifiée, Céleste ouvre un dossier et cherche d'abord une solution de report avec le prestataire." },
+]
 
-export const proPlans = [
-  { name: "Découverte", price: "0 €", period: "pour toujours", features: ["Fiche prestataire complète", "5 demandes de devis par mois", "Messagerie avec les couples"], cta: "Créer ma fiche" },
-  { name: "Pro", price: "39 €", period: "par mois", features: ["Demandes illimitées", "Devis et contrats en ligne", "Paiement sécurisé et acomptes", "Statistiques de votre fiche"], cta: "Essayer 30 jours", highlight: true },
-  { name: "Signature", price: "89 €", period: "par mois", features: ["Tout le plan Pro", "Mise en avant dans votre ville", "Badge Coup de cœur éligible", "Accompagnement dédié"], cta: "Nous contacter" },
-];
+// Modèle économique du cahier des charges : profil gratuit, commission sur les réservations signées.
+export const proPricing = [
+  { value: "0 €", title: "Pour créer votre profil", text: "Inscription ouverte à tous les professionnels. Vous publiez vos formules, vos options et vos disponibilités." },
+  { value: "0 €", title: "Pour recevoir des demandes", text: "Les opportunités compatibles avec votre profil arrivent dans votre espace, sans achat de contacts." },
+  { value: "%", title: "Seulement quand vous signez", text: "Céleste prélève une commission sur les réservations signées et encaissées via la plateforme. Le taux vous est communiqué à l'inscription." },
+]

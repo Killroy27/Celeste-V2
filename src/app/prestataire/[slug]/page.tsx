@@ -28,9 +28,9 @@ export default async function VendorPage({ params }: Params) {
   const similar = vendorsIn(v.category).filter((x) => x.slug !== v.slug).slice(0, 3);
 
   const highlights = [
-    v.verified && { icon: "/icons/verified-seal.png", title: "Prestataire vérifié", text: "SIRET, assurance et références contrôlés par Céleste." },
-    { icon: "/icons/chat-bubbles.png", title: `Répond en ${v.responseTime}`, text: "Devis détaillé garanti sous 48 h." },
-    { icon: "/icons/shield-lock.png", title: "Acompte protégé", text: "Versé au prestataire selon l'échéancier du contrat." },
+    v.verified && { icon: "/icons/verified-seal.png", title: "Prestataire vérifié", text: "Entreprise et identité professionnelle contrôlées par Céleste." },
+    { icon: "/icons/chat-bubbles.png", title: `Répond en ${v.responseTime}`, text: "Offre détaillée, modifiable dans la messagerie." },
+    { icon: "/icons/shield-lock.png", title: "Paiement sur Céleste", text: "Contrat signé en ligne, 30 % d'acompte puis le solde en une à trois fois." },
   ].filter(Boolean) as { icon: string; title: string; text: string }[];
 
   return (
@@ -146,7 +146,7 @@ export default async function VendorPage({ params }: Params) {
               <h2 id="zone" className="h3">
                 Zone d&apos;intervention
               </h2>
-              <p className={styles.text}>Basé à {v.area}, se déplace dans toute l&apos;Île-de-France. Frais de déplacement précisés dans le devis au-delà de 50 km.</p>
+              <p className={styles.text}>Basé à {v.area}, se déplace dans toute l&apos;Île-de-France. Frais de déplacement éventuels précisés dans l&apos;offre.</p>
               <div className={styles.map}>
                 <Image src="/photos/map-paris.jpg" alt={`Carte de la zone d'intervention autour de ${v.area}`} fill sizes="(max-width: 900px) 100vw, 760px" style={{ objectFit: "cover" }} />
                 <span className={styles.pin}>{v.area}</span>
