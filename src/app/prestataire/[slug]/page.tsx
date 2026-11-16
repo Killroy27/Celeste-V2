@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Avatar, ContactCard } from "@/components/ContactCard";
 import { FicheActions } from "@/components/FicheActions";
+import { GalleryTrigger, GalleryViewer } from "@/components/gallery/Gallery";
 import { SectionNav } from "@/components/SectionNav";
 import { VendorCard } from "@/components/VendorCard";
 import { VendorMapLazy } from "@/components/VendorMapLazy";
@@ -75,7 +76,12 @@ export default async function VendorPage({ params }: Params) {
   const [lat, lng] = coordsFor(v);
   const similar = vendorsIn(v.category).filter((x) => x.slug !== v.slug).slice(0, 4);
   const unit = priceLabel(v).includes("/") ? ` ${priceLabel(v).split(" ").slice(-2).join(" ")}` : "";
-  const portfolio = [...v.gallery, ...vendorsIn(v.category).flatMap((x) => x.gallery)].filter((p, i, a) => a.indexOf(p) === i).slice(0, 5);
+  // Toutes les photos du prestataire (prototype : sa galerie, complétée par la photothèque du métier).
+  const photos = [...v.gallery, ...vendorsIn(v.category).flatMap((x) => x.gallery)]
+    .filter((p, i, a) => a.indexOf(p) === i)
+    .map((src, i) => ({ src, alt: `${v.name} · photo ${i + 1}` }));
+  const portfolio = photos.slice(0, 5);
+  const hidden = photos.length - portfolio.length;
 
   return (
     <div className={styles.page}>
@@ -122,19 +128,26 @@ export default async function VendorPage({ params }: Params) {
         </div>
 
         <div className={styles.mosaic}>
-          {v.gallery.slice(0, 3).map((src, i) => (
-            <div key={src + i} className={styles.tile}>
-              <Image
-                src={src}
-                alt={i === 0 ? `${v.name}, ${cat.singular}` : ""}
-                fill
-                priority={i === 0}
-                sizes={i === 0 ? "(max-width: 900px) 100vw, 800px" : "30vw"}
-                style={{ objectFit: "cover", objectPosition: i === 0 ? (v.pos ?? "50% 40%") : "50% 40%" }}
-              />
-              {i === 2 && <a href="#portfolio" className={styles.seeAll}>Afficher toutes les photos</a>}
+          {photos.slice(0, 3).map((p, i) => (
+            <div key={p.src + i} className={styles.tile}>
+              <GalleryTrigger index={i} label={`Agrandir la photo ${i + 1}`}>
+                <Image
+                  src={p.src}
+                  alt={i === 0 ? `${v.name}, ${cat.singular}` : ""}
+                  fill
+                  priority={i === 0}
+                  sizes={i === 0 ? "(max-width: 900px) 100vw, 800px" : "30vw"}
+                  style={{ objectFit: "cover", objectPosition: i === 0 ? (v.pos ?? "50% 40%") : "50% 40%" }}
+                />
+              </GalleryTrigger>
             </div>
           ))}
+          <GalleryTrigger label={`Afficher les ${photos.length} photos`} className={styles.seeAll}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" />
+            </svg>
+            Afficher les {photos.length} photos
+          </GalleryTrigger>
         </div>
 
         <SectionNav
@@ -280,12 +293,14 @@ export default async function VendorPage({ params }: Params) {
             </Section>
 
             {/* Portfolio */}
-            <Section id="portfolio" title="Portfolio" aside={<span className={styles.count}>{portfolio.length + 24}</span>}>
+            <Section id="portfolio" title="Portfolio" aside={<span className={styles.count}>{photos.length}</span>}>
               <div className={styles.portfolio}>
-                {portfolio.map((src, i) => (
-                  <div key={src} className={styles.pf}>
-                    <Image src={src} alt="" fill sizes="(max-width: 900px) 50vw, 260px" style={{ objectFit: "cover" }} />
-                    {i === portfolio.length - 1 && <span className={styles.more}>+24</span>}
+                {portfolio.map((p, i) => (
+                  <div key={p.src} className={styles.pf}>
+                    <GalleryTrigger index={i} label={`Agrandir la photo ${i + 1}`}>
+                      <Image src={p.src} alt="" fill sizes="(max-width: 900px) 50vw, 260px" style={{ objectFit: "cover" }} />
+                      {i === portfolio.length - 1 && hidden > 0 && <span className={styles.more}>+{hidden}</span>}
+                    </GalleryTrigger>
                   </div>
                 ))}
               </div>
@@ -350,6 +365,8 @@ export default async function VendorPage({ params }: Params) {
             <ContactCard vendor={v} person={person} />
           </aside>
         </div>
+
+        <GalleryViewer photos={photos} title={v.name} />
 
         {similar.length > 0 && (
           <section className={styles.similar} aria-labelledby="similaires">

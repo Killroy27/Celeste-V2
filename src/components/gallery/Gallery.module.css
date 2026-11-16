@@ -1,0 +1,250 @@
+/* Galerie : bouton invisible autour des photos de la page. */
+.trigger {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+/* ---------- Vue « toutes les photos » (comme Airbnb) ---------- */
+
+.gridView {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  overflow-y: auto;
+  background: #fff;
+  animation: up 0.35s var(--ease);
+}
+
+@keyframes up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.gridBar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid #ece7e1;
+}
+
+.gridTitle {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.round {
+  width: 40px;
+  height: 40px;
+  border: var(--outline);
+  border-radius: 999px;
+  background: var(--outline-bg);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.gridBody {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.gridItem {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: #f2efe9;
+  cursor: zoom-in;
+}
+
+.gridWide {
+  grid-column: span 2;
+  aspect-ratio: 16 / 10;
+}
+
+.gridItem img {
+  transition: filter 0.2s;
+}
+
+.gridItem:hover img {
+  filter: brightness(0.92);
+}
+
+/* ---------- Vue plein écran ---------- */
+
+.photoView {
+  position: fixed;
+  inset: 0;
+  z-index: 210;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: #0f0b07;
+  color: #fff;
+  animation: fade 0.25s ease;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.photoBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+}
+
+.textBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.textBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.counter {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.stage {
+  position: relative;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 88px;
+}
+
+.frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  animation: fade 0.3s ease;
+}
+
+.nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  margin-top: -24px;
+  border: var(--outline);
+  border-radius: 999px;
+  background: var(--outline-bg);
+  color: var(--brown);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.nav:hover {
+  transform: scale(1.06);
+}
+
+.prev {
+  left: 24px;
+}
+
+.next {
+  right: 24px;
+}
+
+.strip {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 24px 22px;
+  overflow-x: auto;
+}
+
+.thumb {
+  position: relative;
+  flex: none;
+  width: 72px;
+  height: 52px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  opacity: 0.55;
+  cursor: pointer;
+  transition: opacity 0.2s, border-color 0.2s;
+}
+
+.thumb:hover {
+  opacity: 0.85;
+}
+
+.thumbOn {
+  opacity: 1;
+  border-color: var(--brand);
+}
+
+@media (max-width: 720px) {
+  .gridBody {
+    grid-template-columns: 1fr;
+    padding: 16px 0 60px;
+  }
+
+  .gridWide {
+    grid-column: auto;
+  }
+
+  .stage {
+    padding: 0;
+  }
+
+  .nav {
+    width: 40px;
+    height: 40px;
+    margin-top: -20px;
+  }
+
+  .prev {
+    left: 10px;
+  }
+
+  .next {
+    right: 10px;
+  }
+
+  .strip {
+    justify-content: flex-start;
+  }
+}
