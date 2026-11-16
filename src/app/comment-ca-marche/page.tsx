@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const detailed = [
   { icon: "/icons/moodboard.png", n: "1", title: "Inspirez-vous et enregistrez", text: "Parcourez les inspirations et les fiches prestataires. Un ♡ suffit pour garder un coup de cœur, retrouvé dans votre espace.", photo: "/photos/florist.jpg" },
-  { icon: "/icons/match-puzzle.png", n: "2", title: "Trouvez vos matchs", text: "Pas sûrs de ce que vous voulez ? Le quiz en quatre questions vous propose les prestataires qui correspondent à votre style et à votre budget.", photo: "/photos/field.jpg" },
+  { icon: "/icons/match-puzzle.png", n: "2", title: "Faites votre Best Match", text: "Pas sûrs de ce que vous voulez ? Le test en quatre questions vous propose les prestataires qui correspondent à votre style et à votre budget.", photo: "/photos/field.jpg" },
   { icon: "/icons/chat-bubbles.png", n: "3", title: "Demandez et comparez les devis", text: "Une demande, plusieurs devis détaillés sous 48 h. Formules, options et prix sont présentés côte à côte, sans jargon.", photo: "/photos/chef.jpg" },
   { icon: "/icons/contract-pen.png", n: "4", title: "Réservez et payez en sécurité", text: "Contrat signé en ligne, acompte protégé sur un compte séquestré et paiement en plusieurs fois sans frais.", photo: "/photos/rings.jpg" },
 ];
@@ -63,7 +63,7 @@ export default function HowPage() {
           </div>
           <div className={styles.ctas}>
             <Link href="/matchs" className="btn">
-              Trouver mes matchs
+              Faire mon Best Match
             </Link>
             <Link href="/decouvrir" className="btn btn-outline">
               Parcourir les prestataires

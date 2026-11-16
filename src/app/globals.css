@@ -93,13 +93,13 @@ img {
 /* ---------- Briques communes ---------- */
 
 .container {
-  max-width: 1280px;
+  max-width: 1360px;
   margin: 0 auto;
   padding: 0 var(--gutter);
 }
 
 .section {
-  padding: 96px 0;
+  padding: 120px 0;
 }
 
 .section-tight {
@@ -150,8 +150,8 @@ img {
 
 .lead {
   margin: 0;
-  font-size: 17px;
-  line-height: 27px;
+  font-size: 19px;
+  line-height: 30px;
   color: var(--text2);
 }
 

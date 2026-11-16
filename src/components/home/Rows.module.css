@@ -1,0 +1,60 @@
+.rows {
+  padding: 16px 0 0;
+}
+
+.review {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+  border-radius: 20px;
+  background: var(--card);
+  border: 1px solid var(--line);
+}
+
+.stars {
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: #c98a1c;
+}
+
+.stars span {
+  color: var(--line);
+}
+
+.review blockquote {
+  flex: 1;
+  margin: 0;
+  font-size: 15px;
+  line-height: 24px;
+}
+
+.review figcaption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review strong {
+  display: block;
+  font-size: 15px;
+}
+
+.review small {
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.avatar {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--sunken);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}

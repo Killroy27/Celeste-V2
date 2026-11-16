@@ -64,7 +64,7 @@ export const wallColumns: WallColumn[] = [
 
 export type Review = { author: string; date: string; rating: number; text: string };
 
-const reviewPool: Review[] = [
+export const reviewPool: Review[] = [
   { author: "Inès & Malik", date: "septembre 2026", rating: 5, text: "Réponse en moins d'une journée, devis clair, aucune mauvaise surprise. Le jour J, tout était exactement comme prévu." },
   { author: "Claire & Thomas", date: "juin 2026", rating: 5, text: "On a comparé trois prestataires en une soirée grâce aux devis côte à côte. On a choisi sereinement, sans dizaines d'e-mails." },
   { author: "Aïcha & Kwame", date: "août 2026", rating: 5, text: "Une équipe qui a compris nos deux cultures et su les mêler. Nos familles en parlent encore." },
@@ -211,6 +211,13 @@ export const vendors: Vendor[] = Object.entries(seeds).flatMap(([catSlug, list])
 export const getVendor = (slug: string) => vendors.find((v) => v.slug === slug);
 export const vendorsIn = (cat: string) => vendors.filter((v) => v.category === cat);
 export const featuredVendors = vendorsIn("photographes");
+
+const rate = (v: Vendor) => parseFloat(v.rating.replace(",", "."));
+export const homeRows = {
+  recommended: [...vendors].sort((a, b) => rate(b) - rate(a) || b.reviewsCount - a.reviewsCount).filter((v, i, arr) => arr.findIndex((x) => x.category === v.category) === i),
+  newcomers: [...vendors].sort((a, b) => a.reviewsCount - b.reviewsCount).slice(0, 8),
+  trending: [...vendors].filter((v) => ["lieux", "traiteurs", "dj", "decoration"].includes(v.category)).sort((a, b) => b.reviewsCount - a.reviewsCount).slice(0, 8),
+};
 
 export function searchVendors({ quoi = "", ou = "" }: { quoi?: string; ou?: string }) {
   const norm = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().trim();

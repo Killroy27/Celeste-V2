@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { heroWords } from "@/lib/content";
 import { InspirationWall } from "./InspirationWall";
@@ -37,9 +38,15 @@ export function Hero() {
         <SearchForm id="hero-search" />
       </div>
 
-      <Link href="/matchs" className={styles.matchs}>
-        Pas encore d&apos;idée ? <span>Trouvez vos matchs en 2 minutes →</span>
-      </Link>
+      {/* L'action principale : le test Best Match. */}
+      <div className={styles.matchs}>
+        <span>Pas encore d&apos;idée ?</span>
+        <Link href="/matchs" className={styles.matchBtn}>
+          <Image src="/icons/match-puzzle.png" alt="" width={28} height={28} />
+          Faire mon Best Match
+          <small>2 min</small>
+        </Link>
+      </div>
 
       <InspirationWall />
     </section>

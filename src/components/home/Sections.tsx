@@ -1,76 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { articles, categories, faq, stats, steps, testimonials } from "@/lib/content";
+import { categories, faq, stats, steps } from "@/lib/content";
 import { Reveal } from "../Reveal";
+import { SimpleForm } from "../SimpleForm";
 import styles from "./Sections.module.css";
 
-function Head({ eyebrow, title, lead, center }: { eyebrow?: string; title: string; lead?: string; center?: boolean }) {
-  return (
-    <Reveal className={`${styles.head} ${center ? styles.center : ""}`}>
-      {eyebrow && <span className="eyebrow">{eyebrow}</span>}
-      <h2 className="display h2">{title}</h2>
-      {lead && <p className="lead">{lead}</p>}
-    </Reveal>
-  );
-}
+// Un bloc = un message. Titre très lisible, une phrase, une action. Beaucoup d'air autour.
 
-/* ---------- Comment ça marche ---------- */
-
-export function HowItWorks() {
-  return (
-    <section className={`section ${styles.white}`} aria-label="Comment ça marche">
-      <div className="container">
-        <Head center eyebrow="Comment ça marche" title="Du coup de cœur à la réservation" lead="Trois étapes, zéro tableur, et un seul endroit pour tout suivre." />
-        <ol className={styles.steps}>
-          {steps.map((s, i) => (
-            <Reveal as="li" key={s.title} className={styles.step}>
-              <Image src={s.icon} alt="" width={96} height={96} className={styles.stepIcon} />
-              <span className={styles.stepN}>Étape {i + 1}</span>
-              <h3 className="h3">{s.title}</h3>
-              <p className="muted">{s.text}</p>
-            </Reveal>
-          ))}
-        </ol>
-        <div className={styles.centerCta}>
-          <Link href="/comment-ca-marche" className="link-underline">
-            En savoir plus sur Céleste →
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- Tous les métiers ---------- */
-
-export function AllCategories() {
-  return (
-    <section className="section" aria-label="Tous les métiers">
-      <div className="container">
-        <Head eyebrow="Tout au même endroit" title="Chaque détail de votre jour J" lead="Lieu, traiteur, photo, fleurs, musique : comparez les meilleurs dans chaque métier." />
-        <div className={styles.cats}>
-          {categories.map((c, i) => (
-            <Reveal key={c.slug} className={`${styles.catCard} ${i === 0 ? styles.catWide : ""}`}>
-              <Link href={`/prestataires/${c.slug}`} className={styles.catLink}>
-                <Image src={c.cover} alt="" fill sizes="(max-width: 640px) 100vw, (max-width: 1000px) 50vw, 33vw" style={{ objectFit: "cover" }} />
-                <span className={styles.catShade} />
-                <span className={styles.catText}>
-                  <Image src={c.icon} alt="" width={40} height={40} />
-                  <span>
-                    <strong>{c.plural}</strong>
-                    <small>Comparer les devis</small>
-                  </span>
-                </span>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- Quiz des matchs ---------- */
+/* ---------- Best Match : l'action principale ---------- */
 
 const styleChoices = [
   { slug: "champetre", label: "Champêtre", photo: "/photos/field.jpg" },
@@ -79,28 +16,89 @@ const styleChoices = [
   { slug: "urbain", label: "Urbain", photo: "/photos/rain.jpg" },
 ];
 
-export function MatchTeaser() {
+export function BestMatch() {
   return (
-    <section className="section-tight" aria-label="Trouvez vos matchs">
-      <div className="container">
-        <Reveal className={`card-surface ${styles.match}`}>
-          <div className={styles.matchText}>
-            <Image src="/icons/match-puzzle.png" alt="" width={72} height={72} />
-            <h2 className="display h2">Pas encore d&apos;idée ? Trouvez vos matchs en 2 minutes</h2>
-            <p className="lead">Quatre questions sur votre style, votre budget et votre date. Nous vous présentons les prestataires qui vous ressemblent.</p>
-            <Link href="/matchs" className="btn">
-              Commencer le quiz
-            </Link>
+    <section className={styles.block} aria-labelledby="best-match">
+      <div className={`container ${styles.split}`}>
+        <Reveal className={styles.copy}>
+          <span className={styles.kicker}>
+            <Image src="/icons/match-puzzle.png" alt="" width={32} height={32} />
+            Best Match
+          </span>
+          <h2 id="best-match" className={styles.big}>
+            Vos prestataires idéaux en 2 minutes
+          </h2>
+          <p className={styles.say}>Répondez à quatre questions. Céleste choisit pour vous les prestataires qui vous ressemblent.</p>
+          <Link href="/matchs" className="btn">
+            Faire mon Best Match
+          </Link>
+        </Reveal>
+        <Reveal className={styles.matchVisual}>
+          <span className={styles.matchQ}>Votre mariage ressemble plutôt à…</span>
+          <div className={styles.matchGrid}>
+            {styleChoices.map((s) => (
+              <Link key={s.slug} href={`/matchs?style=${s.slug}`} className={styles.matchChoice}>
+                <Image src={s.photo} alt="" fill sizes="(max-width: 900px) 50vw, 300px" style={{ objectFit: "cover" }} />
+                <span>{s.label}</span>
+              </Link>
+            ))}
           </div>
-          <div className={styles.matchChoices}>
-            <span className={styles.matchQ}>Votre mariage ressemble plutôt à…</span>
-            <div className={styles.matchGrid}>
-              {styleChoices.map((s) => (
-                <Link key={s.slug} href={`/matchs?style=${s.slug}`} className={styles.matchChoice}>
-                  <Image src={s.photo} alt="" fill sizes="200px" style={{ objectFit: "cover" }} />
-                  <span>{s.label}</span>
-                </Link>
-              ))}
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Application bientôt disponible ---------- */
+
+export function AppSoon() {
+  return (
+    <section className={styles.block} aria-labelledby="app">
+      <div className={`container ${styles.split}`}>
+        <Reveal className={styles.copy}>
+          <span className={styles.kicker}>Bientôt sur iOS et Android</span>
+          <h2 id="app" className={styles.big}>
+            Votre mariage dans votre poche
+          </h2>
+          <p className={styles.say}>Coups de cœur, devis et messages, partout avec vous. Soyez prévenus dès la sortie de l&apos;application.</p>
+          <div className={styles.notify}>
+            <SimpleForm submit="Me prévenir" doneTitle="C'est noté !" doneText="Nous vous écrirons le jour de la sortie de l'application.">
+              <label className="field">
+                <span className="visually-hidden">Votre e-mail</span>
+                <input type="email" name="email" autoComplete="email" placeholder="Votre e-mail" required />
+              </label>
+            </SimpleForm>
+          </div>
+        </Reveal>
+        <Reveal className={styles.phones}>
+          <div className={styles.phone}>
+            <div className={styles.screen}>
+              <div className={styles.appPhoto}>
+                <Image src="/photos/kente.jpg" alt="" fill sizes="280px" style={{ objectFit: "cover", objectPosition: "50% 30%" }} />
+              </div>
+              <div className={styles.appBody}>
+                <strong>Atelier Kofi & Ama</strong>
+                <small>★ 5,0 · 87 avis · Paris 18e</small>
+                <span className={styles.appChip}>Vérifié</span>
+                <span className={styles.appBtn}>Demander un devis</span>
+              </div>
+            </div>
+          </div>
+          <div className={`${styles.phone} ${styles.phoneBack}`}>
+            <div className={styles.screen}>
+              <div className={styles.appList}>
+                {["/photos/chateau.jpg", "/photos/florist.jpg", "/photos/dj.jpg"].map((p) => (
+                  <div key={p} className={styles.appRow}>
+                    <span className={styles.appThumb}>
+                      <Image src={p} alt="" fill sizes="64px" style={{ objectFit: "cover" }} />
+                    </span>
+                    <span className={styles.appLines}>
+                      <i />
+                      <i />
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </Reveal>
@@ -109,99 +107,85 @@ export function MatchTeaser() {
   );
 }
 
-/* ---------- Confiance : chiffres et témoignages ---------- */
+/* ---------- Comment ça marche ---------- */
 
-export function Trust() {
+export function HowItWorks() {
   return (
-    <section className="section" aria-label="Ils nous ont fait confiance">
+    <section className={styles.block} aria-labelledby="comment">
       <div className="container">
-        <Head center eyebrow="Ils ont dit oui avec Céleste" title="Des couples sereins, des prestataires vérifiés" />
-        <Reveal className={styles.stats}>
-          {stats.map((s) => (
+        <Reveal className={styles.centerHead}>
+          <h2 id="comment" className={styles.mid}>
+            Du coup de cœur à la réservation
+          </h2>
+          <p className={styles.say}>Trois étapes, un seul endroit.</p>
+        </Reveal>
+        <ol className={styles.steps}>
+          {steps.map((s, i) => (
+            <Reveal as="li" key={s.title} className={styles.step}>
+              <Image src={s.icon} alt="" width={112} height={112} />
+              <span className={styles.stepN}>{i + 1}</span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </Reveal>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Chiffres ---------- */
+
+export function Stats() {
+  return (
+    <section className={styles.block} aria-labelledby="chiffres">
+      <div className="container">
+        <Reveal className={styles.centerHead}>
+          <h2 id="chiffres" className={styles.mid}>
+            La maison des mariages réussis
+          </h2>
+          <p className={styles.say}>Les couples et les meilleurs prestataires d&apos;Île-de-France nous font déjà confiance.</p>
+        </Reveal>
+        <Reveal className={styles.hugeWrap}>
+          <span className={styles.huge}>+ de 2 400</span>
+          <span className={styles.hugeLabel}>prestataires vérifiés</span>
+        </Reveal>
+        <div className={styles.stats}>
+          {stats.slice(1).map((s) => (
             <div key={s.label} className={styles.stat}>
               <strong>{s.value}</strong>
               <span>{s.label}</span>
             </div>
           ))}
-        </Reveal>
-        <div className={styles.quotes}>
-          {testimonials.map((t) => (
-            <Reveal as="figure" key={t.couple} className={`card-surface ${styles.quote}`}>
-              <div className={styles.quotePhoto}>
-                <Image src={t.photo} alt={`${t.couple} le jour de leur mariage`} fill sizes="(max-width: 900px) 100vw, 400px" style={{ objectFit: "cover", objectPosition: "50% 35%" }} />
-              </div>
-              <blockquote>« {t.text} »</blockquote>
-              <figcaption>
-                <strong>{t.couple}</strong>
-                <span>{t.place}</span>
-              </figcaption>
-            </Reveal>
-          ))}
         </div>
       </div>
     </section>
   );
 }
 
-/* ---------- Inspirations éditoriales ---------- */
-
-export function Articles() {
-  return (
-    <section className={`section ${styles.white}`} aria-label="Conseils et inspirations">
-      <div className="container">
-        <div className={styles.rowHead}>
-          <Head eyebrow="Le carnet Céleste" title="Conseils pour préparer le grand jour" />
-          <Link href="/inspirations" className="link-underline">
-            Toutes les inspirations →
-          </Link>
-        </div>
-        <div className={styles.articles}>
-          {articles.slice(0, 3).map((a) => (
-            <Reveal as="article" key={a.slug} className={styles.article}>
-              <Link href={`/inspirations#${a.slug}`}>
-                <div className={styles.articlePhoto}>
-                  <Image src={a.photo} alt="" fill sizes="(max-width: 900px) 100vw, 400px" style={{ objectFit: "cover" }} />
-                </div>
-                <span className="eyebrow">
-                  {a.theme} · {a.read}
-                </span>
-                <h3 className="h3">{a.title}</h3>
-                <p className="muted">{a.excerpt}</p>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- Espace prestataires ---------- */
+/* ---------- Céleste pour les prestataires ---------- */
 
 export function ProBand() {
   return (
-    <section className="section" aria-label="Vous êtes prestataire ?">
-      <div className="container">
-        <Reveal className={styles.pro}>
-          <div className={styles.proPhoto}>
-            <Image src="/photos/photog.jpg" alt="Une photographe au travail pendant un mariage" fill sizes="(max-width: 900px) 100vw, 600px" style={{ objectFit: "cover", objectPosition: "50% 35%" }} />
-          </div>
-          <div className={styles.proText}>
-            <span className="eyebrow">Vous êtes prestataire ?</span>
-            <h2 className="display h2">Recevez des demandes de couples qui vous correspondent</h2>
-            <ul className={styles.proList}>
-              <li>Des demandes qualifiées : date, budget et style connus d&apos;avance</li>
-              <li>Devis, contrats et acomptes sécurisés au même endroit</li>
-              <li>Fiche gratuite, sans engagement</li>
-            </ul>
-            <div className={styles.proCtas}>
-              <Link href="/devenir-prestataire" className="btn">
-                Créer ma fiche gratuitement
-              </Link>
-              <Link href="/devenir-prestataire#tarifs" className="link-underline">
-                Voir les tarifs
-              </Link>
-            </div>
+    <section className={styles.block} aria-labelledby="pros">
+      <div className={`container ${styles.split}`}>
+        <Reveal className={styles.copy}>
+          <h2 id="pros" className={styles.big}>
+            Céleste pour les prestataires
+          </h2>
+          <p className={styles.say}>Recevez des demandes de couples qui vous correspondent. Devis, contrats et acomptes au même endroit.</p>
+          <Link href="/devenir-prestataire" className="btn">
+            En savoir plus
+          </Link>
+        </Reveal>
+        <Reveal className={styles.proPhoto}>
+          <Image src="/photos/photog.jpg" alt="Une photographe au travail pendant un mariage" fill sizes="(max-width: 900px) 100vw, 640px" style={{ objectFit: "cover", objectPosition: "50% 35%" }} />
+          <div className={styles.toast}>
+            <Image src="/icons/notification-bell.png" alt="" width={40} height={40} />
+            <span>
+              <strong>Nouvelle demande</strong>
+              <small>Claire & Thomas · 14 juin 2027 · 120 invités</small>
+            </span>
           </div>
         </Reveal>
       </div>
@@ -209,13 +193,47 @@ export function ProBand() {
   );
 }
 
-/* ---------- FAQ ---------- */
+/* ---------- Recherche par métier (liens simples, comme « Recherchez par ville » chez Fresha) ---------- */
+
+const places = ["Paris", "Versailles", "Boulogne", "Saint-Denis", "Vincennes"];
+
+export function BrowseLinks() {
+  return (
+    <section className={styles.links} aria-labelledby="parcourir">
+      <div className="container">
+        <h2 id="parcourir" className={styles.rowTitle}>
+          Recherchez par métier
+        </h2>
+        <div className={styles.linkCols}>
+          {categories.slice(0, 5).map((c) => (
+            <div key={c.slug}>
+              <h3>{c.plural}</h3>
+              <ul>
+                {places.map((p) => (
+                  <li key={p}>
+                    <Link href={`/recherche?quoi=${encodeURIComponent(c.singular)}&ou=${encodeURIComponent(p)}`}>
+                      {c.plural} à {p}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- FAQ (page Comment ça marche) ---------- */
 
 export function Faq({ limit, id }: { limit?: number; id?: string }) {
   return (
-    <section id={id} className={`section ${styles.white}`} aria-label="Questions fréquentes">
+    <section id={id} className={styles.block} aria-labelledby="faq-title">
       <div className={`container ${styles.faqWrap}`}>
-        <Head eyebrow="Questions fréquentes" title="Tout ce que vous vous demandez" />
+        <h2 id="faq-title" className={styles.mid}>
+          Questions fréquentes
+        </h2>
         <div className={styles.faq}>
           {faq.slice(0, limit).map((f) => (
             <details key={f.q} className={styles.qa}>

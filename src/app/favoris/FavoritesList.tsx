@@ -26,7 +26,7 @@ export function FavoritesList() {
               Découvrir les prestataires
             </Link>
             <Link href="/matchs" className="btn btn-sm btn-outline">
-              Trouver mes matchs
+              Faire mon Best Match
             </Link>
           </div>
         </div>

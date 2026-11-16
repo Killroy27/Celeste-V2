@@ -40,7 +40,7 @@ export default async function SearchPage({ searchParams }: Props) {
             </p>
             <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
               <Link href="/matchs" className="btn btn-sm">
-                Trouver mes matchs
+                Faire mon Best Match
               </Link>
               <Link href="/decouvrir" className="link-underline">
                 Parcourir tous les métiers

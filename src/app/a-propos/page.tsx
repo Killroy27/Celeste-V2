@@ -53,7 +53,7 @@ export default function AboutPage() {
         </div>
         <div style={{ display: "flex", justifyContent: "center", gap: 14, flexWrap: "wrap", marginTop: 48 }}>
           <Link href="/matchs" className="btn">
-            Trouver mes matchs
+            Faire mon Best Match
           </Link>
           <Link href="/contact" className="btn btn-outline">
             Nous écrire

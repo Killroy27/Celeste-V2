@@ -4,11 +4,11 @@ import { getCategory, priceLabel, type Vendor } from "@/lib/content";
 import { SaveButton } from "./SaveButton";
 import styles from "./VendorCard.module.css";
 
-export function VendorCard({ vendor: v, showCategory = false }: { vendor: Vendor; showCategory?: boolean }) {
+export function VendorCard({ vendor: v, showCategory = false, landscape = false }: { vendor: Vendor; showCategory?: boolean; landscape?: boolean }) {
   const cat = getCategory(v.category)!;
   return (
     <article className={styles.card}>
-      <Link href={`/prestataire/${v.slug}`} className={styles.photo}>
+      <Link href={`/prestataire/${v.slug}`} className={`${styles.photo} ${landscape ? styles.landscape : ""}`}>
         <Image
           src={v.photo}
           alt={`${v.name}, ${cat.singular} à ${v.city}`}

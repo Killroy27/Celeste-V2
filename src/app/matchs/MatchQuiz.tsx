@@ -71,7 +71,7 @@ export function MatchQuiz() {
         <div className={styles.resultHead}>
           <Image src="/icons/match-puzzle.png" alt="" width={72} height={72} />
           <span className="eyebrow">Vos matchs</span>
-          <h1 className="display h1">{results.length} prestataires faits pour vous</h1>
+          <h1 className="display h1">Votre Best Match : {results.length} prestataires faits pour vous</h1>
           <p className="lead">
             Style {style.label.toLowerCase()}, budget {budgets.find((b) => b.value === a.budget)!.label.toLowerCase()}, {a.guests!.toLowerCase()} invités.
           </p>

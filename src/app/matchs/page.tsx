@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { MatchQuiz } from "./MatchQuiz";
 
 export const metadata: Metadata = {
-  title: "Trouver mes matchs",
+  title: "Faire mon Best Match",
   description: "Quatre questions pour découvrir les prestataires de mariage qui vous ressemblent.",
 };
 
