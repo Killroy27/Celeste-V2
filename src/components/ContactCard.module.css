@@ -2,10 +2,10 @@
   position: sticky;
   top: calc(var(--header-h) + 80px);
   overflow: hidden;
-  border: var(--outline);
+  border: var(--outline-gold);
   border-radius: 26px;
   background: var(--card);
-  box-shadow: var(--outline-shadow);
+  box-shadow: var(--outline-gold-shadow);
   scroll-margin-top: calc(var(--header-h) + 80px);
 }
 
