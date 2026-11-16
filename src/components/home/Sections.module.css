@@ -475,76 +475,105 @@
   background: var(--brand);
 }
 
-/* ---------- Prestataires ---------- */
+/* ---------- Prestataires : « Ça, c'était avant Céleste » ---------- */
 
-.proReasons {
+.proTitle {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-display), Didot, serif;
+}
+
+.proLine {
+  font-size: clamp(30px, 3.2vw, 46px);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+/* La phrase choc : capitales, très grand, très serré. */
+.proShout {
+  font-size: clamp(52px, 6vw, 92px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.proTwist {
+  margin-top: 10px;
+  font-size: clamp(32px, 3.4vw, 50px);
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.05;
+  color: var(--brand);
+}
+
+.proPoints {
   margin: 0;
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 16px;
+  gap: 2px;
+  width: 100%;
+  max-width: 520px;
+  border-top: 1px solid var(--line);
 }
 
-.proReasons li {
-  position: relative;
-  padding-left: 34px;
-}
-
-.proReasons li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 2px;
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  background: var(--brand) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2339210C' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12l4 4 8-8'/%3E%3C/svg%3E") center / 13px no-repeat;
-}
-
-.proReasons strong {
-  display: block;
-  font-size: 17px;
-}
-
-.proReasons span {
-  font-size: 16px;
-  line-height: 25px;
-  color: var(--text2);
-}
-
-.proPhoto {
-  position: relative;
-  aspect-ratio: 5 / 5.4;
-  border-radius: 32px;
-  overflow: hidden;
-}
-
-.toast {
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  bottom: 24px;
+.proPoints li {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: var(--lift);
+  align-items: baseline;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 16px;
 }
 
-.toast img {
-  object-fit: contain;
+.proPoints strong {
+  flex: none;
+  min-width: 128px;
+  font-family: var(--font-display), serif;
+  font-size: 24px;
+  font-weight: 700;
 }
 
-.toast strong {
-  display: block;
-  font-size: 15px;
+.proPoints span {
+  color: rgba(57, 33, 12, 0.82);
 }
 
-.toast small {
-  font-size: 13px;
-  color: var(--text2);
+/* Photo façon tirage papier, légèrement inclinée, monogramme doré en coin. */
+.polaroidWrap {
+  position: relative;
+  padding: 24px 24px 56px;
+}
+
+.polaroid {
+  padding: 16px 16px 16px;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 30px 60px rgba(57, 33, 12, 0.16), 0 2px 6px rgba(57, 33, 12, 0.08);
+  transform: rotate(3deg);
+  transition: transform 0.6s var(--ease);
+}
+
+.polaroidWrap:hover .polaroid {
+  transform: rotate(1.5deg) translateY(-4px);
+}
+
+.polaroidPhoto {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.monogram {
+  position: absolute;
+  right: -8px;
+  bottom: 0;
+  width: 150px;
+  height: auto;
+  filter: drop-shadow(0 6px 14px rgba(201, 138, 28, 0.25));
 }
 
 /* ---------- FAQ (page Comment ça marche) ---------- */
@@ -691,6 +720,19 @@
 
   .phones {
     height: 500px;
+  }
+
+  .polaroidWrap {
+    padding: 12px 12px 48px;
+  }
+
+  .monogram {
+    width: 104px;
+  }
+
+  .proPoints strong {
+    min-width: 104px;
+    font-size: 20px;
   }
 
   .phone {
