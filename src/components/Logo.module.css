@@ -1,0 +1,21 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mark {
+  height: 30px;
+  width: auto;
+}
+
+.word {
+  height: 22px;
+  width: auto;
+}
+
+@media (max-width: 720px) {
+  .hideSmall {
+    display: none;
+  }
+}

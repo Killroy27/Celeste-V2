@@ -1,0 +1,252 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  transition: box-shadow 0.3s;
+}
+
+.raised {
+  box-shadow: var(--sticky);
+}
+
+.top {
+  max-width: 1440px;
+  height: var(--header-h);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.brand,
+.actions {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.actions {
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+/* Centre : liens texte en haut de page, pilule de recherche une fois la barre du hero passée. */
+.center {
+  position: relative;
+  flex: none;
+  width: 560px;
+  height: 100%;
+}
+
+.links,
+.pill {
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease), visibility 0.3s;
+}
+
+.links {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.links a {
+  transition: opacity 0.2s;
+}
+
+.links a:hover {
+  opacity: 0.65;
+}
+
+.pill {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 420px;
+  height: 48px;
+  margin: -24px 0 0 -210px;
+  display: flex;
+  align-items: center;
+  padding: 0 6px 0 22px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px) scale(0.94);
+}
+
+.pill:hover {
+  box-shadow: var(--lift);
+}
+
+.isCompact .links {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-14px);
+}
+
+.isCompact .pill {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.pillPart {
+  white-space: nowrap;
+}
+
+.pillMuted {
+  font-weight: 400;
+  color: var(--text2);
+}
+
+.pillSep {
+  width: 1px;
+  height: 20px;
+  margin: 0 14px;
+  background: var(--line);
+}
+
+.pillGo {
+  margin-left: auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pro {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.pro:hover {
+  opacity: 0.65;
+}
+
+.cta {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: var(--brand);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.cta:hover {
+  background: var(--brand-hover);
+  transform: translateY(-1px);
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 6px 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.account:hover {
+  box-shadow: var(--shadow);
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--sunken);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tablette : plus de place pour les liens, la pilule reste toujours visible. */
+@media (max-width: 1100px) {
+  .pro {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .top {
+    gap: 12px;
+  }
+
+  .brand {
+    flex: none;
+  }
+
+  .center {
+    flex: 1;
+    width: auto;
+  }
+
+  .links {
+    display: none;
+  }
+
+  .pill,
+  .isCompact .pill {
+    left: 0;
+    right: 0;
+    width: auto;
+    margin: -24px 0 0;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .actions {
+    flex: none;
+  }
+
+  .cta {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .pill {
+    padding-left: 16px;
+    font-size: 13px;
+  }
+
+  .pillSep {
+    margin: 0 8px;
+  }
+
+  .account {
+    padding: 0 4px;
+    gap: 0;
+  }
+
+  .account > svg {
+    display: none;
+  }
+}

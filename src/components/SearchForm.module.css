@@ -1,0 +1,172 @@
+.form {
+  display: flex;
+  align-items: center;
+  width: 760px;
+  max-width: 100%;
+  height: 64px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+
+.dialog {
+  width: 860px;
+  height: 68px;
+}
+
+.seg {
+  flex: 1;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 24px;
+  border-radius: 999px;
+  cursor: text;
+  transition: background 0.25s;
+}
+
+.seg:hover {
+  background: var(--sunken);
+}
+
+.seg:focus-within {
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.what {
+  flex: 1.2;
+  padding-left: 28px;
+}
+
+.last {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-right: 7px;
+}
+
+.dateField {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  cursor: text;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.seg input {
+  width: 100%;
+  margin-top: 2px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 14px;
+  outline: none;
+}
+
+.seg input::placeholder {
+  color: var(--text2);
+}
+
+.sep {
+  width: 1px;
+  height: 28px;
+  background: var(--line);
+  flex: none;
+}
+
+.seg:hover + .sep,
+.sep:has(+ .seg:hover) {
+  opacity: 0;
+}
+
+.submit {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--brand);
+  color: var(--brown);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.submit:hover {
+  background: var(--brand-hover);
+}
+
+.submitText {
+  display: none;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.dialog .submit {
+  width: auto;
+  height: 52px;
+  padding: 0 22px;
+}
+
+.dialog .submitText {
+  display: inline;
+}
+
+/* Mobile : les trois champs s'empilent dans une carte, le bouton prend toute la largeur. */
+@media (max-width: 720px) {
+  .form,
+  .dialog {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    padding: 8px;
+    border-radius: 24px;
+  }
+
+  .seg,
+  .what {
+    padding: 12px 16px;
+    border-radius: 16px;
+  }
+
+  .seg input {
+    font-size: 16px;
+  }
+
+  .sep {
+    width: auto;
+    height: 1px;
+    margin: 0 16px;
+  }
+
+  .last {
+    flex-direction: column;
+    align-items: stretch;
+    padding-right: 16px;
+    gap: 12px;
+  }
+
+  .submit,
+  .dialog .submit {
+    width: 100%;
+    height: 48px;
+  }
+
+  .submitText {
+    display: inline;
+  }
+}

@@ -1,0 +1,130 @@
+.wall {
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  height: 330px;
+  margin-top: 26px;
+  overflow: hidden;
+  animation: fadeUp 1.2s var(--ease) 1.1s backwards;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 16px;
+  animation-name: drift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.wall:hover .col {
+  animation-play-state: paused;
+}
+
+@keyframes drift {
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.tile {
+  position: relative;
+  flex: none;
+  display: block;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--sunken);
+  transition: transform 0.5s var(--ease), box-shadow 0.5s;
+}
+
+.tile:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--lift);
+}
+
+.save {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.label {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Fondu vers la crème : aucune coupure avec la section suivante. */
+.fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 150px;
+  background: linear-gradient(to bottom, rgba(251, 247, 242, 0), var(--cream) 85%);
+  pointer-events: none;
+}
+
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .colWrap:nth-child(n + 4) {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .wall {
+    height: 280px;
+    margin-top: 22px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .col {
+    gap: 10px;
+    padding-bottom: 10px;
+  }
+
+  .colWrap:nth-child(n + 3) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .col {
+    animation: none;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
