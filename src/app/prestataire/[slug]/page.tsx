@@ -5,10 +5,9 @@ import { notFound } from "next/navigation";
 import { Avatar, ContactButton, ContactCard } from "@/components/ContactCard";
 import { FicheActions } from "@/components/FicheActions";
 import { GalleryTrigger, GalleryViewer } from "@/components/gallery/Gallery";
-import { SectionNav } from "@/components/SectionNav";
 import { VendorCard } from "@/components/VendorCard";
 import { VendorMapLazy } from "@/components/VendorMapLazy";
-import { getCategory, getVendor, priceLabel, vendors, vendorsIn } from "@/lib/content";
+import { getCategory, getVendor, priceLabel, reviewPool, vendors, vendorsIn } from "@/lib/content";
 import { actionsFor, availabilityFor, coordsFor, criteriaFor, faqFor, personFor, specsFor, teamFor, themeOf } from "@/lib/vendorDetail";
 import styles from "./page.module.css";
 
@@ -46,7 +45,23 @@ function Ico({ d }: { d: string }) {
 const pastel = ["#EDE7F6", "#E3F0E8", "#FDE8E4", "#E4EEF8", "#FBEFD8", "#F1E8E1"];
 const pastelInk = ["#5B3E96", "#2F6B47", "#A3473A", "#2F5D8A", "#8A5A0E", "#6B4A33"];
 
-function Section({ id, title, aside, children }: { id: string; title: string; aside?: React.ReactNode; children: React.ReactNode }) {
+function Laurel({ flip }: { flip?: boolean }) {
+  return (
+    <svg width="34" height="52" viewBox="0 0 34 52" aria-hidden="true" style={flip ? { transform: "scaleX(-1)" } : undefined}>
+      <g fill="#E2A23B">
+        <path d="M27 50C14 44 7 32 8 16" fill="none" stroke="#E2A23B" strokeWidth="2" strokeLinecap="round" />
+        <ellipse cx="6" cy="14" rx="3.2" ry="6.5" transform="rotate(-15 6 14)" />
+        <ellipse cx="5" cy="25" rx="3.2" ry="6.5" transform="rotate(-35 5 25)" />
+        <ellipse cx="8" cy="35" rx="3.2" ry="6.5" transform="rotate(-55 8 35)" />
+        <ellipse cx="14" cy="43" rx="3.2" ry="6.5" transform="rotate(-70 14 43)" />
+        <ellipse cx="14" cy="20" rx="2.8" ry="5.5" transform="rotate(25 14 20)" />
+        <ellipse cx="15" cy="31" rx="2.8" ry="5.5" transform="rotate(5 15 31)" />
+      </g>
+    </svg>
+  );
+}
+
+function Section({ id, title, aside, more, children }: { id: string; title: string; aside?: React.ReactNode; more?: React.ReactNode; children: React.ReactNode }) {
   return (
     <section id={id} className={styles.section} aria-labelledby={`${id}-t`}>
       <div className={styles.sectionHead}>
@@ -54,6 +69,7 @@ function Section({ id, title, aside, children }: { id: string; title: string; as
           {title}
         </h2>
         {aside}
+        {more && <span className={styles.headMore}>{more}</span>}
       </div>
       {children}
     </section>
@@ -83,6 +99,10 @@ export default async function VendorPage({ params }: Params) {
     .slice(0, 12)
     .map((src, i) => ({ src, alt: `${v.name} · photo ${i + 1}`, theme: themeOf(src) }));
   const portfolio = photos.slice(0, 5);
+  // Six avis (prototype : ceux du prestataire complétés par la réserve d'exemples).
+  const reviews = [...v.reviews, ...reviewPool].filter((r, i, a) => a.findIndex((x) => x.author === r.author) === i).slice(0, 6);
+  const ago = ["il y a 3 semaines", "il y a 1 mois", "il y a 2 mois", "il y a 3 mois", "il y a 5 mois", "il y a 6 mois"];
+  const best = [...criteria].sort((a, b) => b[1] - a[1]).slice(0, 2).map(([l]) => (l.startsWith("Rapport") ? "le " : "la ") + l.toLowerCase());
   const hidden = photos.length - portfolio.length;
 
   return (
@@ -152,21 +172,9 @@ export default async function VendorPage({ params }: Params) {
           </GalleryTrigger>
         </div>
 
-        <SectionNav
-          items={[
-            { id: "prestations", label: "Prestations" },
-            { id: "equipe", label: "Équipe" },
-            { id: "disponibilites", label: "Disponibilités" },
-            { id: "avis", label: "Avis" },
-            { id: "portfolio", label: "Portfolio" },
-            { id: "lieu", label: "Zone" },
-            { id: "a-savoir", label: "À savoir" },
-          ]}
-        />
-
         <div className={styles.layout}>
-          <div>
-            {/* Prestations : une liste, comme Fresha */}
+          <div className={styles.flow}>
+            {/* 1. Prestations */}
             <Section id="prestations" title="Prestations">
               <ul className={styles.services}>
                 {v.packages.map((p, i) => (
@@ -190,12 +198,12 @@ export default async function VendorPage({ params }: Params) {
               <p className={styles.note}>
                 Une demande particulière ? {first} peut vous proposer une offre sur mesure.{" "}
                 <Link href="/matchs" className={styles.link}>
-                  Vérifier notre compatibilité avec le Best Match
+                  Vérifier notre compatibilité
                 </Link>
               </p>
             </Section>
 
-            {/* Équipe : la personne d'abord */}
+            {/* 2. Équipe */}
             <Section id="equipe" title="Équipe">
               <ul className={styles.team}>
                 <li>
@@ -214,49 +222,17 @@ export default async function VendorPage({ params }: Params) {
                   </li>
                 ))}
               </ul>
-              <blockquote className={styles.quote}>« {person.bio} »</blockquote>
-              <p className={styles.text}>{v.description}</p>
-              {specs.length > 0 && (
-                <dl className={styles.specs}>
-                  {specs.map(([k, val]) => (
-                    <div key={k}>
-                      <dt>{k}</dt>
-                      <dd>{val}</dd>
-                    </div>
-                  ))}
-                </dl>
-              )}
             </Section>
 
-            {/* Disponibilités */}
-            <Section id="disponibilites" title="Disponibilités">
-              <ul className={styles.calendar}>
-                {calendar.map((c) => (
-                  <li key={c.month} data-status={c.status}>
-                    <span className={styles.dot} />
-                    <span className={styles.month}>{c.month}</span>
-                    <span className={styles.status}>{c.status}</span>
-                  </li>
-                ))}
-              </ul>
-              <div id="rendez-vous" className={styles.visit}>
-                <span>
-                  <strong>{actions.primary.kind === "message" ? "Envie de vous rencontrer avant de décider ?" : actions.primary.title + " ?"}</strong> Proposez un créneau, {first} le confirme ou en propose un autre.
-                </span>
-                <ContactButton kind={actions.primary.kind === "message" ? "meeting" : actions.primary.kind} className={styles.choose}>
-                  {actions.primary.kind === "message" ? "Proposer un rendez-vous" : actions.primary.label}
-                </ContactButton>
-              </div>
-            </Section>
-
-            {/* Avis */}
-            <Section id="avis" title={`Avis`} aside={<span className={styles.count}>{v.reviewsCount}</span>}>
+            {/* 3. Avis */}
+            <Section id="avis" title="Avis" aside={<span className={styles.count}>{v.reviewsCount}</span>} more={<a href="#avis" className={styles.more2}>Tout voir</a>}>
               <div className={styles.score}>
-                <span className={styles.scoreValue}>{v.rating}</span>
-                <span className={styles.scoreStars} aria-hidden="true">
-                  ★★★★★
-                </span>
-                <span className={styles.scoreLabel}>Recommandé par les couples</span>
+                <div className={styles.scoreRow}>
+                  <Laurel />
+                  <span className={styles.scoreValue}>{v.rating}</span>
+                  <Laurel flip />
+                </div>
+                <span className={styles.scoreLabel}>Coup de cœur des couples</span>
                 <small>Basé sur {v.reviewsCount} avis de couples ayant réservé</small>
               </div>
               <ul className={styles.criteria}>
@@ -264,15 +240,21 @@ export default async function VendorPage({ params }: Params) {
                   <li key={label}>
                     <span>{label}</span>
                     <strong>{score.toLocaleString("fr-FR")}</strong>
-                    <span className={styles.bar}>
-                      <i style={{ width: `${(score / 5) * 100}%` }} />
-                    </span>
                   </li>
                 ))}
               </ul>
+              <div className={styles.summary}>
+                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="#E2A23B" d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z" />
+                </svg>
+                <p>
+                  Les couples saluent surtout {best[0]} et {best[1]} de {first}. Ils décrivent un accompagnement {v.style.toLowerCase()}, attentif du premier message au jour J.
+                  <small>Résumé des avis par Céleste</small>
+                </p>
+              </div>
               <div className={styles.reviews}>
-                {v.reviews.map((r, i) => (
-                  <figure key={i} className={styles.review}>
+                {reviews.map((r, i) => (
+                  <figure key={r.author} className={styles.review}>
                     <figcaption>
                       <span className={styles.revAvatar} style={{ background: pastel[i % pastel.length], color: pastelInk[i % pastelInk.length] }}>
                         {r.author
@@ -284,17 +266,23 @@ export default async function VendorPage({ params }: Params) {
                         <strong>{r.author}</strong>
                         <span className={styles.revStars} aria-label={`${r.rating} étoiles sur 5`}>
                           {"★".repeat(r.rating)}
+                          <i>{"★".repeat(5 - r.rating)}</i>
                         </span>
                       </span>
                     </figcaption>
                     <blockquote>{r.text}</blockquote>
-                    <small>Mariés en {r.date} · avec {first}</small>
+                    <small>
+                      {ago[i % ago.length]} · {v.packages[i % v.packages.length].name} · avec {first}
+                    </small>
                   </figure>
                 ))}
               </div>
+              <button type="button" className={styles.allReviews}>
+                Voir les {v.reviewsCount} avis
+              </button>
             </Section>
 
-            {/* Portfolio */}
+            {/* 4. Portfolio */}
             <Section id="portfolio" title="Portfolio" aside={<span className={styles.count}>{photos.length}</span>}>
               <div className={styles.portfolio}>
                 {portfolio.map((p, i) => (
@@ -308,8 +296,25 @@ export default async function VendorPage({ params }: Params) {
               </div>
             </Section>
 
-            {/* Zone : vraie carte en couleur */}
-            <Section id="lieu" title={`Où travaille ${first}`}>
+            {/* 5. À propos */}
+            <Section id="a-propos" title="À propos">
+              <p className={styles.text}>
+                {person.bio} {v.description}
+              </p>
+              {specs.length > 0 && (
+                <dl className={styles.specs}>
+                  {specs.map(([k, val]) => (
+                    <div key={k}>
+                      <dt>{k}</dt>
+                      <dd>{val}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+            </Section>
+
+            {/* 6. Zone */}
+            <Section id="lieu" title="Zone d'intervention">
               <div className={styles.map}>
                 <VendorMapLazy lat={lat} lng={lng} label={`★ ${v.rating}`} />
               </div>
@@ -318,40 +323,60 @@ export default async function VendorPage({ params }: Params) {
               </p>
             </Section>
 
-            {/* À savoir */}
-            <Section id="a-savoir" title="À savoir">
-              <div className={styles.infos}>
-                <div>
-                  <Ico d={ico.shield} />
-                  <strong>{v.verified ? "Prestataire vérifié" : "Vérification en cours"}</strong>
-                  <span>Entreprise et identité contrôlées par Céleste.</span>
-                </div>
-                <div>
-                  <Ico d={ico.chat} />
-                  <strong>Échanges sur Céleste</strong>
-                  <span>Messages, offres et contrat restent au même endroit.</span>
-                </div>
-                <div>
-                  <Ico d={ico.card} />
-                  <strong>Paiement en ligne</strong>
-                  <span>30 % d&apos;acompte, puis le solde en une à trois fois.</span>
-                </div>
-                <div>
-                  <Ico d={ico.undo} />
-                  <strong>Annulation</strong>
-                  <span>Intégralement remboursée plus de 30 jours avant. Conditions affichées avant de réserver.</span>
-                </div>
-                <div>
-                  <Ico d={ico.calendar} />
-                  <strong>Date bloquée 48 h</strong>
-                  <span>Quand la discussion avance, le temps de décider sereinement.</span>
-                </div>
-                <div>
-                  <Ico d={ico.pin} />
-                  <strong>Déplacements</strong>
-                  <span>Frais éventuels précisés dans l&apos;offre.</span>
-                </div>
-              </div>
+            {/* 7. Disponibilités et renseignements, côte à côte comme Fresha */}
+            <div id="disponibilites" className={styles.twoCols}>
+              <section aria-labelledby="dispo-t">
+                <h2 id="dispo-t" className={styles.title}>
+                  Disponibilités
+                </h2>
+                <ul className={styles.calendar}>
+                  {calendar.map((c) => (
+                    <li key={c.month} data-status={c.status}>
+                      <span className={styles.dot} />
+                      <span className={styles.month}>{c.month}</span>
+                      <span className={styles.status}>{c.status}</span>
+                    </li>
+                  ))}
+                </ul>
+                <ContactButton kind={actions.primary.kind === "message" ? "meeting" : actions.primary.kind} className={`${styles.choose} ${styles.dispoBtn}`}>
+                  {actions.primary.kind === "message" ? "Proposer un rendez-vous" : actions.primary.label}
+                </ContactButton>
+              </section>
+              <section id="a-savoir" aria-labelledby="infos-t">
+                <h2 id="infos-t" className={styles.title}>
+                  Renseignements
+                </h2>
+                <ul className={styles.infoList}>
+                  <li>
+                    <Ico d={ico.shield} />
+                    {v.verified ? "Prestataire vérifié par Céleste" : "Vérification en cours"}
+                  </li>
+                  <li>
+                    <Ico d={ico.chat} />
+                    Répond en général en {v.responseTime}
+                  </li>
+                  <li>
+                    <Ico d={ico.card} />
+                    Paiement en ligne : 30 % d&apos;acompte, solde en 1 à 3 fois
+                  </li>
+                  <li>
+                    <Ico d={ico.undo} />
+                    Annulation remboursée plus de 30 jours avant
+                  </li>
+                  <li>
+                    <Ico d={ico.calendar} />
+                    Date bloquée 48 h pendant la discussion
+                  </li>
+                  <li>
+                    <Ico d={ico.pin} />
+                    Frais de déplacement précisés dans l&apos;offre
+                  </li>
+                </ul>
+              </section>
+            </div>
+
+            {/* 8. Questions */}
+            <Section id="questions" title="Questions fréquentes">
               <div className={styles.faq}>
                 {faq.map(([q, a]) => (
                   <details key={q} className={styles.qa}>
