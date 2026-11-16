@@ -80,142 +80,93 @@
   margin-top: 64px;
 }
 
-/* ---------- Best Match : carte de résultat avec le score expliqué ---------- */
+/* ---------- Best Match : les quatre styles ---------- */
 
-.matchCard {
+.matchVisual {
+  padding: 32px;
   border-radius: 32px;
-  overflow: hidden;
   background: var(--card);
-  border: 1.5px solid var(--brand);
-  box-shadow: 0 24px 60px rgba(201, 138, 28, 0.16);
+  box-shadow: var(--lift);
 }
 
-.matchPhoto {
+.matchQ {
+  display: block;
+  margin-bottom: 18px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.matchGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.matchChoice {
   position: relative;
-  height: 260px;
+  aspect-ratio: 4 / 3;
+  border-radius: 18px;
+  overflow: hidden;
+  outline: 3px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.2s, transform 0.2s;
 }
 
-.matchScore {
+.matchChoice:hover {
+  outline-color: var(--brand);
+  transform: translateY(-2px);
+}
+
+.matchChoice span {
   position: absolute;
-  left: 20px;
-  bottom: 20px;
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  padding: 10px 16px;
+  left: 12px;
+  bottom: 12px;
+  padding: 7px 14px;
   border-radius: 999px;
-  background: var(--brand);
+  background: rgba(255, 255, 255, 0.95);
   font-size: 14px;
   font-weight: 600;
-  box-shadow: var(--shadow);
-}
-
-.matchScore strong {
-  font-size: 20px;
-}
-
-.matchBody {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 24px 28px 28px;
-}
-
-.matchName strong {
-  display: block;
-  font-size: 20px;
-}
-
-.matchName span {
-  font-size: 14px;
-  color: var(--text2);
-}
-
-.matchWhy {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text2);
-}
-
-.matchReasons {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 10px;
-}
-
-.matchReasons li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 16px;
-}
-
-.matchReasons li span {
-  flex: none;
-  width: 26px;
-  height: 26px;
-  border-radius: 999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.ok span {
-  background: #fbefd8;
-  color: #9a6512;
-}
-
-.gap {
-  color: var(--text2);
-}
-
-.gap span {
-  background: var(--sunken);
-  color: var(--text2);
 }
 
 /* ---------- Pourquoi Céleste ---------- */
 
 .features {
-  margin: 88px auto 0;
+  margin: 88px 0 0;
   padding: 0;
   list-style: none;
-  max-width: 1120px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px 88px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 48px;
 }
 
 .feature {
   display: flex;
-  align-items: flex-start;
-  gap: 24px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
 }
 
 .feature img {
-  flex: none;
-  width: 88px;
-  height: 88px;
+  width: 112px;
+  height: 112px;
   object-fit: contain;
+  margin-bottom: 14px;
 }
 
 .feature h3 {
-  margin: 4px 0 8px;
+  margin: 0;
   font-size: 22px;
   font-weight: 600;
 }
 
+/* Texte plus foncé et plus grand : lisible d'un coup d'œil. */
 .feature p {
   margin: 0;
+  max-width: 270px;
   font-size: 17px;
   line-height: 27px;
-  color: var(--text2);
+  color: rgba(57, 33, 12, 0.82);
 }
 
 /* ---------- Avis ---------- */
@@ -355,14 +306,14 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 40px;
+  height: 44px;
   padding: 0 16px;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--card);
   font-size: 14px;
   font-weight: 600;
-  color: var(--text2);
+  color: var(--brown);
 }
 
 .stores small {
@@ -371,29 +322,84 @@
 }
 
 .phones {
-  display: flex;
-  justify-content: center;
+  position: relative;
+  height: 600px;
 }
 
 .phone {
-  width: 300px;
-  height: 600px;
+  position: absolute;
+  left: 8%;
+  top: 0;
+  width: 280px;
+  height: 570px;
   padding: 10px;
-  border-radius: 48px;
+  border-radius: 46px;
   background: var(--brown);
   box-shadow: var(--lift);
-  transform: rotate(-3deg);
+  z-index: 2;
+}
+
+.phoneBack {
+  left: auto;
+  right: 2%;
+  top: 56px;
+  transform: rotate(6deg);
+  z-index: 1;
 }
 
 .screen {
   height: 100%;
-  border-radius: 38px;
+  border-radius: 36px;
   overflow: hidden;
   background: var(--cream);
+}
+
+.screenPad {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 44px 18px 18px;
+  gap: 12px;
+  padding: 44px 16px 16px;
+}
+
+.appPhoto {
+  position: relative;
+  height: 58%;
+}
+
+.appBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 18px;
+}
+
+.appBody strong {
+  font-size: 17px;
+}
+
+.appBody small {
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.appChip {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #fbefd8;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.appBtn {
+  align-self: stretch;
+  margin-top: 8px;
+  padding: 12px;
+  border-radius: 999px;
+  background: var(--brand);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
 }
 
 .appTop small {
@@ -620,9 +626,14 @@
   }
 
   .features {
-    grid-template-columns: 1fr;
-    gap: 44px;
-    max-width: 640px;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px 32px;
+  }
+
+  .phones {
+    max-width: 520px;
+    width: 100%;
+    margin: 0 auto;
   }
 }
 
@@ -648,13 +659,13 @@
     margin-top: 56px;
   }
 
-  .feature {
-    gap: 16px;
+  .features {
+    grid-template-columns: 1fr;
   }
 
   .feature img {
-    width: 64px;
-    height: 64px;
+    width: 88px;
+    height: 88px;
   }
 
   .centerCta {
@@ -678,8 +689,17 @@
     padding: 0 16px;
   }
 
+  .phones {
+    height: 500px;
+  }
+
   .phone {
-    width: 260px;
-    height: 520px;
+    width: 220px;
+    height: 450px;
+    left: 2%;
+  }
+
+  .phoneBack {
+    right: 0;
   }
 }
