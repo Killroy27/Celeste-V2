@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { heroWords } from "@/lib/content";
+import { ArrowIcon } from "./icons";
 import { InspirationWall } from "./InspirationWall";
 import { SearchForm } from "./SearchForm";
 import styles from "./Hero.module.css";
@@ -39,12 +40,15 @@ export function Hero() {
       </div>
 
       {/* L'action principale : le test Best Match. */}
+      {/* Comme le « Télécharger l'app » de Fresha : une phrase, puis une pilule sobre. */}
       <div className={styles.matchs}>
-        <span>Pas encore d&apos;idée ?</span>
+        <p className={styles.matchLine}>
+          Pas encore d&apos;idée ? <strong>Vos prestataires idéaux en 2 minutes.</strong>
+        </p>
         <Link href="/matchs" className={styles.matchBtn}>
-          <Image src="/icons/match-puzzle.png" alt="" width={28} height={28} />
+          <Image src="/icons/match-puzzle.png" alt="" width={24} height={24} />
           Faire mon Best Match
-          <small>2 min</small>
+          <ArrowIcon size={14} />
         </Link>
       </div>
 
