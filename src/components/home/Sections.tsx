@@ -303,14 +303,15 @@ export function AppSoon() {
   );
 }
 
-/* ---------- 5. Prestataires : la promesse du modèle économique ---------- */
+/* ---------- 5. Prestataires : même design, message du modèle économique ---------- */
 
 // Ailleurs : un abonnement annuel, sans aucun client garanti.
-// Chez Céleste : rien à payer pour être présent, une commission seulement quand un couple signe (CDC §1.3).
-const proPoints = [
-  ["0 €", "pour créer votre profil et publier vos formules"],
-  ["0 €", "pour recevoir les demandes des couples"],
-  ["Une commission", "seulement quand un couple vous choisit et signe"],
+// Sur Céleste : rien à payer pour être présent, une commission seulement quand un couple signe (CDC §1.3).
+const proReasons = [
+  ["Aucun abonnement", "Votre profil et les demandes des couples : 0 €, toute l'année."],
+  ["Vous payez seulement quand vous signez", "Pas de réservation, pas de commission."],
+  ["Des couples qui vous correspondent", "Date, zone, budget et style connus avant de répondre."],
+  ["Vous êtes payé sereinement", "Contrat signé et acompte encaissés en ligne, avant le jour J."],
 ];
 
 export function ProBand() {
@@ -319,19 +320,17 @@ export function ProBand() {
       <div className={`container ${styles.split}`}>
         <Reveal className={styles.copy}>
           <span className={styles.kicker}>Lieux et prestataires du mariage</span>
-          <h2 id="pros" className={styles.proTitle}>
-            <span className={styles.proLine}>Un abonnement à l&apos;année.</span>
-            <span className={styles.proShout}>Zéro client garanti.</span>
-            <span className={styles.proTwist}>Ça, c&apos;était avant Céleste.</span>
+          <h2 id="pros" className={styles.big}>
+            Payez quand un couple vous choisit. Pas avant.
           </h2>
           <p className={styles.say}>
-            Ici, vous ne payez rien pour être présent. Vous payez seulement quand un couple vous choisit. Quand vous gagnez, Céleste gagne. Pas avant.
+            Ailleurs, vous payez un abonnement à l&apos;année, sans aucun client garanti. Sur Céleste, nous gagnons seulement quand vous gagnez.
           </p>
-          <ul className={styles.proPoints}>
-            {proPoints.map(([v, t]) => (
+          <ul className={styles.proReasons}>
+            {proReasons.map(([t, d]) => (
               <li key={t}>
-                <strong>{v}</strong>
-                <span>{t}</span>
+                <strong>{t}</strong>
+                <span>{d}</span>
               </li>
             ))}
           </ul>
@@ -339,13 +338,15 @@ export function ProBand() {
             Créer mon profil gratuitement
           </Link>
         </Reveal>
-        <Reveal className={styles.polaroidWrap}>
-          <div className={styles.polaroid}>
-            <div className={styles.polaroidPhoto}>
-              <Image src="/photos/dance.jpg" alt="Des invités qui dansent pendant une soirée de mariage" fill sizes="(max-width: 1000px) 90vw, 560px" style={{ objectFit: "cover", objectPosition: "50% 40%" }} />
-            </div>
+        <Reveal className={styles.proPhoto}>
+          <Image src="/photos/photog.jpg" alt="Une photographe au travail pendant un mariage" fill sizes="(max-width: 1000px) 100vw, 640px" style={{ objectFit: "cover", objectPosition: "50% 35%" }} />
+          <div className={styles.toast}>
+            <Image src="/icons/notification-bell.png" alt="" width={40} height={40} />
+            <span>
+              <strong>Nouvelle demande · 92 % compatible</strong>
+              <small>Claire & Thomas · 14 juin 2027 · Yvelines · champêtre</small>
+            </span>
           </div>
-          <Image src="/brand/monogram-gold.png" alt="" width={150} height={156} className={styles.monogram} />
         </Reveal>
       </div>
     </section>
