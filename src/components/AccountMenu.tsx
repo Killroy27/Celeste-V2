@@ -47,7 +47,7 @@ export function AccountMenu() {
             Mes coups de cœur{favorites.length > 0 ? ` (${favorites.length})` : ""}
           </Link>
           <Link role="menuitem" href="/matchs" onClick={close} className={styles.strong}>
-            Faire mon Best Match
+            Trouver mon Best Match
           </Link>
           <hr />
           <Link role="menuitem" href="/decouvrir" onClick={close}>

@@ -1,16 +1,16 @@
 import { Hero } from "@/components/Hero";
 import { VendorRows } from "@/components/home/Rows";
-import { AppSoon, BestMatch, ProBand, Promises, Proof } from "@/components/home/Sections";
+import { AppSoon, BestMatch, ProBand, Proof, WhyCeleste } from "@/components/home/Sections";
 
-// Chercher ou faire son Best Match en haut, parcourir le catalogue (« Métier · Lieu → »),
-// puis de grands blocs aérés, un message chacun : Best Match, promesses, preuve, application, prestataires.
+// Haut de page : chercher ou faire son Best Match, puis parcourir le catalogue.
+// Dessous, un entonnoir : Best Match → pourquoi Céleste → avis → application (e-mail) → prestataires.
 export default function Home() {
   return (
     <>
       <Hero />
       <VendorRows />
       <BestMatch />
-      <Promises />
+      <WhyCeleste />
       <Proof />
       <AppSoon />
       <ProBand />

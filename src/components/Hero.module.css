@@ -76,48 +76,52 @@
 
 .matchLine {
   margin: 0;
-  font-size: 17px;
+  font-size: 16px;
   color: var(--text2);
   text-align: center;
 }
 
-.matchLine strong {
-  color: var(--brown);
-  font-weight: 600;
-}
-
-/* Pilule secondaire, même famille que les boutons Filtres et Compte. */
+/* Bouton premium : bordure dorée, fond ivoire, flèche dans une pastille jaune. */
 .matchBtn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  height: 48px;
-  padding: 0 22px 0 16px;
-  border: 1px solid var(--line);
+  gap: 12px;
+  height: 56px;
+  padding: 0 8px 0 14px;
+  border: 1.5px solid var(--brand);
   border-radius: 999px;
-  background: var(--card);
-  font-size: 15px;
-  font-weight: 600;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  background: #fffaf0;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 10px 28px rgba(201, 138, 28, 0.16);
+  transition: background 0.25s, box-shadow 0.25s, transform 0.25s;
 }
 
 .matchBtn:hover {
-  border-color: var(--brown);
-  box-shadow: var(--shadow);
-  transform: translateY(-1px);
+  background: #fff3db;
+  box-shadow: 0 14px 34px rgba(201, 138, 28, 0.24);
+  transform: translateY(-2px);
 }
 
 .matchBtn img {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
 }
 
-.matchBtn svg {
-  transition: transform 0.2s;
+.matchGo {
+  width: 40px;
+  height: 40px;
+  margin-left: 4px;
+  border-radius: 999px;
+  background: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s var(--ease);
 }
 
-.matchBtn:hover svg {
+.matchBtn:hover .matchGo {
   transform: translateX(3px);
 }
 

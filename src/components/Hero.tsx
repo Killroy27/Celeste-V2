@@ -42,13 +42,13 @@ export function Hero() {
       {/* L'action principale : le test Best Match. */}
       {/* Comme le « Télécharger l'app » de Fresha : une phrase, puis une pilule sobre. */}
       <div className={styles.matchs}>
-        <p className={styles.matchLine}>
-          Pas encore d&apos;idée ? <strong>Vos prestataires idéaux en 2 minutes.</strong>
-        </p>
+        <p className={styles.matchLine}>Vous ne savez pas encore qui choisir ?</p>
         <Link href="/matchs" className={styles.matchBtn}>
-          <Image src="/icons/match-puzzle.png" alt="" width={24} height={24} />
-          Faire mon Best Match
-          <ArrowIcon size={14} />
+          <Image src="/icons/match-puzzle.png" alt="" width={28} height={28} />
+          Trouvez votre Best Match
+          <span className={styles.matchGo}>
+            <ArrowIcon size={14} />
+          </span>
         </Link>
       </div>
 

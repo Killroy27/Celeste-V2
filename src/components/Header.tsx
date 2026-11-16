@@ -92,7 +92,7 @@ export function Header({ watchId = "hero-search" }: Props) {
               Devenir prestataire
             </Link>
             <Link href="/matchs" className={styles.cta}>
-              Faire mon Best Match
+              Trouver mon Best Match
             </Link>
             <AccountMenu />
           </div>

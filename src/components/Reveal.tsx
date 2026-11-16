@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type ElementType, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode } from "react";
 import styles from "./Reveal.module.css";
 
-type Props = { as?: ElementType; className?: string; children: ReactNode };
+type Props = { as?: ElementType; className?: string; children: ReactNode } & Omit<HTMLAttributes<HTMLElement>, "className" | "children">;
 
 // Apparition douce à l'entrée dans l'écran. Fonctionne dans tous les navigateurs (pas de scroll-timeline).
-export function Reveal({ as: Tag = "div", className, children }: Props) {
+export function Reveal({ as: Tag = "div", className, children, ...rest }: Props) {
   const ref = useRef<HTMLElement>(null);
   const [shown, setShown] = useState(false);
 
@@ -27,7 +27,7 @@ export function Reveal({ as: Tag = "div", className, children }: Props) {
   }, []);
 
   return (
-    <Tag ref={ref} className={`${styles.reveal} ${shown ? styles.shown : ""} ${className ?? ""}`}>
+    <Tag ref={ref} className={`${styles.reveal} ${shown ? styles.shown : ""} ${className ?? ""}`} {...rest}>
       {children}
     </Tag>
   );

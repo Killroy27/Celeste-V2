@@ -8,7 +8,7 @@ const groups = [
     title: "Mariés",
     links: [
       ["Découvrir les prestataires", "/decouvrir"],
-      ["Faire mon Best Match", "/matchs"],
+      ["Trouver mon Best Match", "/matchs"],
       ["Inspirations", "/inspirations"],
       ["Mes coups de cœur", "/favoris"],
       ["Comment ça marche", "/comment-ca-marche"],

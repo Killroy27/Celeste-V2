@@ -63,7 +63,7 @@ export default function HowPage() {
           </div>
           <div className={styles.ctas}>
             <Link href="/matchs" className="btn">
-              Faire mon Best Match
+              Trouver mon Best Match
             </Link>
             <Link href="/decouvrir" className="btn btn-outline">
               Parcourir les prestataires
