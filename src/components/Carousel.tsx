@@ -5,9 +5,17 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowIcon } from "./icons";
 import styles from "./Carousel.module.css";
 
-// Rangée défilante façon Fresha : titre à gauche, défilement libre au doigt ou à la molette,
-// flèches discrètes sur ordinateur. Pas d'onglets, pas de filtre : on parcourt, c'est tout.
-export function Carousel({ title, href, children, label }: { title: string; href?: string; children: ReactNode; label?: string }) {
+function Chevron({ left }: { left?: boolean }) {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d={left ? "M15 5l-7 7 7 7" : "M9 5l7 7-7 7"} />
+    </svg>
+  );
+}
+
+// Rangée façon Airbnb : « Métier · Lieu → » à gauche (lien vers les résultats),
+// deux chevrons en haut à droite pour faire défiler. Défilement libre au doigt.
+export function Carousel({ title, href, children, label }: { title?: string; href?: string; children: ReactNode; label?: string }) {
   const track = useRef<HTMLDivElement>(null);
   const [edge, setEdge] = useState({ start: true, end: false });
 
@@ -29,28 +37,37 @@ export function Carousel({ title, href, children, label }: { title: string; href
     if (el) el.scrollBy({ left: dir * el.clientWidth * 0.9, behavior: "smooth" });
   };
 
+  const scrollable = !(edge.start && edge.end);
+
   return (
     <section className={styles.row} aria-label={label ?? title}>
-      {title && (
       <div className={`container ${styles.head}`}>
-        <h2 className={styles.title}>{title}</h2>
-        {href && (
-          <Link href={href} className={styles.all}>
-            Tout voir
-          </Link>
+        {title &&
+          (href ? (
+            <Link href={href} className={styles.titleLink}>
+              <h2 className={styles.title}>{title}</h2>
+              <span className={styles.go}>
+                <ArrowIcon size={13} />
+              </span>
+            </Link>
+          ) : (
+            <h2 className={styles.title}>{title}</h2>
+          ))}
+        {scrollable && (
+          <div className={styles.chevrons}>
+            <button type="button" onClick={() => go(-1)} disabled={edge.start} aria-label="Précédents">
+              <Chevron left />
+            </button>
+            <button type="button" onClick={() => go(1)} disabled={edge.end} aria-label="Suivants">
+              <Chevron />
+            </button>
+          </div>
         )}
       </div>
-      )}
       <div className={styles.viewport}>
         <div ref={track} className={styles.track}>
           {children}
         </div>
-        <button type="button" className={`${styles.arrow} ${styles.prev}`} onClick={() => go(-1)} hidden={edge.start} aria-label="Précédents">
-          <ArrowIcon size={16} />
-        </button>
-        <button type="button" className={`${styles.arrow} ${styles.next}`} onClick={() => go(1)} hidden={edge.end} aria-label="Suivants">
-          <ArrowIcon size={16} />
-        </button>
       </div>
     </section>
   );

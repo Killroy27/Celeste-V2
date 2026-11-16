@@ -1,17 +1,19 @@
 import { Hero } from "@/components/Hero";
 import { VendorRows } from "@/components/home/Rows";
-import { Duo, Reviews, WhyCeleste } from "@/components/home/Sections";
+import { AppSoon, BestMatch, ProBand, Promises, Proof } from "@/components/home/Sections";
 
-// Chercher ou faire son Best Match en haut, parcourir le catalogue,
-// puis en trois temps : ce que fait Céleste, la preuve, les deux portes de sortie.
+// Chercher ou faire son Best Match en haut, parcourir le catalogue (« Métier · Lieu → »),
+// puis de grands blocs aérés, un message chacun : Best Match, promesses, preuve, application, prestataires.
 export default function Home() {
   return (
     <>
       <Hero />
       <VendorRows />
-      <WhyCeleste />
-      <Reviews />
-      <Duo />
+      <BestMatch />
+      <Promises />
+      <Proof />
+      <AppSoon />
+      <ProBand />
     </>
   );
 }
