@@ -35,6 +35,9 @@ const columns = [
   },
 ];
 
+// Cinq instants, du « oui » à la fête : ce qui donne vie au pied de page.
+const moments = ["/photos/confetti.jpg", "/photos/dance.jpg", "/photos/beach.jpg", "/photos/rain.jpg", "/photos/rings.jpg"];
+
 const legal = [
   ["Mentions légales", "/mentions-legales"],
   ["Confidentialité", "/confidentialite"],
@@ -48,6 +51,25 @@ export function Footer() {
   return (
     <footer className={styles.footer}>
       <div className="container">
+        {/* 0. Le souffle : une phrase, cinq instants de mariage */}
+        <div className={styles.story}>
+          <div className={styles.storyHead}>
+            <h2 className={styles.storyTitle}>
+              Chaque mariage, <em>une histoire à part.</em>
+            </h2>
+            <Link href="/inspirations" className={`${styles.link} ${styles.storyLink}`}>
+              Voir les inspirations <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+          <ul className={styles.ribbon} aria-hidden="true">
+            {moments.map((src) => (
+              <li key={src}>
+                <Image src={src} alt="" fill sizes="(max-width: 640px) 33vw, 260px" />
+              </li>
+            ))}
+          </ul>
+        </div>
+
         {/* 1. Signature + sommaire */}
         <div className={styles.top}>
           <div className={styles.brand}>

@@ -1,14 +1,94 @@
 /*
- * Pied de page éditorial, façon maison.
+ * Pied de page éditorial, façon maison, mais vivant.
+ * Des photos de mariage en ouverture, puis un fond qui se réchauffe vers le sable doré,
+ * sans lueur : la Maison respire au lieu de s'éteindre en crème.
  * Un seul axe vertical (colonne marque | colonne contenu) tient toutes les rangées.
- * Le doré n'apparaît qu'en filets, soulignements et contours : jamais en aplat.
  */
 
 .footer {
-  /* Fondu depuis la crème de la page : pas de coupure nette avec la dernière section. */
-  background: linear-gradient(180deg, var(--cream) 0, var(--sunken) 240px);
+  --gold-ink: #8a5d0f; /* doré foncé lisible pour les petits titres */
+  --gold-rule: rgba(214, 150, 40, 0.5);
+  position: relative;
+  overflow: hidden;
+  /* Fondu depuis la crème de la page, puis chaleur croissante jusqu'au bas. */
+  background: linear-gradient(180deg, var(--cream) 0, #f8efe0 40%, #f4e6cc 100%);
   color: var(--brown);
-  padding-top: 128px;
+  padding-top: 112px;
+}
+
+/* ---------- 0. Le souffle : phrase + bandeau photo ---------- */
+
+.story {
+  padding-bottom: 96px;
+}
+
+.storyHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px 40px;
+  margin-bottom: 40px;
+}
+
+.storyTitle {
+  margin: 0;
+  font-family: var(--font-display), Didot, serif;
+  font-size: clamp(34px, 4.2vw, 58px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+
+.storyTitle em {
+  font-weight: 400;
+  color: var(--gold-ink);
+}
+
+.storyLink {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.storyLink::after {
+  transform: scaleX(1);
+  background: var(--brand);
+  height: 1.5px;
+}
+
+.storyLink:hover::after {
+  transform: scaleX(0.4);
+}
+
+/* Cinq instants en portrait, en léger décalage comme une planche contact. */
+.ribbon {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0 0 28px;
+  list-style: none;
+}
+
+.ribbon li {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 18px 40px rgba(122, 76, 14, 0.16);
+}
+
+.ribbon li:nth-child(even) {
+  transform: translateY(28px);
+}
+
+.ribbon img {
+  object-fit: cover;
+  transition: transform 1.2s var(--ease);
+}
+
+.ribbon li:hover img {
+  transform: scale(1.05);
 }
 
 /* Grille commune à toutes les rangées : marque à gauche, contenu à droite. */
@@ -30,7 +110,7 @@
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--text2);
+  color: var(--gold-ink);
 }
 
 /* Lien : encre pleine, filet doré qui se déroule au survol. */
@@ -78,7 +158,7 @@
 }
 
 .lockup img:first-child {
-  width: 40px;
+  width: 44px;
   height: auto;
 }
 
@@ -125,7 +205,12 @@
 .meta {
   align-items: start;
   padding: 36px 0;
-  border-top: 1px solid rgba(238, 176, 72, 0.45);
+  border-top: 1px solid var(--gold-rule);
+}
+
+.top {
+  padding-top: 72px;
+  border-top: 1px solid var(--gold-rule);
 }
 
 /* Même grille que le sommaire : les métiers tombent sous Mariés, Prestataires, La Maison. */
@@ -175,7 +260,7 @@
 }
 
 .socials a:hover {
-  background: var(--outline-bg-hover);
+  background: var(--brand);
   box-shadow: var(--outline-shadow);
   transform: translateY(-2px);
 }
@@ -210,7 +295,7 @@
   flex-wrap: wrap;
   gap: 12px 32px;
   padding: 24px 0 32px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--gold-rule);
   font-size: 13px;
   color: var(--text2);
 }
@@ -243,6 +328,10 @@
     padding-bottom: 72px;
   }
 
+  .ribbon li:nth-child(even) {
+    transform: translateY(20px);
+  }
+
   .trades,
   .meta {
     row-gap: 20px;
@@ -255,7 +344,38 @@
 
 @media (max-width: 640px) {
   .footer {
-    padding-top: 88px;
+    padding-top: 80px;
+  }
+
+  .story {
+    padding-bottom: 64px;
+  }
+
+  .storyHead {
+    margin-bottom: 28px;
+  }
+
+  /* Trois instants suffisent sur téléphone. */
+  .ribbon {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    padding-bottom: 18px;
+  }
+
+  .ribbon li {
+    border-radius: 14px;
+  }
+
+  .ribbon li:nth-child(even) {
+    transform: translateY(18px);
+  }
+
+  .ribbon li:nth-child(n + 4) {
+    display: none;
+  }
+
+  .top {
+    padding-top: 56px;
   }
 
   .motto {
