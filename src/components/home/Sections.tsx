@@ -4,6 +4,7 @@ import { faq } from "@/lib/content";
 import { Carousel, Slide } from "../Carousel";
 import { Reveal } from "../Reveal";
 import { AppleLogo, GooglePlayLogo } from "../StoreBadges";
+import { AppPhones } from "./AppPhones";
 import { NotifyForm } from "./NotifyForm";
 import styles from "./Sections.module.css";
 
@@ -230,52 +231,7 @@ export function AppSoon() {
         </Reveal>
 
         <Reveal className={styles.phones} aria-hidden="true">
-          {/* Téléphone de devant : une fiche prestataire */}
-          <div className={styles.phone}>
-            <div className={styles.screen}>
-              <div className={styles.appPhoto}>
-                <Image src="/photos/kente.jpg" alt="" fill sizes="280px" style={{ objectFit: "cover", objectPosition: "50% 30%" }} />
-              </div>
-              <div className={styles.appBody}>
-                <strong>Atelier Kofi & Ama</strong>
-                <small>★ 5,0 · 87 avis · Paris 18e</small>
-                <span className={styles.appChip}>Vérifié</span>
-                <span className={styles.appBtn}>Demander un devis</span>
-              </div>
-            </div>
-          </div>
-          {/* Téléphone de derrière : le suivi du mariage */}
-          <div className={`${styles.phone} ${styles.phoneBack}`}>
-            <div className={`${styles.screen} ${styles.screenPad}`}>
-              <div className={styles.appTop}>
-                <small>Mon mariage</small>
-                <strong>J-210</strong>
-              </div>
-              <div className={styles.appNotif}>
-                <Image src="/icons/notification-bell.png" alt="" width={26} height={26} />
-                <span>
-                  <strong>Maison Lumen</strong>
-                  <small>vous a envoyé une offre révisée</small>
-                </span>
-              </div>
-              <div className={styles.appNotif}>
-                <Image src="/icons/calendar.png" alt="" width={26} height={26} />
-                <span>
-                  <strong>Solde du traiteur</strong>
-                  <small>échéance dans 5 jours</small>
-                </span>
-              </div>
-              <div className={styles.appList}>
-                <span className={styles.appListTitle}>Checklist</span>
-                {["Réserver le lieu", "Choisir le photographe", "Goûter le menu"].map((t, i) => (
-                  <span key={t} className={i < 2 ? styles.done : ""}>
-                    <i />
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
+          <AppPhones />
         </Reveal>
       </div>
     </section>

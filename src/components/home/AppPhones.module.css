@@ -1,0 +1,507 @@
+/*
+ * Deux vrais téléphones. Le cadre est en titane champagne (le doré de la marque),
+ * le bord d'écran noir, la vitre porte un léger reflet. Taille fixe, mise à l'échelle sur mobile.
+ */
+
+.stage {
+  --w: 290px;
+  --h: 600px;
+  position: relative;
+  width: 560px;
+  height: 680px;
+  margin: 0 auto;
+}
+
+/* ---------- Le boîtier, en volume ---------- */
+
+.stage {
+  perspective: 1700px;
+  perspective-origin: 50% 40%;
+}
+
+.device {
+  position: absolute;
+  width: var(--w);
+  height: var(--h);
+  transform-style: preserve-3d;
+}
+
+.front {
+  left: 10px;
+  top: 10px;
+  z-index: 2;
+  transform: rotateY(26deg) rotateX(6deg) rotateZ(-3deg);
+}
+
+.back {
+  right: 0;
+  top: 58px;
+  z-index: 1;
+  transform: rotateY(20deg) rotateX(6deg) rotateZ(2deg);
+}
+
+/* Couches de la tranche : même forme que la face, empilées vers l'arrière. */
+.slab,
+.rear {
+  position: absolute;
+  inset: 0;
+  border-radius: 54px;
+  backface-visibility: visible;
+}
+
+.rear {
+  background: linear-gradient(160deg, #e9d6b0, #cdb07a 45%, #b8955a);
+  box-shadow: inset 0 0 0 2px #8a6528;
+}
+
+.keys {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  padding: 3px;
+  border-radius: 54px;
+  /* Chanfrein poli : reflets métalliques sur le pourtour avant. */
+  background: linear-gradient(135deg, #fbf0d9 0%, #cfaa6c 16%, #f7e8c8 32%, #a9823f 54%, #efdcb2 74%, #b8914f 90%, #f6e6c4 100%);
+  box-shadow:
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.7),
+    inset 0 0 1px 1.5px rgba(80, 50, 10, 0.35);
+}
+
+/* Ombres au sol, sous chaque téléphone. */
+.floor {
+  position: absolute;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(57, 33, 12, 0.38), rgba(57, 33, 12, 0));
+  filter: blur(6px);
+}
+
+.floorFront {
+  left: 30px;
+  top: 590px;
+  width: 300px;
+}
+
+.floorBack {
+  right: 0;
+  top: 640px;
+  width: 300px;
+  opacity: 0.8;
+}
+
+/* Boutons latéraux, en relief sur la tranche. */
+.key {
+  position: absolute;
+  width: 5px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #8f6a2c, #f0dcb2 55%, #a98443);
+  box-shadow: 0 1px 1px rgba(57, 33, 12, 0.3);
+}
+
+.action,
+.volUp,
+.volDown {
+  left: -4px;
+}
+
+.action {
+  top: 108px;
+  height: 28px;
+}
+
+.volUp {
+  top: 158px;
+  height: 52px;
+}
+
+.volDown {
+  top: 222px;
+  height: 52px;
+}
+
+.power {
+  right: -4px;
+  top: 180px;
+  height: 84px;
+}
+
+.bezel {
+  height: 100%;
+  padding: 9px;
+  border-radius: 51px;
+  background: #0c0a08;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+
+.screen {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 42px;
+  background: var(--cream);
+  color: var(--brown);
+}
+
+.content {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Barre d'état, Dynamic Island, barre d'accueil, vitre ---------- */
+
+.status {
+  position: absolute;
+  z-index: 3;
+  inset: 0 0 auto;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 24px 0 34px;
+  color: var(--brown);
+}
+
+.light {
+  color: #fff;
+}
+
+.time {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.island {
+  position: absolute;
+  z-index: 4;
+  top: 11px;
+  left: 50%;
+  width: 90px;
+  height: 27px;
+  border-radius: 999px;
+  background: #000;
+  transform: translateX(-50%);
+}
+
+/* L'objectif de la caméra frontale. */
+.island::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #3b4a6b 0, #141a2a 45%, #050608 75%);
+  transform: translateY(-50%);
+}
+
+.homeBar {
+  position: absolute;
+  z-index: 4;
+  bottom: 7px;
+  left: 50%;
+  width: 36%;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(57, 33, 12, 0.88);
+  transform: translateX(-50%);
+}
+
+.glare {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(118deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0) 44%);
+  pointer-events: none;
+}
+
+/* ---------- Écran avant : fiche prestataire ---------- */
+
+.photo {
+  position: relative;
+  flex: none;
+  height: 54%;
+}
+
+/* Voile en haut pour garder la barre d'état lisible sur la photo. */
+.photo::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0 0 auto;
+  height: 90px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0));
+}
+
+.photoBar {
+  position: absolute;
+  z-index: 2;
+  top: 52px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.roundGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.round {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  color: var(--brown);
+}
+
+.liked svg {
+  fill: var(--brand);
+  stroke: var(--brand);
+}
+
+.count {
+  position: absolute;
+  z-index: 2;
+  right: 14px;
+  bottom: 30px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(20, 12, 4, 0.55);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* La fiche remonte sur la photo, comme dans l'app. */
+.sheet {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: -20px;
+  padding: 18px 18px 22px;
+  border-radius: 22px 22px 0 0;
+  background: var(--cream);
+}
+
+.chip {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #fbefd8;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.name {
+  margin-top: 8px;
+  font-family: var(--font-display), Didot, serif;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.meta {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text2);
+}
+
+.blurb {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--brown);
+}
+
+.cta {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.price small {
+  display: block;
+  font-size: 10.5px;
+  color: var(--text2);
+}
+
+.price strong {
+  font-size: 16px;
+}
+
+.btn {
+  padding: 11px 14px;
+  border-radius: 999px;
+  background: var(--brand);
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ---------- Écran arrière : mon mariage ---------- */
+
+.wedding {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 58px 14px 0;
+}
+
+.wTop {
+  padding: 0 4px 4px;
+}
+
+.wTop small {
+  font-size: 12px;
+  color: var(--text2);
+}
+
+.wTop strong {
+  display: block;
+  font-family: var(--font-display), Didot, serif;
+  font-size: 40px;
+  line-height: 1.05;
+}
+
+.notif {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 12px;
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.notif img {
+  flex: none;
+  object-fit: contain;
+}
+
+.notif strong {
+  display: block;
+  font-size: 13px;
+}
+
+.notif small {
+  font-size: 11.5px;
+  color: var(--text2);
+}
+
+.list {
+  display: grid;
+  gap: 9px;
+  padding: 13px;
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  font-size: 12.5px;
+}
+
+.listTitle {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+}
+
+.listTitle em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--text2);
+}
+
+.list span:not(.listTitle) {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.list i {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 5px;
+}
+
+.done {
+  color: var(--text2);
+  text-decoration: line-through;
+}
+
+.done i {
+  border-color: var(--brand);
+  background: var(--brand);
+}
+
+/* Barre d'onglets en bas, au-dessus de la barre d'accueil. */
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 9px 6px 22px;
+  border-top: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.tabs span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--text2);
+}
+
+.tabs .tabOn {
+  color: var(--brown);
+}
+
+.tabOn svg {
+  color: #c98a1c;
+}
+
+/* ---------- Mise à l'échelle ---------- */
+/* zoom réduit aussi la place occupée : aucun débordement horizontal. */
+
+@media (max-width: 720px) {
+  .stage {
+    zoom: 0.74;
+  }
+}
+
+@media (max-width: 480px) {
+  .stage {
+    zoom: 0.6;
+  }
+}
