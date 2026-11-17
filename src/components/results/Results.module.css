@@ -1,0 +1,715 @@
+/* Résultats : fond blanc, encre profonde, la couleur vient des photos.
+   L'or est réservé à l'invitation Best Match et au score de compatibilité. */
+
+.results {
+  --ink: #1f1408;
+  --muted: #6f6259;
+  --rule: #ebe5dc;
+  --bar-h: 76px;
+  max-width: 1760px;
+  margin: 0 auto;
+  padding: 0 var(--gutter) 96px;
+  color: var(--ink);
+}
+
+/* ---------- Filtres ---------- */
+
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 0 8px;
+}
+
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.dd {
+  position: relative;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s, transform 0.15s;
+}
+
+.pill:hover {
+  border-color: #cdc2b4;
+}
+
+.pill:active {
+  transform: scale(0.97);
+}
+
+.pill:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.pill[aria-expanded="true"],
+.pill[data-active] {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.pill[data-active] {
+  background: #fffaf0;
+}
+
+.caret {
+  transition: transform 0.2s;
+}
+
+.pill[aria-expanded="true"] .caret {
+  transform: rotate(180deg);
+}
+
+.sortKey {
+  color: var(--muted);
+}
+
+.pop {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 60;
+  padding: 18px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.04), 0 12px 40px rgb(31 20 8 / 0.16);
+  animation: popIn 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-origin: top left;
+}
+
+.pop[data-align="right"] {
+  right: 0;
+  left: auto;
+  padding: 8px;
+  transform-origin: top right;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+
+.popTitle {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.options {
+  display: grid;
+  margin: 0 -8px;
+}
+
+.pop[data-align="right"] .options {
+  margin: 0;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--ink);
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.option:hover {
+  background: #f7f3ee;
+}
+
+.box {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid #b9ad9e;
+  border-radius: 6px;
+  color: #fff;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.option[aria-checked="true"] .box {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+.option[aria-checked="true"] .box svg {
+  animation: tick 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes tick {
+  from {
+    transform: scale(0.3);
+  }
+}
+
+.radio {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid #b9ad9e;
+  border-radius: 50%;
+  transition: border 0.15s;
+}
+
+.option[aria-checked="true"] .radio {
+  border: 7px solid var(--ink);
+}
+
+.optLabel {
+  flex: 1;
+}
+
+.optCount {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.optStar {
+  color: #eeb048;
+}
+
+.optCheck {
+  color: var(--ink);
+}
+
+.option[role="radio"][aria-checked="true"] .optLabel {
+  font-weight: 600;
+}
+
+.popFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 14px -18px -18px;
+  padding: 12px 18px;
+  border-top: 1px solid var(--rule);
+}
+
+.clear {
+  padding: 8px 4px;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.clear:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.done {
+  height: 40px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.budgetValue {
+  margin: 0 0 14px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.slider {
+  width: 100%;
+  height: 28px;
+  margin: 0;
+  background: transparent;
+  appearance: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(to right, var(--ink) var(--p), #e6dfd5 var(--p));
+}
+
+.slider::-moz-range-track {
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(to right, var(--ink) var(--p), #e6dfd5 var(--p));
+}
+
+.slider::-webkit-slider-thumb {
+  width: 26px;
+  height: 26px;
+  margin-top: -11px;
+  border: 1px solid #ddd3c6;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.18);
+  appearance: none;
+  transition: transform 0.15s;
+}
+
+.slider::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border: 1px solid #ddd3c6;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.18);
+}
+
+.slider:active::-webkit-slider-thumb {
+  transform: scale(1.1);
+}
+
+.sliderEnds {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---------- Liste + carte ---------- */
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+}
+
+.results[data-map] .split {
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 40%);
+}
+
+.count {
+  margin: 12px 0 22px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.dnaNote {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.dnaLink {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 40px 24px;
+}
+
+.results[data-map] .grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 1500px) {
+  .results[data-map] .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.mapPane {
+  position: relative;
+}
+
+.mapBox {
+  position: sticky;
+  top: calc(var(--header-h) + var(--bar-h) + 16px);
+  height: calc(100vh - var(--header-h) - var(--bar-h) - 32px);
+  overflow: hidden;
+  border-radius: 18px;
+  background: #eef0ea;
+  isolation: isolate;
+}
+
+.mapLoading {
+  height: 100%;
+  background: #eef0ea;
+}
+
+/* ---------- Carte de résultat ---------- */
+
+.card {
+  position: relative;
+  min-width: 0;
+}
+
+.badge,
+.match {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 11px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.96);
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.08);
+  pointer-events: none;
+}
+
+.match i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #eeb048;
+  box-shadow: 0 0 0 3px rgb(238 176 72 / 0.25);
+}
+
+.save {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+}
+
+.info {
+  display: grid;
+  gap: 2px;
+  padding-top: 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.line {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 1px;
+  color: var(--ink);
+}
+
+.name {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.card:hover .name {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.rating {
+  flex: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.rating span {
+  color: var(--muted);
+}
+
+.meta {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.price {
+  margin-top: 5px;
+}
+
+.price strong {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Invitation Best Match : le seul contour or de la page */
+.invite {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  min-height: 100%;
+  padding: 26px;
+  border: var(--outline-gold);
+  border-radius: 14px;
+  background: var(--outline-gold-bg);
+  box-shadow: var(--outline-gold-shadow);
+}
+
+.inviteMark {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: auto;
+  border-radius: 50%;
+  background: #fff;
+  color: #c98a1c;
+}
+
+.inviteTitle {
+  margin: 0;
+  font-family: var(--font-display), serif;
+  font-size: 26px;
+  line-height: 1.12;
+}
+
+.inviteText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4a3d33;
+}
+
+.inviteCta {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  height: 44px;
+  margin-top: 8px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: var(--brand);
+  color: var(--brown);
+  font-size: 14px;
+  font-weight: 700;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.inviteCta:hover {
+  background: var(--brand-hover);
+  transform: translateY(-1px);
+}
+
+/* Fiche flottante sur la carte */
+.mapCard {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 500;
+  max-width: 420px;
+  margin: 0 auto;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 12px 36px rgb(0 0 0 / 0.22);
+  animation: popIn 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.mapCardLink {
+  display: flex;
+  gap: 14px;
+  padding: 10px;
+}
+
+.mapCardPhoto {
+  position: relative;
+  flex: none;
+  width: 104px;
+  height: 92px;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.mapCardText {
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.mapCardText strong {
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.mapCardText b {
+  color: var(--ink);
+}
+
+.mapCardClose {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 50%;
+  background: #f4efe8;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 72px 16px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.empty p {
+  margin: 0;
+}
+
+.emptyTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.empty button {
+  margin-top: 12px;
+}
+
+.toggle {
+  display: none;
+}
+
+/* ---------- Tablette et mobile : liste par défaut, bouton pour la carte ---------- */
+
+@media (max-width: 1100px) {
+  .results[data-map] .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .results[data-map] .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .mapPane {
+    display: none;
+  }
+
+  .results[data-view="map"] .listPane {
+    display: none;
+  }
+
+  .results[data-view="map"] .mapPane {
+    display: block;
+  }
+
+  .results[data-view="map"] .mapBox {
+    position: relative;
+    top: 0;
+    height: calc(100vh - var(--header-h) - var(--bar-h) - 90px);
+    min-height: 420px;
+  }
+
+  .toggle {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    z-index: 70;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 48px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+    transform: translateX(-50%);
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 720px) {
+  .results {
+    --bar-h: 68px;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .filterRow {
+    flex-wrap: nowrap;
+    max-width: calc(100% + var(--gutter) * 2);
+    overflow-x: auto;
+    margin: 0 calc(var(--gutter) * -1);
+    padding: 2px var(--gutter);
+    scrollbar-width: none;
+  }
+
+  .grid,
+  .results[data-map] .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pop {
+    position: fixed;
+    top: auto;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    width: auto !important;
+  }
+}
+
+/* Fond de carte apaisé : la couleur reste aux pastilles et aux photos. */
+.mapBox :global(.leaflet-tile-pane) {
+  filter: saturate(0.3) brightness(1.05) contrast(0.92);
+}

@@ -10,14 +10,16 @@ type Props = {
   onSelect?: (slug: string) => void;
   onFilters?: () => void;
   filtersCount?: number;
+  /** Même largeur que les rangées (.container) plutôt que la largeur des résultats. */
+  narrow?: boolean;
 };
 
 // Onglets des métiers, posés juste au-dessus de la grille qu'ils pilotent.
 // Collés sous l'en-tête tant qu'on parcourt la liste, puis ils s'en vont avec elle.
-export function CategoryBar({ active, onSelect, onFilters, filtersCount = 0 }: Props) {
+export function CategoryBar({ active, onSelect, onFilters, filtersCount = 0, narrow }: Props) {
   return (
     <div className={styles.bar}>
-      <div className={styles.inner}>
+      <div className={styles.inner} style={narrow ? { maxWidth: 1360 } : undefined}>
         <nav aria-label="Métiers" className={styles.cats}>
           {categories.map((c) => {
             const on = c.slug === active;
@@ -49,17 +51,12 @@ export function CategoryBar({ active, onSelect, onFilters, filtersCount = 0 }: P
             );
           })}
         </nav>
-        {onFilters ? (
+        {onFilters && (
           <button type="button" className={styles.filters} onClick={onFilters}>
             <FiltersIcon />
             <span>Filtres</span>
             {filtersCount > 0 && <b className={styles.n}>{filtersCount}</b>}
           </button>
-        ) : (
-          <Link href={`/prestataires/${active ?? "photographes"}#filtres`} className={styles.filters}>
-            <FiltersIcon />
-            <span>Filtres</span>
-          </Link>
         )}
       </div>
     </div>

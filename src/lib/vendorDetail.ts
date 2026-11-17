@@ -305,3 +305,11 @@ export function themeOf(src: string) {
   const key = src.split("/").pop()?.replace(/\.\w+$/, "") ?? "";
   return photoThemes[key] ?? "Autres";
 }
+
+// Position de l'épingle sur la carte des résultats : la zone d'activité, légèrement décalée
+// pour que deux prestataires du même secteur ne se superposent pas (prototype).
+export function pinFor(v: Vendor): [number, number] {
+  const [lat, lng] = coordsFor(v);
+  const h = hash(v.slug);
+  return [lat + (((h % 100) - 50) / 50) * 0.006, lng + ((((h >> 7) % 100) - 50) / 50) * 0.009];
+}

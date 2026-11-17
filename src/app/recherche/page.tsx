@@ -1,54 +1,53 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { Listing } from "@/components/Listing";
-import { PageIntro } from "@/components/PageIntro";
-import { searchVendors } from "@/lib/content";
+import { CategoryBar } from "@/components/CategoryBar";
+import { Results } from "@/components/results/Results";
+import { ResultsHead } from "@/components/results/ResultsHead";
+import { categories, getCategory, searchVendors } from "@/lib/content";
+import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "Recherche", robots: { index: false } };
 
 type Props = { searchParams: Promise<{ quoi?: string; ou?: string; quand?: string }> };
 
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 export default async function SearchPage({ searchParams }: Props) {
   const { quoi = "", ou = "", quand = "" } = await searchParams;
   const results = searchVendors({ quoi, ou });
-  const what = quoi.trim() || "Tous les prestataires";
-  const details = [ou.trim() && `à ${ou.trim()}`, quand.trim() && `pour le ${quand.trim()}`].filter(Boolean).join(" ");
+  const cats = [...new Set(results.map((v) => v.category))];
+  const single = cats.length === 1 ? getCategory(cats[0]) : undefined;
+  const q = quoi.trim();
+  const title = single && q ? single.plural : q ? cap(q) : "Tous les prestataires";
+  const place = ou.trim() ? cap(ou.trim()) : "Paris et Île-de-France";
 
   return (
-    <>
-      <PageIntro
-        crumbs={[["Recherche"]]}
-        title={
-          <>
-            {what} <em style={{ fontWeight: 600 }}>{details}</em>
-          </>
-        }
-        lead={
-          results.length
-            ? `${results.length} prestataire${results.length > 1 ? "s" : ""} disponible${results.length > 1 ? "s" : ""}. Comparez leurs offres et demandez un devis sans engagement.`
-            : undefined
-        }
-      />
+    <div style={{ background: "#fff" }}>
+      <ResultsHead crumbs={[["Recherche"]]} title={title} place={place} lead={quand.trim() ? `Date souhaitée : ${quand.trim()}.` : undefined} />
+      <CategoryBar active={single?.slug} />
       {results.length ? (
-        <Listing vendors={results} showCategory />
+        <Results vendors={results} category={single?.slug} showCategory={!single} />
       ) : (
-        <div className="container" style={{ paddingBottom: 96 }}>
-          <div className="card-surface" style={{ padding: 40, display: "grid", gap: 12, justifyItems: "start" }}>
-            <h2 className="h3">Aucun résultat pour cette recherche</h2>
-            <p className="muted" style={{ margin: 0 }}>
-              Vérifiez l&apos;orthographe, essayez un métier (photographe, traiteur, DJ…) ou laissez-nous vous proposer des prestataires.
-            </p>
-            <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
-              <Link href="/matchs" className="btn btn-sm">
-                Trouver mon Best Match
+        <div className={styles.empty}>
+          <h2>Rien pour « {q || ou} », pour l&apos;instant</h2>
+          <p>Vérifiez l&apos;orthographe ou partez d&apos;un métier :</p>
+          <div className={styles.cats}>
+            {categories.map((c) => (
+              <Link key={c.slug} href={`/prestataires/${c.slug}`} className={styles.cat}>
+                <Image src={c.icon} alt="" width={32} height={32} />
+                {c.plural}
               </Link>
-              <Link href="/decouvrir" className="link-underline">
-                Parcourir tous les métiers
-              </Link>
-            </div>
+            ))}
           </div>
+          <p className={styles.or}>
+            Ou laissez le Best Match vous proposer des profils :{" "}
+            <Link href="/matchs" className={styles.link}>
+              Trouver mon Best Match
+            </Link>
+          </p>
         </div>
       )}
-    </>
+    </div>
   );
 }
