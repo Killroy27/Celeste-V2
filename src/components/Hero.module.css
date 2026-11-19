@@ -30,57 +30,95 @@
   font-weight: 400; /* Roobert n'a pas d'italique ; le Regular garde le doré lisible */
 }
 
-/* Mot qui défile : dégradé doré qui miroite lentement. Exception assumée à la règle « jamais de texte jaune »
-   (docs/direction-artistique.md) : le dégradé part d'un or profond pour rester lisible, et seul ce mot la porte. */
+/* Mot qui défile, « soleil étincelant » (choix du 19/11/2026). Exception assumée à la règle « jamais de texte
+   jaune » (docs/direction-artistique.md) : seul ce mot la porte. Jaune vif et lumineux, un éclat blanc le traverse,
+   un halo chaud l'éclaire, et deux étoiles ✦ (celle du logo) scintillent autour. */
 .word {
+  position: relative;
+  justify-self: start; /* le mot garde sa largeur : les étoiles restent collées à lui */
   grid-area: 1 / 1;
   padding-bottom: 0.08em; /* les jambages (p, g) ne sont pas rognés par le découpage du dégradé */
   opacity: 0;
   white-space: nowrap;
-  background: linear-gradient(100deg, #b8770c 0%, #d9951f 30%, #eeb048 48%, #f7d488 54%, #eeb048 60%, #c9861a 100%);
-  background-size: 220% 100%;
+  background: linear-gradient(110deg, #f6a700 0%, #ffbf1f 32%, #ffd75e 44%, #fff6d6 50%, #ffd75e 56%, #ffbf1f 68%, #f6a700 100%);
+  background-size: 260% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   animation:
-    cycle var(--cycle) ease-in-out var(--delay) infinite,
-    shimmer 4s ease-in-out infinite alternate;
+    glow var(--cycle) ease-in-out var(--delay) infinite,
+    shine 3.2s cubic-bezier(0.45, 0, 0.25, 1) infinite;
 }
 
-/* Un mot apparaît seulement une fois le précédent effacé : il monte en place, puis s'efface en s'élevant. */
-@keyframes cycle {
+/* Les deux étoiles, qui scintillent en alternance. */
+.word::before,
+.word::after {
+  content: "✦";
+  position: absolute;
+  color: #ffb800;
+  -webkit-text-fill-color: #ffb800;
+  font-size: 0.34em;
+  line-height: 1;
+  pointer-events: none;
+  animation: twinkle 1.6s ease-in-out infinite;
+}
+
+.word::before {
+  top: 0;
+  right: -0.6em;
+}
+
+.word::after {
+  bottom: 0.2em;
+  left: -0.5em;
+  font-size: 0.22em;
+  animation-delay: 0.8s;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.6) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15) rotate(20deg);
+  }
+}
+
+/* Apparition : le mot monte en place en sortant d'un léger flou, avec son halo chaud (porté par le mot lui-même :
+   un filtre sur le conteneur effacerait le texte en dégradé dans Chrome), puis s'efface en s'élevant. */
+@keyframes glow {
   0% {
     opacity: 0;
     transform: translateY(0.28em);
-    filter: blur(6px);
+    filter: blur(6px) drop-shadow(0 4px 20px rgba(255, 184, 0, 0));
   }
-  4% {
-    opacity: 1;
-    transform: none;
-    filter: blur(0);
-  }
+  4%,
   15% {
     opacity: 1;
     transform: none;
-    filter: blur(0);
+    filter: blur(0) drop-shadow(0 4px 20px rgba(255, 184, 0, 0.35));
   }
   19% {
     opacity: 0;
     transform: translateY(-0.22em);
-    filter: blur(6px);
+    filter: blur(6px) drop-shadow(0 4px 20px rgba(255, 184, 0, 0));
   }
   100% {
     opacity: 0;
   }
 }
 
-/* Reflet qui traverse le mot, comme une lumière sur une feuille d'or. */
-@keyframes shimmer {
-  from {
+/* Éclat blanc qui balaie le mot de gauche à droite, puis une pause. */
+@keyframes shine {
+  0% {
     background-position: 100% 0;
   }
-  to {
-    background-position: -120% 0;
+  55%,
+  100% {
+    background-position: 0% 0;
   }
 }
 
@@ -163,7 +201,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .word {
+  .word,
+  .word::before,
+  .word::after {
     animation: none;
   }
 
@@ -187,6 +227,10 @@
     display: grid;
     justify-items: center;
     text-align: center;
+  }
+
+  .word {
+    justify-self: center;
   }
 
   /* Sur mobile, la pilule de l'en-tête est la seule recherche : pas de doublon. */

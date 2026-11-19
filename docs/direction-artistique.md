@@ -54,7 +54,7 @@ La crème `#fbf0e0` de la charte d'origine n'est **plus utilisée** : elle donna
 ### 3.3 Règles du jaune
 
 1. **Jamais de texte jaune** : sur fond clair, le contraste est de 1,9:1, donc illisible. Le jaune est toujours un **fond sous du texte noir** (10,3:1) ou une petite touche graphique (✦, soulignement, point de statut).
-   **Seule exception (19/11/2026, validée)** : le mot qui défile dans le titre de l'accueil (« photographe », « fleuriste »…), en dégradé doré qui miroite, du doré profond `#b8770c` au jaune `#eeb048`, en Regular et à très grande taille pour rester lisible. Aucun autre texte ne passe en jaune.
+   **Seule exception (19/11/2026, validée)** : le mot qui défile dans le titre de l'accueil (« photographe », « fleuriste »…), en « soleil étincelant » : jaune vif et lumineux (`#f6a700` → `#ffd75e`, éclat `#fff6d6`), un éclat blanc qui le traverse, un halo chaud et deux étoiles ✦ qui scintillent autour, en Regular et à très grande taille. Aucun autre texte ne passe en jaune.
 2. **Un seul bouton jaune dans le contenu visible**, en plus de celui de l'en-tête : celui du Best Match. Les pastilles de score jaunes sur les cartes sont autorisées, car elles portent la même signature.
 3. Le jaune ne s'achète pas, comme le badge Select : aucun élément sponsorisé n'utilise le jaune (CDC §3, §18.2).
 
