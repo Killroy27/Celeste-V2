@@ -2,17 +2,16 @@
   position: sticky;
   top: calc(var(--header-h) + 80px);
   overflow: hidden;
-  border: var(--outline-gold);
-  border-radius: 26px;
+  border: var(--outline);
+  border-radius: 24px;
   background: var(--card);
-  box-shadow: var(--outline-gold-shadow);
+  box-shadow: var(--lift);
   scroll-margin-top: calc(var(--header-h) + 80px);
 }
 
-/* Liseré doré en tête de carte. */
+/* Ancien liseré doré : retiré, l'or est réservé au Best Match (docs/direction-artistique.md §3.3). */
 .ribbon {
-  height: 5px;
-  background: linear-gradient(90deg, var(--brand), #f6d79c, var(--brand));
+  display: none;
 }
 
 .body {
@@ -27,14 +26,14 @@
 
 .who strong {
   display: block;
-  font-family: var(--font-display), Didot, serif;
+  font-family: var(--font-display);
   font-size: 22px;
   line-height: 1.15;
 }
 
 .who span {
   font-size: 14px;
-  color: rgba(57, 33, 12, 0.7);
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .avatar {
@@ -42,7 +41,7 @@
   flex: none;
   border-radius: 999px;
   overflow: hidden;
-  border: 2px solid var(--brand);
+  border: 2px solid var(--line);
   background: var(--outline-bg);
   display: inline-flex;
   align-items: center;
@@ -50,23 +49,23 @@
 }
 
 .initials {
-  font-family: var(--font-display), serif;
-  font-weight: 700;
-  color: #9a6512;
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--ink);
 }
 
 .priceBox {
   margin: 20px 0 16px;
   padding: 14px 16px;
   border-radius: 14px;
-  background: #f7f4ef;
+  background: var(--offwhite);
 }
 
 .priceValue {
   display: block;
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display);
   font-size: 30px;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1;
 }
 
@@ -74,7 +73,7 @@
   display: block;
   margin-top: 6px;
   font-size: 12px;
-  color: rgba(57, 33, 12, 0.7);
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .second {
@@ -93,7 +92,7 @@
 }
 
 .formTitle {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display);
   font-size: 20px;
 }
 
@@ -102,14 +101,14 @@
   font-size: 12px;
   line-height: 18px;
   text-align: center;
-  color: rgba(57, 33, 12, 0.7);
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .cancel {
   border: 0;
   background: none;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: underline;
   cursor: pointer;
 }
@@ -122,7 +121,7 @@
   gap: 8px;
   border-top: 1px solid var(--line);
   font-size: 13px;
-  color: rgba(57, 33, 12, 0.78);
+  color: rgba(0, 0, 0, 0.78);
 }
 
 .reassure li {
@@ -136,11 +135,11 @@
   width: 20px;
   height: 20px;
   border-radius: 999px;
-  background: #fbefd8;
+  background: var(--offwhite);
   display: grid;
   place-items: center;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .done {
@@ -158,13 +157,13 @@
 .done p {
   margin: 0;
   font-size: 14px;
-  color: rgba(57, 33, 12, 0.75);
+  color: rgba(0, 0, 0, 0.75);
 }
 
 .textLink {
   margin-top: 6px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: underline;
   text-decoration-color: var(--brand);
   text-underline-offset: 4px;
@@ -208,6 +207,30 @@
 
   .mobileWho small {
     font-size: 13px;
-    color: rgba(57, 33, 12, 0.7);
+    color: rgba(0, 0, 0, 0.7);
   }
+}
+
+/* Formule choisie depuis la fiche : rappelée au-dessus du message, retirable. */
+.formule {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.formule button {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }

@@ -3,7 +3,7 @@
   aspect-ratio: 20 / 19;
   overflow: hidden;
   border-radius: 14px;
-  background: #f2efe9;
+  background: var(--offwhite);
 }
 
 .link {
@@ -41,7 +41,7 @@
   border: 0;
   border-radius: 50%;
   background: rgb(255 255 255 / 0.94);
-  color: #1f1408;
+  color: var(--ink);
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.16);
   cursor: pointer;
   opacity: 0;

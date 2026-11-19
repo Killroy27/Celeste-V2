@@ -42,3 +42,6 @@ next-env.d.ts
 
 # dossiers de build parallèles
 /.next-*/
+
+# Archive de la police commerciale Roobert PRO (seuls les woff2 de src/fonts sont utilisés)
+font.zip

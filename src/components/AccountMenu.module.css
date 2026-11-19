@@ -47,7 +47,7 @@
   right: 0;
   top: calc(100% + 10px);
   z-index: 70;
-  width: 240px;
+  width: 260px;
   padding: 8px 0;
   background: var(--card);
   border-radius: 16px;
@@ -67,7 +67,52 @@
 }
 
 .strong {
-  font-weight: 600;
+  font-weight: 500;
+}
+
+/* Connecté : initiales en noir sur blanc cassé, et un en-tête de menu qui dit qui est connecté. */
+.signedIn {
+  background: var(--ink);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.who {
+  display: grid;
+  gap: 2px;
+  padding: 10px 18px 12px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+.who strong {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.who span {
+  overflow: hidden;
+  font-size: 12px;
+  color: var(--ink-3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.signOut {
+  padding: 12px 18px;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.signOut:hover {
+  background: var(--sunken);
 }
 
 .menu hr {

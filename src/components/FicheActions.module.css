@@ -14,7 +14,7 @@
   background: var(--outline-bg);
   color: var(--brown);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
 }
@@ -25,7 +25,7 @@
 }
 
 .on svg {
-  color: #c98a1c;
+  color: var(--brand-hover);
 }
 
 @media (max-width: 720px) {

@@ -1,0 +1,358 @@
+/* Mes prestataires (CDC §5.4) : colonnes par statut, vue synthétique en panneau latéral. */
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(200px, 1fr));
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.column {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 200px;
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--offwhite);
+}
+
+.columnTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.columnTitle span {
+  display: grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--white);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.cards {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--white);
+  text-align: left;
+  cursor: pointer;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.card:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow);
+}
+
+.thumb {
+  position: relative;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--offwhite);
+}
+
+.cardText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.cardText strong {
+  font-weight: 500;
+}
+
+.cat {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.none {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+/* ---------- Panneau latéral (dialog natif) ---------- */
+
+.drawer {
+  width: min(480px, 100vw);
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: var(--white);
+  box-shadow: var(--shadow-3);
+}
+
+.drawer::backdrop {
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.detail {
+  display: grid;
+  gap: 8px;
+  padding: 28px;
+}
+
+.detailHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.block {
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+
+.blockTitle {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.offer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.amount {
+  font-size: 22px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.offerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- Avis vérifié (§24) ---------- */
+
+.review {
+  display: grid;
+  gap: 8px;
+}
+
+.review p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.reviewTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reviewTop strong {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.reviewScores {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.reviewScores li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.reviewScores li span:last-child {
+  letter-spacing: 1px;
+  color: var(--ink);
+}
+
+.reviewForm {
+  display: grid;
+  gap: 14px;
+  padding: 28px;
+}
+
+.reviewForm p {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .reviewForm {
+    padding: 22px 18px calc(22px + env(safe-area-inset-bottom));
+  }
+}
+
+.starField {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.starField legend {
+  float: left;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.star {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 24px;
+  color: var(--line-strong);
+  cursor: pointer;
+}
+
+.star[data-on="true"] {
+  color: var(--ink);
+}
+
+.star:hover {
+  background: var(--hover);
+}
+
+.star:has(input:focus-visible) {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+.reviewActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.disputes {
+  display: grid;
+  gap: 10px;
+}
+
+/* ---------- Annulation, report, force majeure (§14.3, §14.4) ---------- */
+
+.kinds {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.kind {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.kind[data-checked="true"] {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.kind input {
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  accent-color: var(--ink);
+}
+
+.kind > span {
+  display: grid;
+  gap: 2px;
+}
+
+.kind strong {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.kind small {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--ink-3);
+}
+
+.notice {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--brand-soft);
+  font-size: 13px;
+  line-height: 18px;
+}

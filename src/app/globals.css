@@ -1,32 +1,60 @@
-/* Charte Céleste : le jaune est la couleur principale et d'accent, le brun sert uniquement d'encre. */
+/* Direction « Éditorial chaleureux » (docs/direction-artistique.md, page /charte) :
+   blanc dominant, noir pour le texte et l'action, jaune réservé à la signature Céleste (Best Match, score, Select). */
 :root {
+  /* Police unique : Roobert PRO (chargée dans layout.tsx). */
+  --font-sans: var(--font-roobert), system-ui, sans-serif;
+  --font-display: var(--font-roobert), system-ui, sans-serif;
+
+  /* Palette */
+  --white: #ffffff;
+  --offwhite: #fbf7f2; /* surface secondaire légère */
+  --ink: #000000;
+  --ink-2: #4d4d4d; /* texte secondaire, 8,5:1 sur blanc */
+  --ink-3: #6e6e6e; /* métadonnées, 5,1:1 sur blanc */
   --brand: #eeb048;
   --brand-hover: #e5a43a;
-  --brown: #39210c;
-  --cream: #fbf7f2;
-  --card: #ffffff;
-  --sunken: #f3ece2;
-  --text2: #6b5744;
-  --line: #e6dccf;
-  --strong: #9a8672;
+  --brand-soft: rgba(238, 176, 72, 0.16);
+  --hover: rgba(0, 0, 0, 0.04);
+  --line-strong: rgba(0, 0, 0, 0.18);
 
-  --shadow: 0 1px 2px rgba(57, 33, 12, 0.06), 0 8px 24px rgba(57, 33, 12, 0.08);
-  --lift: 0 1px 2px rgba(57, 33, 12, 0.08), 0 16px 36px rgba(57, 33, 12, 0.14);
-  --sticky: 0 1px 0 rgba(57, 33, 12, 0.06), 0 8px 20px rgba(57, 33, 12, 0.06);
+  /* Statuts (registre Produit) */
+  --pos-bg: #e7f1ea;
+  --pos-fg: #1d5c3a;
+  --pos-dot: #2f8a57;
+  --neg-bg: #f9e6e3;
+  --neg-fg: #8e2a1c;
+  --neg-dot: #c6452f;
+
+  /* Anciens noms, conservés pour les modules existants : ils pointent vers la nouvelle palette. */
+  --brown: var(--ink);
+  --cream: var(--white);
+  --card: var(--white);
+  --sunken: var(--offwhite);
+  --text2: var(--ink-2);
+  --line: #ebebeb;
+  --strong: var(--ink-3);
+
+  /* Élévation : noir pur, jamais teintée */
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --lift: 0 2px 6px rgba(0, 0, 0, 0.06), 0 12px 32px rgba(0, 0, 0, 0.1);
+  --sticky: 0 1px 0 rgba(0, 0, 0, 0.06), 0 8px 20px rgba(0, 0, 0, 0.05);
+  --shadow-1: var(--shadow);
+  --shadow-2: var(--lift);
+  --shadow-3: 0 24px 64px rgba(0, 0, 0, 0.18);
 
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
   /* Contours. Par défaut : neutre, discret (boutons secondaires, chevrons, cartes, badges…). */
   --outline: 1px solid var(--line);
-  --outline-bg: #ffffff;
-  --outline-bg-hover: #faf6f0;
+  --outline-bg: var(--white);
+  --outline-bg-hover: var(--offwhite);
   --outline-shadow: none;
 
-  /* Contour or (celui du bouton Best Match du hero) : réservé à 1 ou 2 éléments capitaux par page. */
+  /* Contour or : réservé au Best Match (signature Céleste). */
   --outline-gold: 1.5px solid var(--brand);
-  --outline-gold-bg: #fffaf0;
-  --outline-gold-bg-hover: #fff3db;
-  --outline-gold-shadow: 0 10px 28px rgba(201, 138, 28, 0.16);
+  --outline-gold-bg: var(--white);
+  --outline-gold-bg-hover: var(--offwhite);
+  --outline-gold-shadow: 0 10px 28px rgba(238, 176, 72, 0.22);
   --gutter: 40px;
   --header-h: 80px;
 }
@@ -62,7 +90,9 @@ a {
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
   color: inherit;
 }
@@ -70,6 +100,18 @@ input {
 img {
   display: block;
   max-width: 100%;
+}
+
+/* Roobert n'a pas d'italique : on évite l'italique synthétique du navigateur. L'emphase passe par la graisse. */
+em,
+i {
+  font-style: normal;
+}
+
+.display em,
+h1 em,
+h2 em {
+  font-weight: 300;
 }
 
 :focus-visible {
@@ -93,9 +135,9 @@ img {
   z-index: 100;
   padding: 12px 18px;
   border-radius: 999px;
-  background: var(--brown);
-  color: var(--card);
-  font-weight: 600;
+  background: var(--ink);
+  color: var(--white);
+  font-weight: 500;
 }
 
 .skip-link:focus {
@@ -131,7 +173,7 @@ img {
 .eyebrow {
   display: inline-block;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text2);
@@ -139,10 +181,10 @@ img {
 
 .display {
   margin: 0;
-  font-family: var(--font-display), Didot, serif;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.12;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
 }
 
 .h1 {
@@ -157,13 +199,15 @@ img {
   margin: 0;
   font-size: 20px;
   line-height: 26px;
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 .lead {
   margin: 0;
   font-size: 19px;
   line-height: 30px;
+  font-weight: 300;
   color: var(--text2);
 }
 
@@ -180,18 +224,37 @@ img {
   padding: 0 28px;
   border: 0;
   border-radius: 999px;
-  background: var(--brand);
-  color: var(--brown);
+  background: var(--ink);
+  color: var(--white);
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s, border-color 0.2s;
 }
 
-.btn:hover {
+/* Bouton principal : noir. */
+.btn:not(:disabled):hover {
+  background: #262626;
+}
+
+.btn:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Bouton signature : jaune, réservé au Best Match (un par écran). */
+.btn-signature {
+  background: var(--brand);
+  color: var(--ink);
+}
+
+.btn-signature:not(:disabled):hover {
   background: var(--brand-hover);
-  transform: translateY(-2px);
 }
 
 .btn-sm {
@@ -201,13 +264,15 @@ img {
 }
 
 .btn-outline {
-  background: var(--outline-bg);
-  border: var(--outline);
-  box-shadow: var(--outline-shadow);
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  box-shadow: none;
 }
 
-.btn-outline:hover {
-  background: var(--outline-bg-hover);
+.btn-outline:not(:disabled):hover {
+  background: var(--hover);
+  border-color: var(--ink);
 }
 
 .btn-block {
@@ -215,13 +280,13 @@ img {
 }
 
 .link-underline {
-  font-weight: 600;
-  border-bottom: 2px solid var(--brand);
+  font-weight: 500;
+  border-bottom: 1.5px solid var(--ink);
   transition: border-color 0.2s;
 }
 
 .link-underline:hover {
-  border-color: var(--brown);
+  border-color: var(--brand);
 }
 
 .card-surface {
@@ -235,7 +300,7 @@ img {
   flex-direction: column;
   gap: 6px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .field input,
@@ -244,7 +309,7 @@ img {
   width: 100%;
   min-height: 48px;
   padding: 12px 14px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   border-radius: 12px;
   background: var(--card);
   font-size: 15px;
@@ -261,8 +326,8 @@ img {
 .field select:focus,
 .field textarea:focus {
   outline: none;
-  border-color: var(--brown);
-  box-shadow: 0 0 0 3px rgba(238, 176, 72, 0.35);
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
 }
 
 .chip {
@@ -293,7 +358,7 @@ img {
 }
 
 .chip:hover {
-  border-color: #cfc3b4;
+  border-color: var(--ink);
 }
 
 .chip:active {
@@ -307,9 +372,10 @@ img {
 
 .chip[aria-pressed="true"],
 .chip[aria-current="page"] {
-  border-color: var(--brown);
-  box-shadow: inset 0 0 0 1px var(--brown);
-  background: #fffaf0;
+  border-color: var(--ink);
+  box-shadow: none;
+  background: var(--ink);
+  color: var(--white);
   padding-left: 13px;
 }
 
@@ -325,9 +391,9 @@ img {
   gap: 6px;
   padding: 4px 10px;
   border-radius: 999px;
-  background: #fbefd8;
+  background: var(--offwhite);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 @keyframes fadeUp {
@@ -355,4 +421,13 @@ img {
 body:has([data-espace]) [data-site-header],
 body:has([data-espace]) > footer {
   display: none;
+}
+
+/* Cartes Leaflet : tuiles désaturées pour rester neutres (docs/direction-artistique.md §6). */
+.celeste-map .leaflet-tile {
+  filter: grayscale(1) contrast(0.92) brightness(1.04);
+}
+
+.celeste-map.leaflet-container {
+  background: var(--offwhite);
 }

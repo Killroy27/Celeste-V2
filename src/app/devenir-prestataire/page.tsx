@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { SimpleForm } from "@/components/SimpleForm";
-import { categories, proPricing } from "@/lib/content";
+import { proPricing } from "@/lib/content";
+import { ProSignup } from "./ProSignup";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -126,10 +126,10 @@ export default function ProPage() {
           <div>
             <span className="eyebrow">Inscription</span>
             <h2 id="inscription-title" className="display h2" style={{ marginTop: 10 }}>
-              Créez votre fiche
+              Créez votre compte
             </h2>
             <p className="lead" style={{ marginTop: 12 }}>
-              Laissez-nous vos coordonnées : un membre de l&apos;équipe vous recontacte pour mettre votre profil en ligne avec vous.
+              Votre compte est créé en deux minutes, sans attendre de validation. Complétez votre fiche à votre rythme : l&apos;équipe vérifie ensuite vos justificatifs pour le badge Vérifié.
             </p>
             <figure className={styles.quote}>
               <blockquote>« Depuis Céleste, je n&apos;ai plus de demandes à côté de mon style. Les couples arrivent avec un projet clair. »</blockquote>
@@ -137,45 +137,7 @@ export default function ProPage() {
             </figure>
           </div>
           <div className="card-surface" style={{ padding: 28 }}>
-            <SimpleForm submit="Envoyer ma demande" doneTitle="Merci, c'est noté !" doneText="Nous vous recontactons très vite pour créer votre profil ensemble.">
-              <div className={styles.row2}>
-                <label className="field">
-                  Prénom et nom
-                  <input name="nom" autoComplete="name" required />
-                </label>
-                <label className="field">
-                  Entreprise
-                  <input name="entreprise" autoComplete="organization" required />
-                </label>
-              </div>
-              <label className="field">
-                Métier
-                <select name="metier" required defaultValue="">
-                  <option value="" disabled>
-                    Choisir…
-                  </option>
-                  {categories.map((c) => (
-                    <option key={c.slug} value={c.slug}>
-                      {c.plural}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <div className={styles.row2}>
-                <label className="field">
-                  E-mail
-                  <input type="email" name="email" autoComplete="email" required />
-                </label>
-                <label className="field">
-                  Téléphone
-                  <input type="tel" name="tel" autoComplete="tel" required />
-                </label>
-              </div>
-              <label className="field">
-                Ville
-                <input name="ville" autoComplete="address-level2" placeholder="Paris" />
-              </label>
-            </SimpleForm>
+            <ProSignup />
           </div>
         </div>
       </section>

@@ -131,11 +131,12 @@
   width: 40px;
   height: 40px;
   border-radius: 999px;
-  background: var(--brand);
+  background: var(--ink);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  font-weight: 500;
+  color: var(--white);
 }
 
 .plans {
@@ -158,7 +159,7 @@
 }
 
 .planStar {
-  border: 2px solid var(--brand);
+  border: 2px solid var(--ink);
   box-shadow: var(--lift);
 }
 
@@ -168,13 +169,14 @@
   left: 28px;
   padding: 4px 12px;
   border-radius: 999px;
-  background: var(--brand);
+  background: var(--ink);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
+  color: var(--white);
 }
 
 .planPrice strong {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display);
   font-size: 40px;
 }
 
@@ -195,12 +197,12 @@
 .quote {
   margin: 32px 0 0;
   padding-left: 20px;
-  border-left: 3px solid var(--brand);
+  border-left: 3px solid var(--ink);
 }
 
 .quote blockquote {
   margin: 0;
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display);
   font-size: 20px;
   line-height: 1.4;
 }
@@ -245,4 +247,47 @@
   .row2 {
     grid-template-columns: 1fr;
   }
+}
+
+/* Inscription ouverte (CDC §16.2) */
+.signup {
+  display: grid;
+  gap: 16px;
+}
+
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.consent input {
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  accent-color: var(--ink);
+}
+
+.consent a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--neg-bg);
+  font-size: 14px;
+  color: var(--neg-fg);
+}
+
+.signupNote {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--ink-3);
 }

@@ -37,13 +37,13 @@
   gap: 16px;
   padding: 14px 24px;
   background: rgba(255, 255, 255, 0.96);
-  border-bottom: 1px solid #ece7e1;
+  border-bottom: 1px solid var(--line);
 }
 
 .gridTitle {
   text-align: center;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .round {
@@ -67,7 +67,7 @@
 .tourTitle {
   margin: 0 0 20px;
   font-size: 26px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .themes {
@@ -99,7 +99,7 @@
   margin-bottom: 8px;
   border-radius: 10px;
   overflow: hidden;
-  background: #f2efe9;
+  background: var(--offwhite);
 }
 
 .themeThumb img {
@@ -116,7 +116,7 @@
 
 .themes small {
   font-size: 12px;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 .group {
@@ -124,7 +124,7 @@
   grid-template-columns: 240px 1fr;
   gap: 32px;
   padding: 40px 0;
-  border-top: 1px solid #ece7e1;
+  border-top: 1px solid var(--line);
   scroll-margin-top: 72px;
 }
 
@@ -136,14 +136,14 @@
 
 .groupHead h3 {
   margin: 0 0 4px;
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display);
   font-size: 26px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .groupHead span {
   font-size: 14px;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 .groupGrid {
@@ -158,7 +158,7 @@
   padding: 0;
   border: 0;
   overflow: hidden;
-  background: #f2efe9;
+  background: var(--offwhite);
   cursor: zoom-in;
 }
 
@@ -183,7 +183,7 @@
   z-index: 210;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  background: #0f0b07;
+  background: #000;
   color: #fff;
   animation: fade 0.25s ease;
 }
@@ -212,7 +212,7 @@
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
 }
 
@@ -222,7 +222,7 @@
 
 .counter {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   color: rgba(255, 255, 255, 0.85);
 }
 
@@ -299,7 +299,7 @@
 
 .thumbOn {
   opacity: 1;
-  border-color: var(--brand);
+  border-color: var(--ink);
 }
 
 @media (max-width: 720px) {

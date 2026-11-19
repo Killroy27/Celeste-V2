@@ -1,0 +1,604 @@
+/* Parcours de réservation (CDC §13.1) : étapes nettes, une action principale, résumé toujours visible. */
+
+.page {
+  display: grid;
+  gap: 20px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.back:hover {
+  color: var(--ink);
+}
+
+/* ---------- Étapes en accordéon : une seule ouverte, les autres repliées en une ligne ---------- */
+
+.acc {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.accItem {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  scroll-margin-top: 88px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.accItem[data-state="current"] {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-1, 0 4px 16px rgba(0, 0, 0, 0.06));
+}
+
+.accHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+}
+
+.accItem[data-state="current"] .accHead {
+  padding-bottom: 4px;
+}
+
+.accTitle {
+  flex: 1;
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.accLabel {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.accItem[data-state="todo"] .accLabel {
+  color: var(--ink-3);
+}
+
+.accTitle small {
+  overflow: hidden;
+  font-size: 13px;
+  color: var(--ink-3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.accEdit {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.accBody {
+  display: grid;
+  gap: 16px;
+  padding: 12px 24px 24px 66px;
+}
+
+.accBody > p,
+.accBody > section > p:first-child {
+  margin: 0;
+}
+
+.dot {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.accItem[data-state="current"] .dot,
+.accItem[data-state="done"] .dot {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--white);
+}
+
+.stack {
+  display: grid;
+  gap: 16px;
+}
+
+.stack > p {
+  margin: 0;
+}
+
+.inlineLink {
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.factLink {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Mise en page ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  align-items: start;
+  gap: 24px;
+}
+
+.main {
+  min-width: 0;
+}
+
+.panel {
+  display: grid;
+  gap: 16px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+}
+
+.panel > p {
+  margin: 0;
+}
+
+.summary {
+  position: sticky;
+  top: 88px;
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 20px;
+  background: var(--offwhite);
+}
+
+.vendor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vendor > span:last-child {
+  display: grid;
+}
+
+.vendor strong {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.vendor small {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.thumb {
+  position: relative;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.facts {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.facts > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.facts dt {
+  color: var(--ink-3);
+}
+
+.facts dd {
+  margin: 0;
+  text-align: right;
+}
+
+.facts strong {
+  font-weight: 500;
+}
+
+.totalRow {
+  padding-top: 10px;
+  border-top: 1px solid var(--line-strong);
+}
+
+.totalRow dd {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Lignes d'offre ---------- */
+
+.lines {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.lines li span:last-child {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--ink);
+  font-size: 14px;
+}
+
+.total strong {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Contrat ---------- */
+
+.contract {
+  max-height: 420px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--white);
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--ink-2);
+}
+
+.contract:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.contract h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.contract h4 {
+  margin: 18px 0 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.contract p {
+  margin: 0;
+}
+
+.ref {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.parties {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.parties strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.parties span {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.pending {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--brand-soft);
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--ink) !important;
+}
+
+.sign {
+  display: grid;
+  gap: 14px;
+}
+
+.agree {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.agree input {
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  accent-color: var(--ink);
+}
+
+.signed {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--pos-bg);
+  font-size: 14px;
+  color: var(--pos-fg) !important;
+}
+
+.note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+/* ---------- Paiement ---------- */
+
+.modes {
+  display: grid;
+  gap: 10px;
+}
+
+.mode {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.mode[data-checked="true"] {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.mode input {
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--ink);
+}
+
+.mode > span {
+  display: grid;
+  gap: 2px;
+}
+
+.mode strong {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.mode small {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.counts span {
+  margin-right: 4px;
+  color: var(--ink-2);
+}
+
+.counts button {
+  min-width: 72px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--white);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.counts button[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--white);
+}
+
+.schedule {
+  display: grid;
+  margin: 0;
+  padding: 4px 16px;
+  border-radius: 16px;
+  background: var(--offwhite);
+  list-style: none;
+}
+
+.schedule li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.schedule li:first-child {
+  border-top: 0;
+}
+
+.schedule li > span:first-child {
+  display: grid;
+}
+
+.schedule strong {
+  font-weight: 500;
+}
+
+.schedule small {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.schedule li > span:last-child {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.scheduleEnd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.subTitle {
+  margin: 8px 0 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* ---------- Confirmation ---------- */
+
+.done {
+  justify-items: center;
+  text-align: center;
+}
+
+.done .schedule {
+  width: 100%;
+  text-align: left;
+}
+
+.doneActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px 20px;
+}
+
+/* ---------- Petit écran : résumé en tête, panneaux pleine largeur ---------- */
+
+@media (max-width: 640px) {
+  .accHead {
+    padding: 16px 18px;
+  }
+
+  .accBody {
+    padding: 8px 18px 20px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary {
+    position: static;
+    order: -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .steps {
+    gap: 8px 14px;
+  }
+
+  .step > span,
+  .step > button {
+    gap: 7px;
+    font-size: 13px;
+  }
+
+  .dot {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  .panel {
+    padding: 20px 16px;
+    border: 0;
+    border-radius: 0;
+    margin: 0 calc(var(--gutter) * -1);
+  }
+
+  .contract {
+    max-height: 360px;
+    padding: 18px;
+  }
+}

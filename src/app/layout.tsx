@@ -1,19 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, DM_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import "./globals.css";
 
-const sans = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-});
-
-const display = Bodoni_Moda({
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  variable: "--font-display",
+// Roobert PRO : police unique du site (docs/direction-artistique.md §4). Pas de graisse 600 ni d'italique.
+const roobert = localFont({
+  src: [
+    { path: "../fonts/roobert/RoobertPRO-Light.woff2", weight: "300", style: "normal" },
+    { path: "../fonts/roobert/RoobertPRO-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/roobert/RoobertPRO-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/roobert/RoobertPRO-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-roobert",
   display: "swap",
 });
 
@@ -29,12 +28,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FBF7F2",
+  themeColor: "#FFFFFF",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${sans.variable} ${display.variable}`}>
+    <html lang="fr" className={roobert.variable}>
       <body>
         <a href="#contenu" className="skip-link">
           Aller au contenu

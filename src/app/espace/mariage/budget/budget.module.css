@@ -1,0 +1,274 @@
+/* Budget (CDC §15.1). Spécifications dataviz : barres fines aux extrémités arrondies, espace de 2 px
+   couleur du fond entre segments (jamais de contour), une seule rampe neutre, texte en encre, pas en couleur de série. */
+
+.track {
+  --gap: 2px;
+  display: flex;
+  gap: var(--gap);
+  height: 10px;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.trackLg {
+  height: 14px;
+}
+
+.seg {
+  position: relative;
+  min-width: 4px;
+  height: 100%;
+  border-radius: 999px;
+  outline: none;
+  transition: filter 0.15s;
+}
+
+.paid {
+  background: #111111;
+}
+
+.engaged {
+  background: #8c8c8c;
+}
+
+/* Le segment survolé ou focalisé réagit (éclaircissement léger) et affiche sa valeur. */
+.seg:hover,
+.seg:focus-visible {
+  filter: brightness(1.35);
+}
+
+.seg:focus-visible {
+  box-shadow: 0 0 0 2px var(--white), 0 0 0 4px var(--ink);
+}
+
+.tip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  z-index: 5;
+  display: grid;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--white);
+  box-shadow: var(--lift);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ink-3);
+  white-space: nowrap;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s;
+}
+
+/* La valeur d'abord, le libellé ensuite (méthode dataviz : « values lead, labels follow »). */
+.tip strong {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.seg:hover .tip,
+.seg:focus-visible .tip {
+  opacity: 1;
+}
+
+/* Zone de survol plus grande que la barre (cible ≥ 24 px). */
+.seg::after {
+  content: "";
+  position: absolute;
+  inset: -8px 0;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.key {
+  width: 14px;
+  height: 8px;
+  border-radius: 999px;
+}
+
+.keyTrack {
+  background: var(--line);
+}
+
+/* ---------- Synthèse ---------- */
+
+.summary {
+  display: grid;
+  gap: 20px;
+}
+
+.overrun {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--neg-fg);
+}
+
+/* ---------- Liste par poste (« meter list ») ---------- */
+
+.lines {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.1fr) 2fr minmax(170px, 1fr);
+  align-items: center;
+  gap: 8px 24px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+
+.line:first-child {
+  border-top: 0;
+}
+
+.lineName {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+}
+
+.lineName strong {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.figures {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--ink-3);
+  text-align: right;
+}
+
+.figures strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.lineActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.lineActions label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.lineActions input {
+  accent-color: var(--ink);
+}
+
+/* Sur écran étroit, la barre passe sous le nom (méthode dataviz). */
+@media (max-width: 760px) {
+  .line {
+    grid-template-columns: 1fr auto;
+  }
+
+  .line > :nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* ---------- Vue tableau ---------- */
+
+.tableView summary {
+  padding: 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.table {
+  width: 100%;
+  margin-top: 8px;
+  border-collapse: collapse;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.table th,
+.table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+}
+
+.table th:first-child,
+.table td:first-child {
+  text-align: left;
+}
+
+.table th {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+
+.table tfoot td {
+  font-weight: 500;
+  border-bottom: 0;
+}
+
+/* ---------- Échéancier ---------- */
+
+.payAction {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* Fenêtre de règlement d'une échéance */
+.payDialog {
+  display: grid;
+  gap: 14px;
+  padding: 28px;
+}
+
+.payDialog p {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .payDialog {
+    padding: 22px 18px calc(22px + env(safe-area-inset-bottom));
+  }
+}

@@ -2,9 +2,8 @@
    L'or est réservé à l'invitation Best Match et au score de compatibilité. */
 
 .results {
-  --ink: #1f1408;
-  --muted: #6f6259;
-  --rule: #ebe5dc;
+  --muted: var(--ink-3);
+  --rule: var(--line);
   --bar-h: 76px;
   max-width: 1760px;
   margin: 0 auto;
@@ -51,7 +50,7 @@
 }
 
 .pill:hover {
-  border-color: #cdc2b4;
+  border-color: #d4d4d4;
 }
 
 .pill:active {
@@ -70,7 +69,7 @@
 }
 
 .pill[data-active] {
-  background: #fffaf0;
+  background: var(--offwhite);
 }
 
 .caret {
@@ -93,7 +92,7 @@
   padding: 18px;
   border-radius: 18px;
   background: #fff;
-  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.04), 0 12px 40px rgb(31 20 8 / 0.16);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.04), 0 12px 40px rgb(0 0 0 / 0.16);
   animation: popIn 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
   transform-origin: top left;
 }
@@ -115,7 +114,7 @@
 .popTitle {
   margin: 0 0 10px;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .options {
@@ -145,7 +144,7 @@
 }
 
 .option:hover {
-  background: #f7f3ee;
+  background: var(--offwhite);
 }
 
 .box {
@@ -154,7 +153,7 @@
   place-items: center;
   width: 22px;
   height: 22px;
-  border: 1.5px solid #b9ad9e;
+  border: 1.5px solid #a3a3a3;
   border-radius: 6px;
   color: #fff;
   transition: background 0.15s, border-color 0.15s;
@@ -179,7 +178,7 @@
   flex: none;
   width: 22px;
   height: 22px;
-  border: 1.5px solid #b9ad9e;
+  border: 1.5px solid #a3a3a3;
   border-radius: 50%;
   transition: border 0.15s;
 }
@@ -206,7 +205,7 @@
 }
 
 .option[role="radio"][aria-checked="true"] .optLabel {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .popFoot {
@@ -224,7 +223,7 @@
   background: none;
   color: var(--ink);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
@@ -243,14 +242,14 @@
   background: var(--ink);
   color: #fff;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
 }
 
 .budgetValue {
   margin: 0 0 14px;
   font-size: 26px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: -0.01em;
 }
 
@@ -266,20 +265,20 @@
 .slider::-webkit-slider-runnable-track {
   height: 4px;
   border-radius: 4px;
-  background: linear-gradient(to right, var(--ink) var(--p), #e6dfd5 var(--p));
+  background: linear-gradient(to right, var(--ink) var(--p), var(--line) var(--p));
 }
 
 .slider::-moz-range-track {
   height: 4px;
   border-radius: 4px;
-  background: linear-gradient(to right, var(--ink) var(--p), #e6dfd5 var(--p));
+  background: linear-gradient(to right, var(--ink) var(--p), var(--line) var(--p));
 }
 
 .slider::-webkit-slider-thumb {
   width: 26px;
   height: 26px;
   margin-top: -11px;
-  border: 1px solid #ddd3c6;
+  border: 1px solid #d4d4d4;
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.18);
@@ -290,7 +289,7 @@
 .slider::-moz-range-thumb {
   width: 26px;
   height: 26px;
-  border: 1px solid #ddd3c6;
+  border: 1px solid #d4d4d4;
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.18);
@@ -323,7 +322,7 @@
 .count {
   margin: 12px 0 22px;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .dnaNote {
@@ -333,7 +332,7 @@
 
 .dnaLink {
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -364,13 +363,13 @@
   height: calc(100vh - var(--header-h) - var(--bar-h) - 32px);
   overflow: hidden;
   border-radius: 18px;
-  background: #eef0ea;
+  background: var(--offwhite);
   isolation: isolate;
 }
 
 .mapLoading {
   height: 100%;
-  background: #eef0ea;
+  background: var(--offwhite);
 }
 
 /* ---------- Carte de résultat ---------- */
@@ -394,7 +393,7 @@
   border-radius: 999px;
   background: rgb(255 255 255 / 0.96);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   box-shadow: 0 1px 4px rgb(0 0 0 / 0.08);
   pointer-events: none;
 }
@@ -433,7 +432,7 @@
 .name {
   overflow: hidden;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -465,7 +464,7 @@
 
 .price strong {
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--ink);
 }
 
@@ -491,12 +490,12 @@
   margin-bottom: auto;
   border-radius: 50%;
   background: #fff;
-  color: #c98a1c;
+  color: var(--brand-hover);
 }
 
 .inviteTitle {
   margin: 0;
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display);
   font-size: 26px;
   line-height: 1.12;
 }
@@ -505,7 +504,7 @@
   margin: 0;
   font-size: 14px;
   line-height: 1.5;
-  color: #4a3d33;
+  color: var(--ink-2);
 }
 
 .inviteCta {
@@ -519,7 +518,7 @@
   background: var(--brand);
   color: var(--brown);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   transition: background 0.2s, transform 0.2s;
 }
 
@@ -586,7 +585,7 @@
   height: 26px;
   border: 0;
   border-radius: 50%;
-  background: #f4efe8;
+  background: var(--offwhite);
   color: var(--ink);
   cursor: pointer;
 }
@@ -606,7 +605,7 @@
 
 .emptyTitle {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--ink);
 }
 
@@ -667,7 +666,7 @@
     background: var(--ink);
     color: #fff;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
     transform: translateX(-50%);
     cursor: pointer;
@@ -712,4 +711,41 @@
 /* Fond de carte apaisé : la couleur reste aux pastilles et aux photos. */
 .mapBox :global(.leaflet-tile-pane) {
   filter: saturate(0.3) brightness(1.05) contrast(0.92);
+}
+
+/* Filtre « Date » (CDC §9.1) */
+.dateInput {
+  width: 100%;
+  min-height: 44px;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+.dateInput:focus {
+  border-color: var(--ink);
+  outline: none;
+}
+
+/* Badge Céleste Select : pastille noire, losange jaune (seul badge qui porte le jaune, DA §4) */
+.selectTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  height: 22px;
+  margin-top: 4px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: var(--ink);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--offwhite);
+}
+
+.selectTag i {
+  font-style: normal;
+  color: var(--brand);
 }

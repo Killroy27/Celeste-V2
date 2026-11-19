@@ -23,7 +23,7 @@ export function Hero() {
               <span
                 key={w}
                 className={styles.word}
-                style={{ animationDuration: `${heroWords.length * STEP}s`, animationDelay: `${i * STEP - 1}s` }}
+                style={{ "--cycle": `${heroWords.length * STEP}s`, "--delay": `${i * STEP - 1}s` } as React.CSSProperties}
               >
                 {w}
               </span>

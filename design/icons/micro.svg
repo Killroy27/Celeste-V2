@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+  <!-- Micro vintage chromé (catégorie « Groupes & musique live ») -->
+  <defs>
+    <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="chrome" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#6b6f75"/>
+      <stop offset="0.18" stop-color="#d9dde2"/>
+      <stop offset="0.35" stop-color="#f7f8fa"/>
+      <stop offset="0.55" stop-color="#9ea3aa"/>
+      <stop offset="0.78" stop-color="#e3e6ea"/>
+      <stop offset="1" stop-color="#5d6167"/>
+    </linearGradient>
+    <linearGradient id="chromeV" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#f4f5f7"/>
+      <stop offset="0.5" stop-color="#a7acb3"/>
+      <stop offset="1" stop-color="#5f636a"/>
+    </linearGradient>
+    <linearGradient id="black" x1="0" x2="1">
+      <stop offset="0" stop-color="#121214"/>
+      <stop offset="0.3" stop-color="#3a3b40"/>
+      <stop offset="0.55" stop-color="#18181b"/>
+      <stop offset="1" stop-color="#050506"/>
+    </linearGradient>
+    <radialGradient id="grilleShade" cx="38%" cy="32%" r="75%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.75"/>
+      <stop offset="0.45" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.45"/>
+    </radialGradient>
+    <pattern id="mesh" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="7" height="7" fill="#b9bdc3"/>
+      <rect width="7" height="1.6" fill="#5c6067"/>
+      <rect width="1.6" height="7" fill="#5c6067"/>
+    </pattern>
+    <clipPath id="grille">
+      <rect x="112" y="40" width="96" height="132" rx="48"/>
+    </clipPath>
+    <linearGradient id="gold" x1="0" x2="1">
+      <stop offset="0" stop-color="#b8862d"/>
+      <stop offset="0.4" stop-color="#f6d58c"/>
+      <stop offset="0.7" stop-color="#eeb048"/>
+      <stop offset="1" stop-color="#9c6d1f"/>
+    </linearGradient>
+  </defs>
+
+  <ellipse cx="160" cy="292" rx="78" ry="12" fill="url(#shadow)"/>
+
+  <!-- Pied -->
+  <ellipse cx="160" cy="284" rx="62" ry="13" fill="#2a2b2f"/>
+  <ellipse cx="160" cy="280" rx="62" ry="13" fill="url(#chromeV)"/>
+  <ellipse cx="160" cy="278" rx="50" ry="9" fill="#d5d8dc" opacity="0.7"/>
+  <rect x="152" y="196" width="16" height="84" rx="6" fill="url(#chrome)"/>
+
+  <!-- Fourche -->
+  <path d="M104 150 C104 200, 216 200, 216 150" fill="none" stroke="#3a3c41" stroke-width="13" stroke-linecap="round"/>
+  <path d="M104 150 C104 200, 216 200, 216 150" fill="none" stroke="url(#chrome)" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="104" cy="150" r="9" fill="url(#chromeV)" stroke="#55585e" stroke-width="1.5"/>
+  <circle cx="216" cy="150" r="9" fill="url(#chromeV)" stroke="#55585e" stroke-width="1.5"/>
+
+  <!-- Corps -->
+  <rect x="128" y="150" width="64" height="44" rx="14" fill="url(#black)"/>
+  <rect x="128" y="160" width="64" height="7" fill="url(#gold)"/>
+
+  <!-- Grille -->
+  <rect x="112" y="40" width="96" height="132" rx="48" fill="url(#chrome)"/>
+  <g clip-path="url(#grille)">
+    <rect x="112" y="40" width="96" height="132" fill="url(#mesh)"/>
+    <rect x="112" y="98" width="96" height="10" fill="url(#chrome)"/>
+    <rect x="112" y="40" width="96" height="132" fill="url(#grilleShade)"/>
+  </g>
+  <rect x="112" y="40" width="96" height="132" rx="48" fill="none" stroke="#6a6e75" stroke-width="3"/>
+  <!-- Reflet -->
+  <path d="M130 66 C134 54, 146 48, 156 47" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity="0.85"/>
+</svg>

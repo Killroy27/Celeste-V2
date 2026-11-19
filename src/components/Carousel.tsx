@@ -46,19 +46,29 @@ export function Carousel({ title, href, children, label, more }: { title?: strin
 
   const scrollable = !(edge.start && edge.end);
 
+  // « Métier · Lieu » : le lieu reste d'un bloc, sinon « Île-de-France » se coupe au trait d'union sur mobile.
+  const [what, where] = title?.split(" · ") ?? [];
+  const titleNode = where ? (
+    <>
+      {what} · <span style={{ whiteSpace: "nowrap" }}>{where}</span>
+    </>
+  ) : (
+    title
+  );
+
   return (
     <section className={styles.row} aria-label={label ?? title}>
       <div className={`container ${styles.head}`}>
         {title &&
           (href ? (
             <Link href={href} className={styles.titleLink}>
-              <h2 className={styles.title}>{title}</h2>
+              <h2 className={styles.title}>{titleNode}</h2>
               <span className={styles.go}>
                 <ArrowIcon size={13} />
               </span>
             </Link>
           ) : (
-            <h2 className={styles.title}>{title}</h2>
+            <h2 className={styles.title}>{titleNode}</h2>
           ))}
         {scrollable && (
           <div className={styles.chevrons}>

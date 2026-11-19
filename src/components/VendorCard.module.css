@@ -37,7 +37,7 @@
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.95);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .save {
@@ -55,7 +55,7 @@
   justify-content: space-between;
   gap: 8px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 22px;
 }
 
@@ -89,7 +89,7 @@
 .price strong {
   font-size: 15px;
   color: var(--brown);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 @media (max-width: 1000px) {

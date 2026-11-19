@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { groupByTheme } from "@/lib/vendorDetail";
 import styles from "./Gallery.module.css";
 
 /* ---------- Petit état partagé : quelle vue est ouverte ---------- */
 
-type View = { mode: "closed" } | { mode: "grid" } | { mode: "photo"; index: number };
+type View = { mode: "closed" } | { mode: "grid"; theme?: string } | { mode: "photo"; index: number };
 
 let view: View = { mode: "closed" };
 const listeners = new Set<() => void>();
@@ -19,7 +20,8 @@ const subscribe = (l: () => void) => {
   return () => listeners.delete(l);
 };
 
-export const openGrid = () => set({ mode: "grid" });
+// theme : ouvre la visite photo directement sur ce thème.
+export const openGrid = (theme?: string) => set({ mode: "grid", theme });
 export const openPhoto = (index: number) => set({ mode: "photo", index });
 
 /* ---------- Déclencheurs : n'importe quelle photo de la page ouvre la galerie ---------- */
@@ -34,9 +36,20 @@ export function GalleryTrigger({ index, className, label, children }: { index?: 
 
 /* ---------- Visionneuse : grille de toutes les photos, puis plein écran ---------- */
 
+// Ouvre la visite photo sur un thème (pastilles de thèmes de la fiche).
+export function GalleryThemeButton({ theme, className, children }: { theme: string; className?: string; children: ReactNode }) {
+  return (
+    <button type="button" className={className} onClick={() => openGrid(theme)}>
+      {children}
+    </button>
+  );
+}
+
 export type Photo = { src: string; alt: string; theme?: string };
 
-export function GalleryViewer({ photos, title }: { photos: Photo[]; title: string }) {
+const slug = (t: string) => "theme-" + t.toLowerCase().normalize("NFD").replace(/[^a-z]/g, "");
+
+export function GalleryViewer({ photos, title, order }: { photos: Photo[]; title: string; order?: string[] }) {
   const v = useSyncExternalStore(subscribe, () => view, () => view);
   const touchX = useRef<number | null>(null);
   const [shown, setShown] = useState(false);
@@ -74,15 +87,19 @@ export function GalleryViewer({ photos, title }: { photos: Photo[]; title: strin
     };
   }, [v.mode, close, go]);
 
+  // Ouverture sur un thème précis : la visite photo défile jusqu'à sa section.
+  const theme = v.mode === "grid" ? v.theme : undefined;
+  useEffect(() => {
+    if (!shown || !theme) return;
+    const id = requestAnimationFrame(() => document.getElementById(slug(theme))?.scrollIntoView({ block: "start" }));
+    return () => cancelAnimationFrame(id);
+  }, [shown, theme]);
+
   if (v.mode === "closed" || !shown) return null;
 
   if (v.mode === "grid") {
     // Visite photo (façon Airbnb) : un aperçu par thème en haut, puis chaque thème en section à faire défiler.
-    const order = ["Cérémonie", "Le couple", "Préparatifs", "Réception", "La soirée", "Détails", "En coulisses", "Autres"];
-    const groups = order
-      .map((t) => ({ theme: t, items: photos.map((p, i) => ({ ...p, i })).filter((p) => (p.theme ?? "Autres") === t) }))
-      .filter((g) => g.items.length > 0);
-    const slug = (t: string) => "theme-" + t.toLowerCase().normalize("NFD").replace(/[^a-z]/g, "");
+    const groups = groupByTheme(photos, order);
 
     return (
       <div className={styles.gridView} role="dialog" aria-modal="true" aria-label={`Visite photo de ${title}`}>

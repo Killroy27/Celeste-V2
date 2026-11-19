@@ -33,8 +33,8 @@ export function BestMatch() {
           <h2 id="best-match" className={styles.big}>
             Dites-nous qui vous êtes. On vous dit qui choisir.
           </h2>
-          <p className={styles.say}>Quatre questions sur votre style et votre budget. Deux minutes plus tard, vos prestataires idéaux.</p>
-          <Link href="/matchs" className="btn">
+          <p className={styles.say}>Votre mariage en quelques images, puis une ou deux questions par métier. Deux minutes plus tard, vos prestataires idéaux, score expliqué.</p>
+          <Link href="/matchs" className="btn btn-signature">
             Trouver mon Best Match
           </Link>
         </Reveal>
@@ -99,7 +99,7 @@ export function WhyCeleste() {
           ))}
         </ul>
         <div className={styles.centerCta}>
-          <Link href="/matchs" className="btn">
+          <Link href="/matchs" className="btn btn-signature">
             Commencer mon mariage sur Céleste
           </Link>
         </div>
@@ -247,7 +247,7 @@ const proReasons = [
   ["0 € d'abonnement", "Votre profil et les demandes des couples sont offerts, toute l'année."],
   ["Des couples qui vous correspondent", "Date, zone, budget et style connus avant de répondre."],
   ["Vos tarifs restent les vôtres", "Adaptez votre formule au budget du couple, sans brader votre travail."],
-  ["Des réservations sécurisées", "Contrat signé et acompte encaissés en ligne, avant le jour J."],
+  ["Des réservations formalisées", "Offre acceptée, contrat signé et acompte encaissé en ligne, avant le jour J."],
 ];
 
 export function ProBand() {

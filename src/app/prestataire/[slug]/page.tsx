@@ -3,12 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Avatar, ContactButton, ContactCard } from "@/components/ContactCard";
+import { FicheNav } from "./FicheNav";
+import { LiveAbout, LiveSetting, PayRule } from "./LiveAbout";
+import { ReviewsButton, ReviewsDialog } from "./ReviewsDialog";
 import { FicheActions } from "@/components/FicheActions";
-import { GalleryTrigger, GalleryViewer } from "@/components/gallery/Gallery";
+import { GalleryThemeButton, GalleryTrigger, GalleryViewer } from "@/components/gallery/Gallery";
 import { VendorCard } from "@/components/VendorCard";
 import { VendorMapLazy } from "@/components/VendorMapLazy";
 import { getCategory, getVendor, priceLabel, reviewPool, vendors, vendorsIn } from "@/lib/content";
-import { actionsFor, availabilityFor, coordsFor, criteriaFor, faqFor, personFor, specsFor, teamFor, themeOf } from "@/lib/vendorDetail";
+import { actionsFor, availabilityFor, capacityFor, coordsFor, criteriaFor, faqFor, personFor, specsFor, teamFor, groupByTheme, themeOf, themeOrder } from "@/lib/vendorDetail";
 import styles from "./page.module.css";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -32,6 +35,8 @@ const ico = {
   calendar: "M4 6h16v14H4zM4 10h16M9 3v4M15 3v4",
   undo: "M9 14L4 9l5-5M4 9h10a6 6 0 010 12h-3",
   pin: "M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11zm0-8.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z",
+  check: "M5 12.5l4.5 4.5L19 7.5",
+  lock: "M6 11h12v10H6zM8.5 11V8a3.5 3.5 0 017 0v3",
 };
 
 function Ico({ d }: { d: string }) {
@@ -42,14 +47,28 @@ function Ico({ d }: { d: string }) {
   );
 }
 
-const pastel = ["#EDE7F6", "#E3F0E8", "#FDE8E4", "#E4EEF8", "#FBEFD8", "#F1E8E1"];
-const pastelInk = ["#5B3E96", "#2F6B47", "#A3473A", "#2F5D8A", "#8A5A0E", "#6B4A33"];
+// Avatars sans photo : initiales noires sur blanc cassé (docs/direction-artistique.md §6).
+const initialsStyle = { background: "var(--offwhite)", color: "var(--ink)" };
+
+function CalendarList({ months }: { months: { month: string; status: string }[] }) {
+  return (
+    <ul className={styles.calendar}>
+      {months.map((c) => (
+        <li key={c.month} data-status={c.status}>
+          <span className={styles.dot} />
+          <span className={styles.month}>{c.month}</span>
+          <span className={styles.status}>{c.status}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 function Laurel({ flip }: { flip?: boolean }) {
   return (
     <svg width="34" height="52" viewBox="0 0 34 52" aria-hidden="true" style={flip ? { transform: "scaleX(-1)" } : undefined}>
-      <g fill="#E2A23B">
-        <path d="M27 50C14 44 7 32 8 16" fill="none" stroke="#E2A23B" strokeWidth="2" strokeLinecap="round" />
+      <g fill="#EEB048">
+        <path d="M27 50C14 44 7 32 8 16" fill="none" stroke="#EEB048" strokeWidth="2" strokeLinecap="round" />
         <ellipse cx="6" cy="14" rx="3.2" ry="6.5" transform="rotate(-15 6 14)" />
         <ellipse cx="5" cy="25" rx="3.2" ry="6.5" transform="rotate(-35 5 25)" />
         <ellipse cx="8" cy="35" rx="3.2" ry="6.5" transform="rotate(-55 8 35)" />
@@ -88,6 +107,7 @@ export default async function VendorPage({ params }: Params) {
   const actions = actionsFor(v, first);
   const specs = specsFor(v);
   const calendar = availabilityFor(v);
+  const capacity = capacityFor(v);
   const criteria = criteriaFor(v);
   const faq = faqFor(v, first);
   const [lat, lng] = coordsFor(v);
@@ -97,16 +117,20 @@ export default async function VendorPage({ params }: Params) {
   const photos = [...v.gallery, ...vendorsIn(v.category).flatMap((x) => x.gallery), ...vendors.flatMap((x) => x.gallery)]
     .filter((p, i, a) => a.indexOf(p) === i)
     .slice(0, 12)
-    .map((src, i) => ({ src, alt: `${v.name} · photo ${i + 1}`, theme: themeOf(src) }));
+    .map((src, i) => ({ src, alt: `${v.name} · photo ${i + 1}`, theme: themeOf(src, v.category) }));
+  const themes = groupByTheme(photos, themeOrder(v.category));
   const portfolio = photos.slice(0, 5);
-  // Six avis (prototype : ceux du prestataire complétés par la réserve d'exemples).
-  const reviews = [...v.reviews, ...reviewPool].filter((r, i, a) => a.findIndex((x) => x.author === r.author) === i).slice(0, 6);
-  const ago = ["il y a 3 semaines", "il y a 1 mois", "il y a 2 mois", "il y a 3 mois", "il y a 5 mois", "il y a 6 mois"];
+  // Avis (prototype : ceux du prestataire complétés par la réserve d'exemples). Six sur la fiche, tous dans la fenêtre.
+  const allReviews = [...v.reviews, ...reviewPool]
+    .filter((r, i, a) => a.findIndex((x) => x.author === r.author) === i)
+    .map((r, i) => ({ ...r, formule: v.packages[i % v.packages.length].name }));
+  const reviews = allReviews.slice(0, 6);
   const best = [...criteria].sort((a, b) => b[1] - a[1]).slice(0, 2).map(([l]) => (l.startsWith("Rapport") ? "le " : "la ") + l.toLowerCase());
   const hidden = photos.length - portfolio.length;
 
   return (
     <div className={styles.page}>
+      <FicheNav price={priceLabel(v)} rating={v.rating} action={{ kind: actions.primary.kind, label: actions.primary.label }} />
       <div className="container">
         <nav aria-label="Fil d'Ariane" className={styles.crumbs}>
           <Link href="/decouvrir">Découvrir</Link>
@@ -123,8 +147,8 @@ export default async function VendorPage({ params }: Params) {
               {v.verified && (
                 <span className={styles.verified} title="Identité vérifiée">
                   <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#EEB048" d="M12 2l2.4 1.8 3-.2 1 2.8 2.5 1.7-.8 2.9.8 2.9-2.5 1.7-1 2.8-3-.2L12 22l-2.4-1.8-3 .2-1-2.8-2.5-1.7.8-2.9-.8-2.9 2.5-1.7 1-2.8 3 .2z" />
-                    <path d="M8.5 12.2l2.3 2.3 4.7-4.8" fill="none" stroke="#39210C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path fill="#000000" d="M12 2l2.4 1.8 3-.2 1 2.8 2.5 1.7-.8 2.9.8 2.9-2.5 1.7-1 2.8-3-.2L12 22l-2.4-1.8-3 .2-1-2.8-2.5-1.7.8-2.9-.8-2.9 2.5-1.7 1-2.8 3 .2z" />
+                    <path d="M8.5 12.2l2.3 2.3 4.7-4.8" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </span>
               )}
@@ -149,7 +173,7 @@ export default async function VendorPage({ params }: Params) {
           <FicheActions slug={v.slug} name={v.name} />
         </div>
 
-        <div className={styles.mosaic}>
+        <div id="photos" className={styles.mosaic}>
           {photos.slice(0, 3).map((p, i) => (
             <div key={p.src + i} className={styles.tile}>
               <GalleryTrigger index={i} label={`Agrandir la photo ${i + 1}`}>
@@ -176,22 +200,34 @@ export default async function VendorPage({ params }: Params) {
           <div className={styles.flow}>
             {/* 1. Prestations */}
             <Section id="prestations" title="Prestations">
-              <ul className={styles.services}>
+              {/* Formules en cartes (photo, prix, inclusions) : « Choisir » ouvre le message avec la formule reprise. */}
+              <ul className={styles.formules}>
                 {v.packages.map((p, i) => (
-                  <li key={p.name}>
-                    <div>
-                      <strong>
-                        {p.name}
-                        {i === 1 && <span className={styles.popular}>La plus choisie</span>}
-                      </strong>
-                      <span>{p.includes.join(" · ")}</span>
-                      <b>
-                        {p.price.toLocaleString("fr-FR")} €{unit}
-                      </b>
+                  <li key={p.name} className={styles.formule}>
+                    <div className={styles.fPhoto}>
+                      <Image src={photos[(3 + i) % photos.length].src} alt="" fill sizes="(max-width: 700px) 78vw, 240px" style={{ objectFit: "cover" }} />
+                      {i === 1 && <span className={styles.popular}>La plus choisie</span>}
                     </div>
-                    <ContactButton kind="message" className={styles.choose}>
-                      Choisir
-                    </ContactButton>
+                    <div className={styles.fBody}>
+                      <strong className={styles.fName}>{p.name}</strong>
+                      <span className={styles.fPrice}>
+                        <b>{p.price.toLocaleString("fr-FR")} €</b>
+                        {unit}
+                      </span>
+                      <ul className={styles.fIncludes}>
+                        {p.includes.map((x) => (
+                          <li key={x}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                              <path d={ico.check} />
+                            </svg>
+                            {x}
+                          </li>
+                        ))}
+                      </ul>
+                      <ContactButton kind="message" formule={p.name} className={`${styles.choose} ${styles.fChoose}`}>
+                        Choisir cette formule
+                      </ContactButton>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -212,9 +248,9 @@ export default async function VendorPage({ params }: Params) {
                   <strong>{first}</strong>
                   <small>{person.role}</small>
                 </li>
-                {team.map((m, i) => (
+                {team.map((m) => (
                   <li key={m.name}>
-                    <span className={styles.mate} style={{ background: pastel[(i + 2) % pastel.length], color: pastelInk[(i + 2) % pastelInk.length] }}>
+                    <span className={styles.mate} style={initialsStyle}>
                       {m.name[0]}
                     </span>
                     <strong>{m.name}</strong>
@@ -225,7 +261,7 @@ export default async function VendorPage({ params }: Params) {
             </Section>
 
             {/* 3. Avis */}
-            <Section id="avis" title="Avis" aside={<span className={styles.count}>{v.reviewsCount}</span>} more={<a href="#avis" className={styles.more2}>Tout voir</a>}>
+            <Section id="avis" title="Avis" aside={<span className={styles.count}>{v.reviewsCount}</span>} more={<ReviewsButton className={styles.more2}>Tout voir</ReviewsButton>}>
               <div className={styles.score}>
                 <div className={styles.scoreRow}>
                   <Laurel />
@@ -239,13 +275,13 @@ export default async function VendorPage({ params }: Params) {
                 {criteria.map(([label, score]) => (
                   <li key={label}>
                     <span>{label}</span>
-                    <strong>{score.toLocaleString("fr-FR")}</strong>
+                    <strong>{score.toLocaleString("fr-FR", { minimumFractionDigits: 1 })}</strong>
                   </li>
                 ))}
               </ul>
               <div className={styles.summary}>
                 <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#E2A23B" d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z" />
+                  <path fill="#EEB048" d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z" />
                 </svg>
                 <p>
                   Les couples saluent surtout {best[0]} et {best[1]} de {first}. Ils décrivent un accompagnement {v.style.toLowerCase()}, attentif du premier message au jour J.
@@ -253,10 +289,10 @@ export default async function VendorPage({ params }: Params) {
                 </p>
               </div>
               <div className={styles.reviews}>
-                {reviews.map((r, i) => (
+                {reviews.map((r) => (
                   <figure key={r.author} className={styles.review}>
                     <figcaption>
-                      <span className={styles.revAvatar} style={{ background: pastel[i % pastel.length], color: pastelInk[i % pastelInk.length] }}>
+                      <span className={styles.revAvatar} style={initialsStyle}>
                         {r.author
                           .split(" & ")
                           .map((n) => n[0])
@@ -272,18 +308,35 @@ export default async function VendorPage({ params }: Params) {
                     </figcaption>
                     <blockquote>{r.text}</blockquote>
                     <small>
-                      {ago[i % ago.length]} · {v.packages[i % v.packages.length].name} · avec {first}
+                      {r.date.charAt(0).toUpperCase() + r.date.slice(1)} · {r.formule} · avec {first}
                     </small>
                   </figure>
                 ))}
               </div>
-              <button type="button" className={styles.allReviews}>
-                Voir les {v.reviewsCount} avis
-              </button>
+              <ReviewsButton className={styles.allReviews}>Voir les {v.reviewsCount} avis</ReviewsButton>
+              <ReviewsDialog rating={v.rating} count={v.reviewsCount} criteria={criteria} reviews={allReviews} first={first} />
             </Section>
 
             {/* 4. Portfolio */}
             <Section id="portfolio" title="Portfolio" aside={<span className={styles.count}>{photos.length}</span>}>
+              {/* Visite photo par thème (benchmark Airbnb) : chaque pastille ouvre la galerie sur son thème. */}
+              <ul className={styles.pfThemes} aria-label="Photos par thème">
+                {themes.map((g) => (
+                  <li key={g.theme}>
+                    <GalleryThemeButton theme={g.theme} className={styles.pfTheme}>
+                      <span className={styles.pfThumb}>
+                        <Image src={g.items[0].src} alt="" fill sizes="44px" style={{ objectFit: "cover" }} />
+                      </span>
+                      <span>
+                        <strong>{g.theme}</strong>
+                        <small>
+                          {g.items.length} photo{g.items.length > 1 ? "s" : ""}
+                        </small>
+                      </span>
+                    </GalleryThemeButton>
+                  </li>
+                ))}
+              </ul>
               <div className={styles.portfolio}>
                 {portfolio.map((p, i) => (
                   <div key={p.src} className={styles.pf}>
@@ -298,19 +351,7 @@ export default async function VendorPage({ params }: Params) {
 
             {/* 5. À propos */}
             <Section id="a-propos" title="À propos">
-              <p className={styles.text}>
-                {person.bio} {v.description}
-              </p>
-              {specs.length > 0 && (
-                <dl className={styles.specs}>
-                  {specs.map(([k, val]) => (
-                    <div key={k}>
-                      <dt>{k}</dt>
-                      <dd>{val}</dd>
-                    </div>
-                  ))}
-                </dl>
-              )}
+              <LiveAbout slug={v.slug} bio={person.bio} description={v.description} specs={specs} />
             </Section>
 
             {/* 6. Zone */}
@@ -329,22 +370,22 @@ export default async function VendorPage({ params }: Params) {
                 <h2 id="dispo-t" className={styles.title}>
                   Disponibilités
                 </h2>
-                <ul className={styles.calendar}>
-                  {calendar.map((c) => (
-                    <li key={c.month} data-status={c.status}>
-                      <span className={styles.dot} />
-                      <span className={styles.month}>{c.month}</span>
-                      <span className={styles.status}>{c.status}</span>
-                    </li>
-                  ))}
-                </ul>
+                <p className={styles.capacity}>
+                  {capacity === 1 ? "Un seul mariage par jour : votre date vous est réservée." : `Jusqu'à ${capacity} mariages le même jour, avec des équipes distinctes.`}
+                </p>
+                {/* CDC §17 : calendrier glissant sur 24 mois. Les 6 prochains mois d'abord, le reste à la demande. */}
+                <CalendarList months={calendar.slice(0, 6)} />
+                <details className={styles.calendarMore}>
+                  <summary>Voir les {calendar.length} prochains mois</summary>
+                  <CalendarList months={calendar.slice(6)} />
+                </details>
                 <ContactButton kind={actions.primary.kind === "message" ? "meeting" : actions.primary.kind} className={`${styles.choose} ${styles.dispoBtn}`}>
                   {actions.primary.kind === "message" ? "Proposer un rendez-vous" : actions.primary.label}
                 </ContactButton>
               </section>
-              <section id="a-savoir" aria-labelledby="infos-t">
+              <section aria-labelledby="infos-t">
                 <h2 id="infos-t" className={styles.title}>
-                  Renseignements
+                  En bref
                 </h2>
                 <ul className={styles.infoList}>
                   <li>
@@ -356,19 +397,11 @@ export default async function VendorPage({ params }: Params) {
                     Répond en général en {v.responseTime}
                   </li>
                   <li>
-                    <Ico d={ico.card} />
-                    Paiement en ligne : 30 % d&apos;acompte, solde en 1 à 3 fois
+                    <Ico d={ico.pin} />
+                    {v.area} et environ 25 km autour
                   </li>
                   <li>
                     <Ico d={ico.undo} />
-                    Annulation remboursée plus de 30 jours avant
-                  </li>
-                  <li>
-                    <Ico d={ico.calendar} />
-                    Date bloquée 48 h pendant la discussion
-                  </li>
-                  <li>
-                    <Ico d={ico.pin} />
                     Frais de déplacement précisés dans l&apos;offre
                   </li>
                 </ul>
@@ -381,9 +414,55 @@ export default async function VendorPage({ params }: Params) {
                 {faq.map(([q, a]) => (
                   <details key={q} className={styles.qa}>
                     <summary>{q}</summary>
-                    <p>{a}</p>
+                    <p>
+                      {a.split("{hold}").map((part, i) => (
+                        <span key={i}>
+                          {i > 0 && <LiveSetting name="dateHoldHours" />}
+                          {part}
+                        </span>
+                      ))}
+                    </p>
                   </details>
                 ))}
+              </div>
+            </Section>
+
+            {/* 9. À savoir : les règles de la réservation, en trois colonnes courtes, avant de se décider. */}
+            <Section id="a-savoir" title="À savoir">
+              <div className={styles.know}>
+                <div>
+                  <Ico d={ico.calendar} />
+                  <strong>Réserver</strong>
+                  <ul>
+                    <li>
+                      Votre date est bloquée <LiveSetting name="dateHoldHours" /> h pendant la discussion.
+                    </li>
+                    <li>
+                      Chaque offre reste valable <LiveSetting name="offerValidityDays" /> jours.
+                    </li>
+                    <li>Le contrat se signe en ligne, avant tout paiement.</li>
+                  </ul>
+                </div>
+                <div>
+                  <Ico d={ico.card} />
+                  <strong>Payer</strong>
+                  <ul>
+                    <li>
+                      <PayRule />.
+                    </li>
+                    <li>L&apos;échéancier est affiché avant la signature.</li>
+                    <li>Les paiements passent par Céleste, jamais en direct.</li>
+                  </ul>
+                </div>
+                <div>
+                  <Ico d={ico.lock} />
+                  <strong>Échanger en confiance</strong>
+                  <ul>
+                    <li>{v.verified ? "Identité, activité et compte de paiement contrôlés par Céleste." : "Justificatifs en cours de vérification par Céleste."}</li>
+                    <li>Coordonnées masquées jusqu&apos;à la réservation.</li>
+                    <li>Annulation selon le contrat ; en cas de désaccord, Céleste vous accompagne.</li>
+                  </ul>
+                </div>
               </div>
             </Section>
           </div>
@@ -393,7 +472,7 @@ export default async function VendorPage({ params }: Params) {
           </aside>
         </div>
 
-        <GalleryViewer photos={photos} title={v.name} />
+        <GalleryViewer photos={photos} title={v.name} order={themeOrder(v.category)} />
 
         {similar.length > 0 && (
           <section className={styles.similar} aria-labelledby="similaires">

@@ -20,13 +20,14 @@ import {
   type Dna,
   type Match,
 } from "@/lib/match";
+import { loadDna, loadDraftInspirations, saveDna as storeDna, saveDraftInspirations } from "@/lib/dna";
+import { adoptDna } from "@/lib/wedding";
+import { CATEGORIES_OFF } from "@/lib/settings";
 import styles from "./flow.module.css";
-
-const DNA_KEY = "celeste:dna";
+import { WhyOrder } from "@/components/results/WhyOrder";
 
 type Step =
   | { id: "intro" }
-  | { id: "welcome" }
   | { id: "ambiance" }
   | { id: "inspirations" }
   | { id: "season" }
@@ -40,26 +41,17 @@ type Step =
 
 const DNA_STEPS = ["ambiance", "inspirations", "season", "zone", "reception", "priorities"] as const;
 
-function loadDna(): Dna | null {
-  try {
-    const raw = localStorage.getItem(DNA_KEY);
-    return raw ? { ...emptyDna, ...JSON.parse(raw) } : null;
-  } catch {
-    return null;
-  }
-}
-
+// Enregistre le Wedding DNA et répercute date, invités, budget et zone dans l'espace couple (§3).
 function saveDna(d: Dna) {
-  try {
-    localStorage.setItem(DNA_KEY, JSON.stringify(d));
-  } catch {
-    /* navigation privée */
-  }
+  storeDna(d);
+  adoptDna(d);
+  saveDraftInspirations([]); // brouillon repris dans le Wedding DNA
 }
 
 // Parcours Best Match : Wedding DNA commun → choix du métier → mini-test → calcul → résultats expliqués.
 export function MatchFlow() {
   const [dna, setDna] = useState<Dna>(emptyDna);
+  // L'introduction s'affiche toujours ; avec un Wedding DNA enregistré, seuls ses boutons changent (« Bon retour »).
   const [step, setStep] = useState<Step>({ id: "intro" });
   const [category, setCategory] = useState<string>("");
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -70,12 +62,13 @@ export function MatchFlow() {
     const saved = loadDna();
     const style = new URLSearchParams(window.location.search).get("style");
     const map: Record<string, string> = { champetre: "champetre", chateau: "chateau", boheme: "boheme", urbain: "urbain" };
+    // Images déjà enregistrées (Inspirations, ou DNA commencé) : jamais perdues au premier passage.
+    const kept = [...new Set([...(saved?.inspirations ?? []), ...loadDraftInspirations()])];
     if (saved && saved.ambiances.length) {
-      setDna(saved);
+      setDna({ ...saved, inspirations: kept });
       setHasSaved(true);
-      setStep({ id: "welcome" });
-    } else if (style && map[style]) {
-      setDna((d) => ({ ...d, ambiances: [map[style]] }));
+    } else {
+      setDna((d) => ({ ...(saved ?? d), inspirations: kept, ...(style && map[style] ? { ambiances: [map[style]] } : {}) }));
     }
   }, []);
 
@@ -100,10 +93,10 @@ export function MatchFlow() {
   const back = () => {
     const p = order[idx - 1];
     if (p && p.id !== "intro") go(p);
-    else go({ id: hasSaved ? "welcome" : "intro" });
+    else go({ id: "intro" });
   };
 
-  const phase = ["intro", "welcome"].includes(step.id) ? 0 : (DNA_STEPS as readonly string[]).includes(step.id) ? 1 : step.id === "category" || step.id === "mini" ? 2 : 3;
+  const phase = step.id === "intro" ? 0 : (DNA_STEPS as readonly string[]).includes(step.id) ? 1 : step.id === "category" || step.id === "mini" ? 2 : 3;
   const dnaIndex = (DNA_STEPS as readonly string[]).indexOf(step.id);
   const progress = step.id === "results" ? 100 : Math.max(4, Math.round((Math.max(idx, 0) / (order.length - 2)) * 100));
 
@@ -140,25 +133,7 @@ export function MatchFlow() {
         </div>
       </header>
 
-      {step.id === "intro" && <Intro onStart={() => go({ id: "ambiance" })} />}
-
-      {step.id === "welcome" && (
-        <Center>
-          <div className={styles.welcome}>
-            <p className={styles.kicker}>Bon retour</p>
-            <h1 className={styles.h1}>Votre Wedding DNA est prêt.</h1>
-            <p className={styles.dnaQuote}>{summarize(dna)}</p>
-            <div className={styles.row}>
-              <button type="button" className="btn" onClick={() => go({ id: "category" })}>
-                Trouver mes matchs
-              </button>
-              <button type="button" className="btn btn-outline" onClick={() => go({ id: "ambiance" })}>
-                Modifier mon Wedding DNA
-              </button>
-            </div>
-          </div>
-        </Center>
-      )}
+      {step.id === "intro" && <Intro saved={hasSaved ? summarize(dna) : null} onStart={() => go({ id: "ambiance" })} onMatches={() => go({ id: "category" })} />}
 
       {phase === 1 && (
         <Split dna={dna} onEdit={(s) => go({ id: s } as Step)}>
@@ -363,7 +338,7 @@ export function MatchFlow() {
           <h1 className={styles.h1}>Par quoi commencez-vous ?</h1>
           <p className={styles.lead}>Votre Wedding DNA sert pour tous les métiers. Vous pourrez en explorer d&apos;autres ensuite.</p>
           <div className={styles.catGrid}>
-            {exploreCategories.map((c) => (
+            {exploreCategories.filter((c) => !CATEGORIES_OFF.includes(c.slug)).map((c) => (
               <button key={c.slug} type="button" className={styles.catCard} onClick={() => startCategory(c.slug)}>
                 <span className={styles.catPhoto}>
                   <Image src={c.cover} alt="" fill sizes="(max-width: 720px) 50vw, 260px" style={{ objectFit: "cover" }} />
@@ -415,7 +390,8 @@ export function MatchFlow() {
 
 /* ---------- Écrans ---------- */
 
-function Intro({ onStart }: { onStart: () => void }) {
+// saved : résumé du Wedding DNA déjà enregistré ; l'introduction reste, seuls les boutons proposent de reprendre.
+function Intro({ saved, onStart, onMatches }: { saved: string | null; onStart: () => void; onMatches: () => void }) {
   return (
     <div className={styles.intro}>
       <div className={styles.introText}>
@@ -433,10 +409,28 @@ function Intro({ onStart }: { onStart: () => void }) {
             <b>3</b> Vos matchs, score expliqué
           </li>
         </ul>
-        <button type="button" className="btn" onClick={onStart}>
-          Commencer
-        </button>
-        <p className={styles.hintSmall}>Aucun compte nécessaire pour voir vos matchs.</p>
+        {saved ? (
+          <div className={styles.introBack}>
+            <p className={styles.introBackText}>
+              <strong>Bon retour.</strong> Votre Wedding DNA est prêt : {saved.charAt(0).toLowerCase() + saved.slice(1)}
+            </p>
+            <div className={styles.row}>
+              <button type="button" className="btn btn-signature" onClick={onMatches}>
+                Trouver mes matchs
+              </button>
+              <button type="button" className="btn btn-outline" onClick={onStart}>
+                Modifier mon Wedding DNA
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <button type="button" className="btn btn-signature" onClick={onStart}>
+              Commencer
+            </button>
+            <p className={styles.hintSmall}>Aucun compte nécessaire pour voir vos matchs.</p>
+          </>
+        )}
       </div>
       <div className={styles.introWall} aria-hidden="true">
         {["/photos/field.jpg", "/photos/kente.jpg", "/photos/chateau.jpg", "/photos/dance.jpg", "/photos/florist.jpg", "/photos/rings.jpg"].map((src, i) => (
@@ -611,7 +605,7 @@ function Computing({ category, top, onDone }: { category: string; top?: Match; o
     <Center>
       <div className={styles.computing} role="status" aria-live="polite">
         <svg viewBox="0 0 200 200" className={styles.gauge} aria-hidden="true">
-          <circle cx="100" cy="100" r={r} fill="none" stroke="#efe7dc" strokeWidth="10" />
+          <circle cx="100" cy="100" r={r} fill="none" stroke="#ebebeb" strokeWidth="10" />
           <circle cx="100" cy="100" r={r} fill="none" stroke="#EEB048" strokeWidth="10" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - value / 100)} transform="rotate(-90 100 100)" />
         </svg>
         <div className={styles.gaugeValue}>
@@ -695,9 +689,13 @@ function MatchCard({ m, rank }: { m: Match; rank: number }) {
 function Results({ dna, category, matches, onRefine, onCategory, onEditDna }: { dna: Dna; category: string; matches: Match[]; onRefine: () => void; onCategory: (s: string) => void; onEditDna: () => void }) {
   const cat = getCategory(category)!;
   const kept = matches.filter((m) => !m.excluded);
+  // Organisation du feed (CDC §9.3) : chaque profil apparaît dans la première rangée qui lui correspond.
   const top = kept.slice(0, 3);
-  const close = kept.slice(3).filter((m) => m.score >= 70);
-  const budget = kept.slice(3).filter((m) => m.withinBudget && m.score < 70);
+  const rest = kept.slice(3);
+  const close = rest.filter((m) => m.score >= 70);
+  const free = rest.filter((m) => !close.includes(m) && m.availability.startsWith("Disponible"));
+  const budget = rest.filter((m) => !close.includes(m) && !free.includes(m) && m.withinBudget);
+  const discover = rest.filter((m) => !close.includes(m) && !free.includes(m) && !budget.includes(m));
   const excluded = matches.filter((m) => m.excluded);
 
   return (
@@ -711,6 +709,8 @@ function Results({ dna, category, matches, onRefine, onCategory, onEditDna }: { 
             <button type="button" className={styles.linkBtn} onClick={onEditDna}>
               Modifier
             </button>
+            {" · "}
+            <WhyOrder mode="dna" excludes />
           </p>
         </div>
         <button type="button" className="btn btn-outline btn-sm" onClick={onRefine}>
@@ -734,7 +734,9 @@ function Results({ dna, category, matches, onRefine, onCategory, onEditDna }: { 
       )}
 
       {close.length > 0 && <Row title="Très proches de vos critères" items={close} />}
+      {free.length > 0 && <Row title="Disponibles à votre date" items={free} />}
       {budget.length > 0 && <Row title="Compatibles avec votre budget" items={budget} />}
+      {discover.length > 0 && <Row title="À découvrir" items={discover} />}
       {excluded.length > 0 && <p className={styles.excludedNote}>{excluded.length} profil(s) écarté(s) par vos critères indispensables.</p>}
 
       <section className={styles.next}>
@@ -742,7 +744,7 @@ function Results({ dna, category, matches, onRefine, onCategory, onEditDna }: { 
         <p>Votre Wedding DNA est déjà rempli : une ou deux questions suffisent.</p>
         <div className={styles.nextCats}>
           {exploreCategories
-            .filter((c) => c.slug !== category)
+            .filter((c) => c.slug !== category && !CATEGORIES_OFF.includes(c.slug))
             .map((c) => (
               <button key={c.slug} type="button" className={styles.nextCat} onClick={() => onCategory(c.slug)}>
                 <span className={styles.nextPhoto}>

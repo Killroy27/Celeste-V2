@@ -50,13 +50,14 @@
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.95);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   transition: opacity 0.25s;
 }
 
 .pinCta {
   opacity: 0;
-  background: var(--brand);
+  background: var(--ink);
+  color: var(--white);
 }
 
 .pin:hover .pinCta,
@@ -102,8 +103,8 @@
 
 .soon {
   font-size: 13px;
-  font-weight: 600;
-  color: #b07a1c;
+  font-weight: 500;
+  color: var(--ink);
 }
 
 @media (max-width: 1000px) {
@@ -126,4 +127,49 @@
   .articles {
     grid-template-columns: 1fr;
   }
+}
+
+/* Enregistrer une image dans le Wedding DNA (CDC §6.1) */
+.pinWrap {
+  position: relative;
+  break-inside: avoid;
+  margin-bottom: 16px;
+}
+
+.pinWrap .pin {
+  margin-bottom: 0;
+}
+
+.pinSave {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.pinSave[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.savedNote {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.savedNote a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }

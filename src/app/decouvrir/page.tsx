@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Carousel, Slide } from "@/components/Carousel";
 import { CategoryBar } from "@/components/CategoryBar";
+import { Invite } from "@/components/results/Results";
 import { ResultsHead } from "@/components/results/ResultsHead";
 import { VendorCard } from "@/components/VendorCard";
 import { categories, vendorsIn } from "@/lib/content";
@@ -16,6 +17,10 @@ export default function DiscoverPage() {
     <div style={{ background: "#fff", paddingBottom: 96 }}>
       <ResultsHead narrow crumbs={[["Découvrir"]]} title="Tous les métiers" place="Paris et Île-de-France" lead="Les mieux notés de chaque métier. Une rangée vous plaît ? La flèche ouvre tous les profils, avec la carte." />
       <CategoryBar narrow />
+      {/* Best Match accessible depuis Découvrir (CDC §8) */}
+      <div className="container" style={{ paddingTop: 24 }}>
+        <Invite />
+      </div>
       <div style={{ display: "grid", gap: 8, paddingTop: 24 }}>
         {categories.map((c) => {
           const list = vendorsIn(c.slug);

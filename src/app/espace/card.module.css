@@ -1,0 +1,33 @@
+/* Formulaire de carte (simulation), partagé par la réservation et l'échéancier. */
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form input[aria-invalid="true"] {
+  border-color: var(--neg-dot);
+}
+
+.error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--neg-bg);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--neg-fg);
+}
+
+.note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 17px;
+  color: var(--ink-3);
+}

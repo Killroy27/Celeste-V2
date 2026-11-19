@@ -13,7 +13,7 @@ const pill = (price: string, state: "idle" | "hover" | "selected") => {
   const dark = state !== "idle";
   return L.divIcon({
     className: "",
-    html: `<span style="display:inline-flex;align-items:center;height:30px;padding:0 11px;border-radius:999px;background:${dark ? "#1f1408" : "#fff"};color:${dark ? "#fff" : "#1f1408"};font:700 13px/1 var(--font-sans),system-ui,sans-serif;box-shadow:0 0 0 1px rgba(0,0,0,.06),0 3px 10px rgba(0,0,0,.18);white-space:nowrap;transform:translate(-50%,-50%) scale(${state === "idle" ? 1 : 1.08});transition:transform .15s">${price}</span>`,
+    html: `<span style="display:inline-flex;align-items:center;height:30px;padding:0 11px;border-radius:999px;background:${dark ? "#000" : "#fff"};color:${dark ? "#fff" : "#000"};font:500 13px/1 var(--font-sans),system-ui,sans-serif;box-shadow:0 0 0 1px rgba(0,0,0,.06),0 3px 10px rgba(0,0,0,.18);white-space:nowrap;transform:translate(-50%,-50%) scale(${state === "idle" ? 1 : 1.08});transition:transform .15s">${price}</span>`,
     iconSize: [0, 0],
   });
 };
@@ -39,7 +39,7 @@ function Fit({ pins }: { pins: Pin[] }) {
 export default function ResultsMap({ pins, active, selected, onSelect, onHover }: Props) {
   const icons = useMemo(() => new Map(pins.map((p) => [p.slug, { idle: pill(p.price, "idle"), hover: pill(p.price, "hover"), selected: pill(p.price, "selected") }])), [pins]);
   return (
-    <MapContainer center={[48.8566, 2.3522]} zoom={11} scrollWheelZoom style={{ height: "100%", width: "100%" }} zoomControl={false}>
+    <MapContainer className="celeste-map" center={[48.8566, 2.3522]} zoom={11} scrollWheelZoom style={{ height: "100%", width: "100%" }} zoomControl={false}>
       <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' maxZoom={19} />
       <Fit pins={pins} />
       {pins.map((p) => {

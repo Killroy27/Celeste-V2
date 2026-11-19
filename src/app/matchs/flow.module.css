@@ -2,7 +2,7 @@
 .shell {
   min-height: 100vh;
   background: #fff;
-  color: #1f1408;
+  color: var(--ink);
 }
 
 /* ---------- Barre du parcours ---------- */
@@ -19,16 +19,16 @@
   padding: 0 32px;
   background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid #f0ebe4;
+  border-bottom: 1px solid var(--line);
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display);
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .phases {
@@ -38,8 +38,8 @@
   display: flex;
   gap: 28px;
   font-size: 13px;
-  font-weight: 600;
-  color: #9a8e84;
+  font-weight: 500;
+  color: var(--ink-3);
 }
 
 .phases li {
@@ -53,14 +53,14 @@
   width: 22px;
   height: 22px;
   border-radius: 999px;
-  border: 1px solid #e3dbd1;
+  border: 1px solid var(--line);
   display: grid;
   place-items: center;
   font-size: 11px;
 }
 
 .phaseOn {
-  color: #1f1408;
+  color: var(--ink);
 }
 
 .phaseOn span {
@@ -69,19 +69,19 @@
 }
 
 .phaseDone {
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 .phaseDone span {
-  background: #1f1408;
-  border-color: #1f1408 !important;
+  background: var(--ink);
+  border-color: var(--ink) !important;
   color: #fff;
 }
 
 .quit {
   justify-self: end;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: underline;
   text-underline-offset: 4px;
 }
@@ -106,17 +106,17 @@
 .kicker {
   margin: 0 0 10px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #a8741a;
+  color: var(--ink);
 }
 
 .h1 {
   margin: 0;
-  font-family: var(--font-display), Didot, serif;
+  font-family: var(--font-display);
   font-size: clamp(30px, 3.4vw, 46px);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.08;
   letter-spacing: -0.015em;
   animation: rise 0.5s var(--ease);
@@ -127,13 +127,13 @@
   max-width: 620px;
   font-size: 17px;
   line-height: 27px;
-  color: #4a3d33;
+  color: var(--ink-2);
 }
 
 .hintSmall {
   margin: 14px 0 0;
   font-size: 13px;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 @keyframes rise {
@@ -217,9 +217,9 @@
 
 .hero {
   margin: 0;
-  font-family: var(--font-display), Didot, serif;
+  font-family: var(--font-display);
   font-size: clamp(38px, 4.6vw, 64px);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.04;
   letter-spacing: -0.02em;
   animation: rise 0.6s var(--ease);
@@ -244,7 +244,7 @@
   width: 28px;
   height: 28px;
   border-radius: 999px;
-  background: #f7f1e6;
+  background: var(--offwhite);
   display: grid;
   place-items: center;
   font-size: 13px;
@@ -261,7 +261,7 @@
   position: relative;
   overflow: hidden;
   border-radius: 18px;
-  background: #f2efe9;
+  background: var(--offwhite);
   animation: pop 0.7s var(--ease) backwards;
 }
 
@@ -325,7 +325,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(20, 12, 5, 0.6), transparent 55%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent 55%);
 }
 
 .photoLabel {
@@ -335,7 +335,7 @@
   z-index: 1;
   color: #fff;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .check {
@@ -350,7 +350,7 @@
   display: grid;
   place-items: center;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   opacity: 0;
   transform: scale(0.6);
   transition: opacity 0.2s, transform 0.25s var(--ease);
@@ -392,7 +392,7 @@
   display: grid;
   place-items: center;
   font-size: 17px;
-  color: #c98a1c;
+  color: var(--brand-hover);
   transition: transform 0.25s var(--ease);
 }
 
@@ -407,7 +407,7 @@
   gap: 8px;
   margin-top: 22px;
   font-size: 14px;
-  color: #4a3d33;
+  color: var(--ink-2);
   animation: rise 0.4s var(--ease);
 }
 
@@ -418,9 +418,9 @@
   padding: 6px 12px;
   border: 0;
   border-radius: 999px;
-  background: #f7f1e6;
+  background: var(--offwhite);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
 }
 
@@ -435,15 +435,15 @@
   flex-direction: column;
   gap: 4px;
   padding: 20px;
-  border: 1px solid #ece7e1;
+  border: 1px solid var(--line);
   border-radius: 16px;
   outline: 2px solid transparent;
   transition: border-color 0.2s, box-shadow 0.2s, outline-color 0.2s;
 }
 
 .tile:hover {
-  border-color: #d9cfc4;
-  box-shadow: 0 6px 18px rgba(31, 20, 8, 0.06);
+  border-color: #d4d4d4;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
 .tile strong {
@@ -452,12 +452,12 @@
 
 .tile span {
   font-size: 13px;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 .tile.on {
   border-color: var(--brand);
-  background: #fffaf0;
+  background: var(--offwhite);
 }
 
 .inline {
@@ -484,7 +484,7 @@
 .toggle input {
   width: 20px;
   height: 20px;
-  accent-color: #1f1408;
+  accent-color: var(--ink);
 }
 
 /* Curseurs */
@@ -499,26 +499,26 @@
   align-items: baseline;
   margin-bottom: 14px;
   font-size: 15px;
-  color: #4a3d33;
+  color: var(--ink-2);
 }
 
 .rangeHead strong {
   display: inline-flex;
   align-items: baseline;
   gap: 10px;
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display);
   font-size: 32px;
-  color: #1f1408;
+  color: var(--ink);
 }
 
 .rangeHead em {
   padding: 3px 10px;
   border-radius: 999px;
-  background: #f7f1e6;
+  background: var(--offwhite);
   font-family: var(--font-sans), sans-serif;
   font-size: 12px;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .range input {
@@ -526,7 +526,7 @@
   height: 6px;
   border-radius: 999px;
   appearance: none;
-  background: linear-gradient(90deg, var(--brand) var(--pct), #ece7e1 var(--pct));
+  background: linear-gradient(90deg, var(--brand) var(--pct), var(--line) var(--pct));
   outline: none;
 }
 
@@ -537,7 +537,7 @@
   border-radius: 999px;
   background: #fff;
   border: 2px solid var(--brand);
-  box-shadow: 0 4px 12px rgba(31, 20, 8, 0.18);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
   cursor: grab;
 }
 
@@ -547,7 +547,7 @@
   border-radius: 999px;
   background: #fff;
   border: 2px solid var(--brand);
-  box-shadow: 0 4px 12px rgba(31, 20, 8, 0.18);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
   cursor: grab;
 }
 
@@ -560,7 +560,7 @@
 .subQ {
   margin: 28px 0 12px;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 /* Navigation */
@@ -570,7 +570,7 @@
   align-items: center;
   margin-top: 40px;
   padding-top: 24px;
-  border-top: 1px solid #f0ebe4;
+  border-top: 1px solid var(--line);
 }
 
 .nav .btn:disabled {
@@ -587,13 +587,13 @@
   border: 0;
   background: none;
   font-size: 15px;
-  font-weight: 600;
-  color: #4a3d33;
+  font-weight: 500;
+  color: var(--ink-2);
   cursor: pointer;
 }
 
 .back:hover {
-  color: #1f1408;
+  color: var(--ink);
 }
 
 /* ---------- Panneau Wedding DNA ---------- */
@@ -606,10 +606,10 @@
   position: sticky;
   top: 100px;
   padding: 18px;
-  border: 1px solid #ece7e1;
+  border: 1px solid var(--line);
   border-radius: 22px;
   background: #fff;
-  box-shadow: 0 18px 50px rgba(31, 20, 8, 0.07);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.07);
 }
 
 .panelCollage {
@@ -634,16 +634,16 @@
   display: grid;
   place-items: center;
   border-radius: 12px;
-  background: #f7f4ef;
+  background: var(--offwhite);
   font-size: 13px;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 .panelTitle {
   margin: 0 0 10px;
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display);
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .panelRows {
@@ -657,9 +657,9 @@
   justify-content: space-between;
   gap: 12px;
   padding: 10px 0;
-  border-top: 1px solid #f0ebe4;
+  border-top: 1px solid var(--line);
   font-size: 13px;
-  color: #9a8e84;
+  color: var(--ink-3);
 }
 
 .panelRows li > span {
@@ -671,8 +671,8 @@
   background: none;
   padding: 0;
   font-size: 13px;
-  font-weight: 600;
-  color: #1f1408;
+  font-weight: 500;
+  color: var(--ink);
   text-align: right;
   cursor: pointer;
   animation: rise 0.35s var(--ease);
@@ -687,23 +687,20 @@
 }
 
 .filled > span {
-  color: #4a3d33;
+  color: var(--ink-2);
 }
 
 /* ---------- Bienvenue ---------- */
 
-.welcome .row {
-  margin-top: 32px;
-}
-
 .dnaQuote {
   margin: 16px auto 0;
   max-width: 640px;
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display);
   font-size: 21px;
-  font-style: italic;
+  font-style: normal;
+  font-weight: 300; /* Roobert n'a pas d'italique : le Light crée le contraste */
   line-height: 1.45;
-  color: #2a1f16;
+  color: var(--ink);
 }
 
 /* ---------- Catégories ---------- */
@@ -719,7 +716,7 @@
 .catCard {
   display: flex;
   flex-direction: column;
-  border: 1px solid #ece7e1;
+  border: 1px solid var(--line);
   border-radius: 18px;
   overflow: hidden;
   transition: transform 0.25s var(--ease), box-shadow 0.25s;
@@ -728,7 +725,7 @@
 
 .catCard:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 34px rgba(31, 20, 8, 0.1);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.1);
 }
 
 .catPhoto {
@@ -742,14 +739,14 @@
   gap: 10px;
   padding: 14px 16px;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .catText em {
   margin-left: auto;
   padding: 3px 9px;
   border-radius: 999px;
-  background: #fbefd8;
+  background: var(--offwhite);
   font-size: 11px;
   font-style: normal;
 }
@@ -769,7 +766,7 @@
   flex-direction: column;
   gap: 4px;
   padding: 10px 10px 16px;
-  border: 1px solid #ece7e1;
+  border: 1px solid var(--line);
   border-radius: 20px;
   outline: 3px solid transparent;
   outline-offset: 2px;
@@ -779,7 +776,7 @@
 
 .miniCard:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 36px rgba(31, 20, 8, 0.1);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.1);
 }
 
 .miniPhoto {
@@ -798,7 +795,7 @@
 .miniCard span:not(.miniPhoto) {
   padding: 0 6px;
   font-size: 14px;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 /* ---------- Calcul ---------- */
@@ -827,7 +824,7 @@
 }
 
 .gaugeValue strong {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display);
   font-size: 84px;
   line-height: 1;
 }
@@ -835,16 +832,16 @@
 .gaugeValue span {
   margin-top: 6px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 .phase {
   margin: 28px 0 0;
   font-size: 17px;
-  color: #4a3d33;
+  color: var(--ink-2);
   animation: rise 0.4s var(--ease);
 }
 
@@ -877,7 +874,7 @@
   font-family: var(--font-sans), sans-serif;
   font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: underline;
   text-decoration-color: var(--brand);
   text-underline-offset: 4px;
@@ -893,7 +890,7 @@
 .match {
   display: flex;
   flex-direction: column;
-  border: 1px solid #ece7e1;
+  border: 1px solid var(--line);
   border-radius: 22px;
   overflow: hidden;
   background: #fff;
@@ -914,7 +911,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(20, 12, 5, 0.55), transparent 50%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 50%);
 }
 
 .rank {
@@ -926,7 +923,7 @@
   border-radius: 999px;
   background: #fff;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .matchSave {
@@ -968,22 +965,22 @@
 
 .matchHead h3 {
   margin: 0;
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display);
   font-size: 23px;
 }
 
 .matchHead span {
   font-size: 13px;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 .why {
   margin: 16px 0 8px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #a8741a;
+  color: var(--ink);
 }
 
 .reasons {
@@ -1006,27 +1003,27 @@
   width: 20px;
   height: 20px;
   border-radius: 999px;
-  background: #e3f0e8;
-  color: #2f6b47;
+  background: var(--pos-bg);
+  color: var(--pos-fg);
   display: grid;
   place-items: center;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .reasons .gap {
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 .reasons .gap span {
-  background: #f7f1e6;
-  color: #8a5a0e;
+  background: var(--offwhite);
+  color: var(--ink);
 }
 
 .meta {
   margin: 14px 0 0;
   font-size: 12px;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 .matchCtas {
@@ -1042,7 +1039,7 @@
   gap: 14px;
   padding: 48px 16px;
   border-radius: 20px;
-  background: #f7f4ef;
+  background: var(--offwhite);
   text-align: center;
 }
 
@@ -1059,7 +1056,7 @@
 .next h2 {
   margin: 0 0 18px;
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .rowGrid {
@@ -1098,25 +1095,25 @@
 
 .small span:not(.smallPhoto) {
   font-size: 13px;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 .excludedNote {
   margin: 28px 0 0;
   font-size: 13px;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 .next {
   margin-top: 72px;
   padding: 32px;
   border-radius: 22px;
-  background: #f7f4ef;
+  background: var(--offwhite);
 }
 
 .next > p {
   margin: -8px 0 18px;
-  color: #4a3d33;
+  color: var(--ink-2);
 }
 
 .nextCats {
@@ -1137,7 +1134,7 @@
   border: 0;
   border-radius: 16px;
   background: #fff;
-  box-shadow: 0 1px 2px rgb(33 32 32 / 0.06);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
   text-align: left;
   cursor: pointer;
   transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s;
@@ -1145,11 +1142,11 @@
 
 .nextCat:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px -12px rgb(57 33 12 / 0.28);
+  box-shadow: 0 10px 24px -12px rgb(0 0 0 / 0.28);
 }
 
 .nextCat:focus-visible {
-  outline: 2px solid var(--ink, #212020);
+  outline: 2px solid var(--ink, var(--ink));
   outline-offset: 2px;
 }
 
@@ -1179,23 +1176,23 @@
 
 .nextText strong {
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .nextText small {
   font-size: 13px;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 .nextArrow {
   flex: none;
-  color: #6f6259;
+  color: var(--ink-3);
   transition: transform 0.25s, color 0.25s;
 }
 
 .nextCat:hover .nextArrow {
   transform: translateX(3px);
-  color: #212020;
+  color: var(--ink);
 }
 
 /* Priorités : tuiles avec rang */
@@ -1211,18 +1208,18 @@
   justify-items: start;
   gap: 10px;
   padding: 16px;
-  border: 1px solid var(--line, #e9e1d6);
+  border: 1px solid var(--line, var(--line));
   border-radius: 16px;
   background: #fff;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   text-align: left;
   cursor: pointer;
   transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s, opacity 0.2s;
 }
 
 .prio:hover {
-  border-color: #cfc3b4;
+  border-color: #d4d4d4;
 }
 
 .prio:active {
@@ -1230,9 +1227,9 @@
 }
 
 .prio[aria-pressed="true"] {
-  border-color: #212020;
-  box-shadow: inset 0 0 0 1px #212020;
-  background: #fffaf0;
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+  background: var(--offwhite);
 }
 
 .prio[data-full] {
@@ -1257,17 +1254,17 @@
   place-items: center;
   width: 24px;
   height: 24px;
-  border: 1px solid var(--line, #e9e1d6);
+  border: 1px solid var(--line, var(--line));
   border-radius: 50%;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   color: #fff;
   transition: background 0.2s, border-color 0.2s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .prio[aria-pressed="true"] .prioRank {
-  border-color: #212020;
-  background: #212020;
+  border-color: var(--ink);
+  background: var(--ink);
   animation: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -1283,14 +1280,14 @@
 .prioCount {
   margin: 10px 0 0;
   font-size: 13px;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 /* Indispensables : lignes à interrupteur */
 .musts {
   display: grid;
   overflow: hidden;
-  border: 1px solid var(--line, #e9e1d6);
+  border: 1px solid var(--line, var(--line));
   border-radius: 16px;
   background: #fff;
 }
@@ -1301,7 +1298,7 @@
   gap: 14px;
   padding: 14px 16px;
   border: 0;
-  border-top: 1px solid var(--line, #e9e1d6);
+  border-top: 1px solid var(--line, var(--line));
   background: transparent;
   text-align: left;
   cursor: pointer;
@@ -1313,11 +1310,11 @@
 }
 
 .must:hover {
-  background: #faf6f0;
+  background: var(--offwhite);
 }
 
 .must:focus-visible {
-  outline: 2px solid #212020;
+  outline: 2px solid var(--ink);
   outline-offset: -2px;
 }
 
@@ -1328,13 +1325,13 @@
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: #f5efe6;
-  color: #39210c;
+  background: var(--offwhite);
+  color: var(--ink);
   transition: background 0.2s;
 }
 
 .must[aria-checked="true"] .mustIcon {
-  background: #fdeccb;
+  background: var(--brand-soft);
 }
 
 .mustText {
@@ -1345,12 +1342,12 @@
 
 .mustText strong {
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .mustText small {
   font-size: 13px;
-  color: #6f6259;
+  color: var(--ink-3);
 }
 
 .switch {
@@ -1359,7 +1356,7 @@
   width: 44px;
   height: 26px;
   border-radius: 999px;
-  background: #ddd3c6;
+  background: #d4d4d4;
   transition: background 0.25s;
 }
 
@@ -1377,7 +1374,7 @@
 }
 
 .must[aria-checked="true"] .switch {
-  background: #212020;
+  background: var(--ink);
 }
 
 .must[aria-checked="true"] .switch::after {
@@ -1446,6 +1443,13 @@
   .introWall {
     order: -1;
     grid-auto-rows: 110px;
+    /* Les photos décalées vers le bas ne doivent pas mordre sur le texte qui suit. */
+    margin-bottom: 28px;
+  }
+
+  .wallTile:nth-child(2),
+  .wallTile:nth-child(5) {
+    transform: translateY(20px);
   }
 
   .center {
@@ -1475,4 +1479,28 @@
   .gaugeValue strong {
     font-size: 64px;
   }
+}
+
+/* Introduction avec un Wedding DNA déjà enregistré : rappel discret et reprise du parcours. */
+.introBack {
+  display: grid;
+  gap: 16px;
+  max-width: 520px;
+}
+
+.introBackText {
+  margin: 0;
+  font-size: 15px;
+  line-height: 23px;
+  color: var(--ink-2);
+}
+
+.introBackText strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.introBack .row {
+  justify-content: flex-start;
+  margin-top: 0;
 }

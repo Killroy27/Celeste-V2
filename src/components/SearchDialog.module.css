@@ -7,7 +7,7 @@
 .scrim {
   position: absolute;
   inset: 0;
-  background: rgba(33, 32, 32, 0.38);
+  background: rgba(0, 0, 0, 0.38);
   animation: fade 0.25s ease both;
 }
 
@@ -44,7 +44,7 @@
 
 .title {
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .close {

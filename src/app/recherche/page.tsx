@@ -5,6 +5,7 @@ import { CategoryBar } from "@/components/CategoryBar";
 import { Results } from "@/components/results/Results";
 import { ResultsHead } from "@/components/results/ResultsHead";
 import { categories, getCategory, searchVendors } from "@/lib/content";
+import { whenLabel } from "@/lib/format";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "Recherche", robots: { index: false } };
@@ -21,13 +22,16 @@ export default async function SearchPage({ searchParams }: Props) {
   const q = quoi.trim();
   const title = single && q ? single.plural : q ? cap(q) : "Tous les prestataires";
   const place = ou.trim() ? cap(ou.trim()) : "Paris et Île-de-France";
+  // Jour J : une date précise règle le filtre de disponibilité ; un mois ou un texte libre est seulement rappelé.
+  const day = /^\d{4}-\d{2}-\d{2}$/.test(quand) && quand > new Date().toISOString().slice(0, 10) ? quand : "";
+  const lead = day ? `Prestataires encore libres le ${whenLabel(day)}.` : quand.trim() ? `Date souhaitée : ${whenLabel(quand.trim())}.` : undefined;
 
   return (
     <div style={{ background: "#fff" }}>
-      <ResultsHead crumbs={[["Recherche"]]} title={title} place={place} lead={quand.trim() ? `Date souhaitée : ${quand.trim()}.` : undefined} />
+      <ResultsHead crumbs={[["Recherche"]]} title={title} place={place} lead={lead} />
       <CategoryBar active={single?.slug} />
       {results.length ? (
-        <Results vendors={results} category={single?.slug} showCategory={!single} />
+        <Results vendors={results} category={single?.slug} showCategory={!single} initialDate={day} />
       ) : (
         <div className={styles.empty}>
           <h2>Rien pour « {q || ou} », pour l&apos;instant</h2>

@@ -3,6 +3,7 @@
 // conditions (§14). À remplacer par l'API.
 
 import type { Vendor } from "./content";
+import { CALENDAR_MONTHS } from "./settings";
 
 export type Person = {
   firstName: string;
@@ -42,6 +43,13 @@ const roles: Record<string, string> = {
   decoration: "Fondation · scénographie",
   patisserie: "Fondation · pâtisserie",
   beaute: "Maquillage et coiffure",
+  musique: "Direction musicale",
+  "wedding-planners": "Fondation · organisation",
+  tenues: "Fondation · création",
+  animation: "Fondation · animation",
+  location: "Direction · logistique",
+  transport: "Direction · transport",
+  papeterie: "Fondation · papeterie",
 };
 
 // Portraits disponibles dans la photothèque ; sinon, des initiales.
@@ -62,6 +70,13 @@ const bios: Record<string, string> = {
   decoration: "J'imagine des décors de mariage depuis {since}. De la première esquisse au démontage, je m'occupe de tout.",
   patisserie: "Je crée des pièces montées et des wedding cakes depuis {since}. Dégustation offerte avant de valider le gâteau.",
   beaute: "Je maquille et coiffe des mariées depuis {since}, à domicile. L'essai permet de trouver ensemble le bon look.",
+  musique: "Nous jouons pour les mariages depuis {since}. Le répertoire se construit avec vous, de l'entrée en cérémonie à la dernière chanson.",
+  "wedding-planners": "J'organise des mariages depuis {since}. Je prends en charge les prestataires, le planning et le jour J, pour que vous en profitiez.",
+  tenues: "J'habille les mariés depuis {since}. Chaque tenue se construit en trois essayages, à partir de votre histoire et de vos traditions.",
+  animation: "J'anime des mariages depuis {since}. Photobooth, jeux, surprises : vos invités ne voient pas le temps passer.",
+  location: "Nous équipons les mariages depuis {since}. Livraison, installation et reprise : vous n'avez rien à porter.",
+  transport: "Je conduis les mariés depuis {since}. Voitures entretenues, chauffeur en tenue, horaires tenus à la minute.",
+  papeterie: "Je dessine la papeterie de mariage depuis {since}. Du faire-part au plan de table, tout raconte le même univers.",
 };
 
 const hash = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
@@ -148,18 +163,93 @@ export function specsFor(v: Vendor): [string, string][] {
       ["Déplacement", "À domicile"],
       ["Cortège", "Jusqu'à 6 personnes"],
     ],
+    musique: [
+      ["Formation", v.style === "Cérémonie classique" ? "Quatuor à cordes" : "Groupe de 4 à 6 musiciens"],
+      ["Répertoire", v.style],
+      ["Moments", "Cérémonie, cocktail, soirée"],
+      ["Sonorisation", "Incluse"],
+      ["Durée", "Jusqu'à 3 sets de 45 min"],
+    ],
+    "wedding-planners": [
+      ["Formules", "Organisation complète, coordination jour J"],
+      ["Style", v.style],
+      ["Prestataires", "Sélection et suivi des contrats"],
+      ["Jour J", "Présence de l'arrivée au dernier invité"],
+      ["Équipe", "Coordinatrice et assistant"],
+    ],
+    tenues: [
+      ["Créations", "Robes, costumes, tenues traditionnelles"],
+      ["Style", v.style],
+      ["Essayages", "3 essayages inclus"],
+      ["Délai", "4 à 6 mois avant le mariage"],
+      ["Retouches", "Incluses"],
+    ],
+    animation: [
+      ["Animations", v.style === "Moderne" ? "Photobooth, livre d'or vidéo" : "Jeux, magicien, stands"],
+      ["Moments", "Cocktail et soirée"],
+      ["Installation", "Incluse"],
+      ["Durée", "Jusqu'à 5 h"],
+    ],
+    location: [
+      ["Catalogue", "Chaises, tables, vaisselle, lumières"],
+      ["Style", v.style],
+      ["Livraison et installation", "Incluses en Île-de-France"],
+      ["Reprise", "Le lendemain"],
+    ],
+    transport: [
+      ["Véhicules", v.style === "Intemporel" ? "Voitures de collection" : "Navettes de 20 à 50 places"],
+      ["Chauffeur", "Inclus, en tenue"],
+      ["Décoration du véhicule", "En option"],
+      ["Zone", "Île-de-France et au-delà sur devis"],
+    ],
+    papeterie: [
+      ["Créations", "Faire-part, menus, plans de table"],
+      ["Style", v.style],
+      ["Impression", "Letterpress, dorure, papier recyclé"],
+      ["Délai", "3 à 4 semaines"],
+    ],
   };
   return map[v.category] ?? [];
 }
 
-// Calendrier sur les prochains mois (CDC §17 : statuts de disponibilité).
-export type Availability = "Disponible" | "À confirmer" | "Capacité limitée" | "Complet";
+// Calendrier glissant sur au moins 24 mois (CDC §17), avec les cinq statuts du cahier des charges.
+export type Availability = "Disponible confirmé" | "Probablement disponible" | "À confirmer" | "Capacité limitée" | "Complet";
+
+const MONTHS_FR = ["Janv.", "Févr.", "Mars", "Avr.", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."];
+
+// Libellés des CALENDAR_MONTHS prochains mois, à partir du mois suivant (« Mai 2027 », « Juil. 2027 »…).
+export function calendarMonths(from = new Date()): string[] {
+  return Array.from({ length: CALENDAR_MONTHS }, (_, i) => {
+    const d = new Date(from.getFullYear(), from.getMonth() + 1 + i, 1);
+    return `${MONTHS_FR[d.getMonth()]} ${d.getFullYear()}`;
+  });
+}
+
+// Démo : statuts pseudo-aléatoires mais stables pour un prestataire donné. À remplacer par l'API.
+const STATUS_CYCLE: Availability[] = ["Disponible confirmé", "Capacité limitée", "Complet", "Probablement disponible", "À confirmer", "Disponible confirmé", "Disponible confirmé"];
 
 export function availabilityFor(v: Vendor): { month: string; status: Availability }[] {
-  const months = ["Mai 2027", "Juin 2027", "Juil. 2027", "Août 2027", "Sept. 2027", "Oct. 2027"];
-  const statuses: Availability[] = ["Disponible", "Capacité limitée", "Complet", "Disponible", "À confirmer", "Disponible"];
   const h = hash(v.slug);
-  return months.map((month, i) => ({ month, status: statuses[(i + h) % statuses.length] }));
+  return calendarMonths().map((month, i) => ({ month, status: STATUS_CYCLE[(i * 3 + h) % STATUS_CYCLE.length] }));
+}
+
+// Libellés des informations propres à un métier (§10.2), pour le formulaire de l'espace prestataire.
+export const specFields = (category: string) => specsFor({ category, style: "" } as Vendor).map(([k]) => k);
+
+// Statut à une date donnée (mois du calendrier) ; null hors de l'horizon publié.
+export function availabilityOn(v: Vendor, iso: string): Availability | null {
+  const d = new Date(`${iso.slice(0, 10)}T12:00`);
+  const label = `${MONTHS_FR[d.getMonth()]} ${d.getFullYear()}`;
+  return availabilityFor(v).find((m) => m.month === label)?.status ?? null;
+}
+
+// Nombre de mariages que le prestataire peut assurer le même jour (CDC §17) :
+// 1 pour un indépendant ou un lieu, plusieurs pour une entreprise multi-équipes.
+const MULTI_TEAM = new Set(["traiteurs", "dj", "musique", "decoration", "location", "transport", "animation", "papeterie", "patisserie"]);
+
+export function capacityFor(v: Vendor): number {
+  if (!MULTI_TEAM.has(v.category)) return 1;
+  return 2 + (hash(v.slug) % 3);
 }
 
 // Avis détaillés (CDC §24).
@@ -170,11 +260,12 @@ export function criteriaFor(v: Vendor): [string, number][] {
   return labels.map((l, i) => [l, Math.min(5, Math.round((base - ((h >> i) % 3) * 0.1) * 10) / 10)]);
 }
 
+// {hold} : durée de blocage de la date, réglable dans le back-office, insérée à l'affichage.
 export function faqFor(v: Vendor, first: string): [string, string][] {
   return [
     ["Des déplacements hors d'Île-de-France ?", "Oui, sur demande. Les frais de déplacement éventuels sont précisés dans l'offre, avant toute réservation."],
     ["Peut-on adapter une formule ?", `Oui. Indiquez votre budget dans la conversation : ${first} peut ajuster la durée ou les options et vous envoyer une nouvelle version de l'offre.`],
-    ["Notre date peut-elle être bloquée ?", "Quand la discussion est avancée, la date peut être bloquée 48 heures, le temps de vous décider sereinement."],
+    ["Notre date peut-elle être bloquée ?", "Quand la discussion est avancée, la date peut être bloquée {hold} heures, le temps de vous décider sereinement."],
   ];
 }
 
@@ -262,6 +353,17 @@ export function actionsFor(v: Vendor, first: string): VendorActions {
         },
         secondary: { kind: "message", label: `Écrire à ${first}` },
       };
+    case "tenues":
+      return {
+        primary: {
+          kind: "trial",
+          label: "Réserver un essayage",
+          title: "Votre premier essayage",
+          submit: "Demander l'essayage",
+          note: `${first} vous propose un créneau d'essayage à l'atelier.`,
+        },
+        secondary: { kind: "message", label: `Écrire à ${first}` },
+      };
     case "beaute":
       return {
         primary: {
@@ -301,9 +403,44 @@ const photoThemes: Record<string, string> = {
   rings: "Détails",
 };
 
-export function themeOf(src: string) {
+// Thèmes propres à certains métiers (benchmark Airbnb : un lieu se visite par espaces, un traiteur par moments
+// du repas). Les autres métiers gardent les thèmes du reportage de mariage ci-dessus.
+const themesByCategory: Record<string, Record<string, string>> = {
+  lieux: { chateau: "Le domaine", hero: "Le domaine", aisle: "Espace cérémonie", confetti: "Espace cérémonie", deco: "Salle de réception", dance: "Salle de réception", field: "Jardins et parc", chef: "Cuisine et service", beach: "Mariages célébrés ici", rain: "Mariages célébrés ici", kente: "Mariages célébrés ici", bride: "Mariages célébrés ici", groom: "Mariages célébrés ici", bridesmaids: "Mariages célébrés ici", cake: "Détails", rings: "Détails" },
+  traiteurs: { chef: "En cuisine", deco: "Tables dressées", chateau: "Tables dressées", cake: "Desserts", confetti: "Cocktail", aisle: "Cocktail", dance: "Dîner et soirée", dj: "Dîner et soirée", rings: "Détails" },
+  patisserie: { cake: "Pièces et wedding cakes", chef: "À l'atelier", deco: "Buffet sucré", rings: "Détails", chateau: "Buffet sucré" },
+  decoration: { deco: "Scénographie", chateau: "Scénographie", aisle: "Cérémonie", florist: "Fleurs et végétal", cake: "Détails", rings: "Détails", dance: "Ambiance du soir", dj: "Ambiance du soir" },
+  location: { deco: "Tables et mobilier", chateau: "Tables et mobilier", aisle: "Cérémonie", dance: "Lumières et soirée", dj: "Lumières et soirée", cake: "Détails", rings: "Détails" },
+};
+
+// Ordre d'affichage des thèmes dans la visite photo, du plus parlant au plus anecdotique.
+const themeOrders: Record<string, string[]> = {
+  default: ["Cérémonie", "Le couple", "Préparatifs", "Réception", "La soirée", "Détails", "En coulisses"],
+  lieux: ["Le domaine", "Espace cérémonie", "Salle de réception", "Jardins et parc", "Cuisine et service", "Mariages célébrés ici", "Détails"],
+  traiteurs: ["En cuisine", "Cocktail", "Tables dressées", "Dîner et soirée", "Desserts", "Mariages servis", "Détails"],
+  patisserie: ["Pièces et wedding cakes", "Buffet sucré", "À l'atelier", "Mariages servis", "Détails"],
+  decoration: ["Scénographie", "Cérémonie", "Fleurs et végétal", "Ambiance du soir", "Mariages réalisés", "Détails"],
+  location: ["Tables et mobilier", "Cérémonie", "Lumières et soirée", "Mariages réalisés", "Détails"],
+};
+
+// Photos sans thème propre au métier (souvent des photos de couples) : un thème honnête du métier.
+const otherByCategory: Record<string, string> = { lieux: "Mariages célébrés ici", traiteurs: "Mariages servis", patisserie: "Mariages servis", decoration: "Mariages réalisés", location: "Mariages réalisés" };
+
+export function themeOf(src: string, category?: string) {
   const key = src.split("/").pop()?.replace(/\.\w+$/, "") ?? "";
+  const own = category ? themesByCategory[category] : undefined;
+  if (own) return own[key] ?? otherByCategory[category!];
   return photoThemes[key] ?? "Autres";
+}
+
+export const themeOrder = (category?: string) => [...(themeOrders[category ?? ""] ?? themeOrders.default), "Autres"];
+
+// Photos regroupées par thème : thèmes dans l'ordre voulu, puis ceux qui n'y figurent pas, dans l'ordre d'apparition.
+// Commun à la fiche (rendu serveur) et à la visite photo.
+export function groupByTheme<P extends { theme?: string }>(photos: P[], order: string[] = []) {
+  const seen = photos.map((p) => p.theme ?? "Autres").filter((t, i, a) => a.indexOf(t) === i);
+  const themes = [...order.filter((t) => seen.includes(t)), ...seen.filter((t) => !order.includes(t))];
+  return themes.map((t) => ({ theme: t, items: photos.map((p, i) => ({ ...p, i })).filter((p) => (p.theme ?? "Autres") === t) }));
 }
 
 // Position de l'épingle sur la carte des résultats : la zone d'activité, légèrement décalée

@@ -1,0 +1,106 @@
+/* Créneaux en pastilles : jours sur une bande qui défile, heures en pastilles qui passent à la ligne. */
+.picker {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.label:not(:first-of-type) {
+  margin-top: 6px;
+}
+
+.days {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+
+.day {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  width: 58px;
+  height: 72px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.day small {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.day strong {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 22px;
+}
+
+.other {
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--ink-2);
+}
+
+.day:hover,
+.hour:hover {
+  border-color: var(--ink);
+}
+
+.day[aria-checked="true"],
+.hour[aria-checked="true"] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+.day[aria-checked="true"] small,
+.day[aria-checked="true"].other {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.hours {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hour {
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.native {
+  justify-self: start;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font: inherit;
+  font-size: 14px;
+}

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+  <!-- Voiture de mariage ancienne, avec nœud (catégorie « Transport ») -->
+  <defs>
+    <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="body" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#fffdf8"/>
+      <stop offset="0.45" stop-color="#f1ebe0"/>
+      <stop offset="0.8" stop-color="#d8cfc1"/>
+      <stop offset="1" stop-color="#b9ae9e"/>
+    </linearGradient>
+    <linearGradient id="chrome" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#f7f8fa"/>
+      <stop offset="0.5" stop-color="#9fa4ab"/>
+      <stop offset="1" stop-color="#e2e5e9"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#cfe0ea"/>
+      <stop offset="0.5" stop-color="#7f97a6"/>
+      <stop offset="1" stop-color="#3f515c"/>
+    </linearGradient>
+    <radialGradient id="tyre" cx="50%" cy="50%" r="50%">
+      <stop offset="0.55" stop-color="#2c2d31"/>
+      <stop offset="0.8" stop-color="#111214"/>
+      <stop offset="1" stop-color="#2e2f33"/>
+    </radialGradient>
+    <radialGradient id="hub" cx="40%" cy="35%" r="65%">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.5" stop-color="#c3c7cd"/>
+      <stop offset="1" stop-color="#6d7178"/>
+    </radialGradient>
+    <linearGradient id="ribbon" x1="0" x2="1">
+      <stop offset="0" stop-color="#d9798a"/>
+      <stop offset="0.5" stop-color="#f6b3bf"/>
+      <stop offset="1" stop-color="#c86377"/>
+    </linearGradient>
+  </defs>
+
+  <ellipse cx="160" cy="246" rx="138" ry="14" fill="url(#shadow)"/>
+
+  <!-- Ailes et marchepied -->
+  <path d="M34 214 C40 176, 82 170, 98 196 L222 196 C238 170, 282 172, 290 210 L290 222 L34 222 Z" fill="#cfc5b6"/>
+  <!-- Carrosserie -->
+  <path d="M30 206 C30 186, 44 176, 70 172 L104 168 C116 138, 140 118, 176 116 L210 116 C232 116, 246 132, 254 160 L276 166 C292 170, 298 184, 296 204 C296 214, 290 220, 280 220 L40 220 C34 220, 30 214, 30 206 Z" fill="url(#body)"/>
+  <!-- Toit capote -->
+  <path d="M118 166 C126 138, 146 124, 176 122 L206 122 C224 122, 236 136, 242 162 Z" fill="#2f2a26"/>
+  <!-- Vitres -->
+  <path d="M130 162 C136 142, 150 132, 172 131 L176 131 L176 162 Z" fill="url(#glass)"/>
+  <path d="M184 131 L204 131 C218 131, 228 142, 232 162 L184 162 Z" fill="url(#glass)"/>
+  <path d="M138 156 C142 146, 150 140, 160 138" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+  <!-- Ligne de caisse et poignée -->
+  <path d="M40 188 L290 188" stroke="#b8ad9c" stroke-width="2"/>
+  <rect x="186" y="172" width="16" height="4" rx="2" fill="url(#chrome)"/>
+  <!-- Calandre et phare -->
+  <rect x="284" y="176" width="10" height="30" rx="4" fill="url(#chrome)"/>
+  <circle cx="276" cy="174" r="11" fill="url(#chrome)"/>
+  <circle cx="276" cy="174" r="7" fill="#fff8e1"/>
+  <!-- Pare-chocs -->
+  <rect x="22" y="212" width="22" height="7" rx="3.5" fill="url(#chrome)"/>
+  <rect x="280" y="212" width="22" height="7" rx="3.5" fill="url(#chrome)"/>
+
+  <!-- Roues -->
+  <g>
+    <circle cx="82" cy="214" r="30" fill="url(#tyre)"/>
+    <circle cx="82" cy="214" r="18" fill="#f3efe7"/>
+    <circle cx="82" cy="214" r="12" fill="url(#hub)"/>
+    <circle cx="242" cy="214" r="30" fill="url(#tyre)"/>
+    <circle cx="242" cy="214" r="18" fill="#f3efe7"/>
+    <circle cx="242" cy="214" r="12" fill="url(#hub)"/>
+  </g>
+
+  <!-- Nœud de mariage sur le capot -->
+  <path d="M248 160 C236 146, 226 160, 238 168 Z" fill="url(#ribbon)"/>
+  <path d="M256 160 C268 146, 278 160, 266 168 Z" fill="url(#ribbon)"/>
+  <path d="M248 166 L242 184 L250 180 Z" fill="#c86377"/>
+  <path d="M256 166 L262 184 L254 180 Z" fill="#c86377"/>
+  <circle cx="252" cy="163" r="6" fill="#e78b9b"/>
+  <!-- Reflet carrosserie -->
+  <path d="M60 182 C90 176, 120 176, 150 178" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+</svg>

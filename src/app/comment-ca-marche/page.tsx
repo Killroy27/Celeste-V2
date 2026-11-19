@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const detailed = [
   { icon: "/icons/moodboard.png", n: "1", title: "Inspirez-vous et enregistrez", text: "Parcourez les inspirations et les fiches prestataires. Un ♡ suffit pour garder un coup de cœur, retrouvé dans votre espace.", photo: "/photos/florist.jpg" },
-  { icon: "/icons/match-puzzle.png", n: "2", title: "Faites votre Best Match", text: "Pas sûrs de ce que vous voulez ? Le test en quatre questions vous propose les prestataires qui correspondent à votre style et à votre budget.", photo: "/photos/field.jpg" },
+  { icon: "/icons/match-puzzle.png", n: "2", title: "Faites votre Best Match", text: "Pas sûrs de ce que vous voulez ? Décrivez votre mariage en quelques images, répondez à une ou deux questions par métier : Céleste vous présente les prestataires qui vous correspondent, et vous explique pourquoi.", photo: "/photos/field.jpg" },
   { icon: "/icons/chat-bubbles.png", n: "3", title: "Demandez et comparez les devis", text: "Une demande, des offres détaillées présentées côte à côte. Et si le budget coince, le prestataire peut adapter sa formule.", photo: "/photos/chef.jpg" },
   { icon: "/icons/contract-pen.png", n: "4", title: "Réservez et payez en sécurité", text: "Contrat signé en ligne, puis 30 % d'acompte et le solde en une à trois échéances, directement sur Céleste.", photo: "/photos/rings.jpg" },
 ];
@@ -62,7 +62,7 @@ export default function HowPage() {
             ))}
           </div>
           <div className={styles.ctas}>
-            <Link href="/matchs" className="btn">
+            <Link href="/matchs" className="btn btn-signature">
               Trouver mon Best Match
             </Link>
             <Link href="/decouvrir" className="btn btn-outline">

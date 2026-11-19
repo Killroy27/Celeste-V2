@@ -9,19 +9,31 @@ export type Category = {
   icon: string;
   cover: string;
   intro: string;
+  active: boolean; // activable ou désactivable depuis le back-office (CDC §4)
 };
 
-export const categories: Category[] = [
-  { slug: "photographes", label: "Photo", plural: "Photographes", singular: "photographe", icon: "/icons/camera.png", cover: "/photos/photog.jpg", intro: "Reportage, argentique, éditorial : des regards qui racontent votre journée sans la mettre en scène." },
-  { slug: "lieux", label: "Lieux", plural: "Lieux de réception", singular: "lieu", icon: "/icons/chateau.png", cover: "/photos/chateau.jpg", intro: "Châteaux, domaines, rooftops et granges : des lieux disponibles à vos dates, capacité et tarifs affichés." },
-  { slug: "traiteurs", label: "Traiteurs", plural: "Traiteurs", singular: "traiteur", icon: "/icons/cloche.png", cover: "/photos/chef.jpg", intro: "Du cocktail au dîner assis, des chefs qui composent un menu à votre image, dégustation comprise." },
-  { slug: "videastes", label: "Vidéo", plural: "Vidéastes", singular: "vidéaste", icon: "/icons/video.png", cover: "/photos/dance.jpg", intro: "Films courts, teasers et documentaires de mariage, filmés avec discrétion." },
-  { slug: "dj", label: "DJ", plural: "DJ & musiciens", singular: "DJ", icon: "/icons/dj.png", cover: "/photos/dj.jpg", intro: "Des DJ et des groupes qui lisent la piste et gardent vos invités debout jusqu'au bout de la nuit." },
-  { slug: "fleuristes", label: "Fleurs", plural: "Fleuristes", singular: "fleuriste", icon: "/icons/bouquet.png", cover: "/photos/florist.jpg", intro: "Bouquets, arches et centres de table de saison, imaginés avec vous." },
-  { slug: "decoration", label: "Décor", plural: "Décorateurs", singular: "décorateur", icon: "/icons/arch.png", cover: "/photos/deco.jpg", intro: "Scénographie, location de mobilier et mise en place le jour J." },
-  { slug: "patisserie", label: "Pâtisserie", plural: "Pâtissiers", singular: "pâtissier", icon: "/icons/wedding-cake.png", cover: "/photos/cake.jpg", intro: "Pièces montées, wedding cakes et buffets sucrés, faits maison." },
-  { slug: "beaute", label: "Beauté", plural: "Coiffure & maquillage", singular: "maquilleuse", icon: "/icons/makeup.png", cover: "/photos/bride.jpg", intro: "Maquillage et coiffure à domicile pour la mariée et ses proches, essai inclus." },
+// Les 15 métiers du cahier des charges (§4), plus la pâtisserie (« autres catégories activables »).
+const allCategories: Category[] = [
+  { slug: "photographes", label: "Photo", plural: "Photographes", singular: "photographe", icon: "/icons/camera.png", cover: "/photos/photog.jpg", intro: "Reportage, argentique, éditorial : des regards qui racontent votre journée sans la mettre en scène.", active: true },
+  { slug: "lieux", label: "Lieux", plural: "Lieux de réception", singular: "lieu", icon: "/icons/chateau.png", cover: "/photos/chateau.jpg", intro: "Châteaux, domaines, rooftops et granges : des lieux disponibles à vos dates, capacité et tarifs affichés.", active: true },
+  { slug: "traiteurs", label: "Traiteurs", plural: "Traiteurs", singular: "traiteur", icon: "/icons/cloche.png", cover: "/photos/chef.jpg", intro: "Du cocktail au dîner assis, des chefs qui composent un menu à votre image, dégustation comprise.", active: true },
+  { slug: "videastes", label: "Vidéo", plural: "Vidéastes", singular: "vidéaste", icon: "/icons/video.png", cover: "/photos/dance.jpg", intro: "Films courts, teasers et documentaires de mariage, filmés avec discrétion.", active: true },
+  { slug: "dj", label: "DJ", plural: "DJ & sonorisation", singular: "DJ", icon: "/icons/dj.png", cover: "/photos/dj.jpg", intro: "Des DJ qui lisent la piste, avec le son et la lumière, pour garder vos invités debout jusqu'au bout de la nuit.", active: true },
+  { slug: "musique", label: "Live", plural: "Groupes & musique live", singular: "groupe", icon: "/icons/microphone.png", cover: "/photos/aisle.jpg", intro: "Quatuors pour la cérémonie, groupes et chanteurs pour la soirée : la musique jouée pour vous, en direct.", active: true },
+  { slug: "fleuristes", label: "Fleurs", plural: "Fleuristes", singular: "fleuriste", icon: "/icons/bouquet.png", cover: "/photos/florist.jpg", intro: "Bouquets, arches et centres de table de saison, imaginés avec vous.", active: true },
+  { slug: "decoration", label: "Décor", plural: "Décorateurs & scénographes", singular: "décorateur", icon: "/icons/arch.png", cover: "/photos/deco.jpg", intro: "Scénographie, décor sur mesure et mise en place le jour J.", active: true },
+  { slug: "wedding-planners", label: "Planners", plural: "Wedding planners", singular: "wedding planner", icon: "/icons/planner-notebook.png", cover: "/photos/aisle.jpg", intro: "Une organisation de A à Z, ou une coordination le jour J pour profiter sans rien gérer.", active: true },
+  { slug: "patisserie", label: "Pâtisserie", plural: "Pâtissiers", singular: "pâtissier", icon: "/icons/wedding-cake.png", cover: "/photos/cake.jpg", intro: "Pièces montées, wedding cakes et buffets sucrés, faits maison.", active: true },
+  { slug: "beaute", label: "Beauté", plural: "Coiffure & maquillage", singular: "maquilleuse", icon: "/icons/makeup.png", cover: "/photos/bride.jpg", intro: "Maquillage et coiffure à domicile pour la mariée et ses proches, essai inclus.", active: true },
+  { slug: "tenues", label: "Tenues", plural: "Tenues de mariage", singular: "créateur", icon: "/icons/kente-cloth.png", cover: "/photos/bride.jpg", intro: "Robes, costumes et tenues traditionnelles, sur mesure ou à essayer, pour les mariés et le cortège.", active: true },
+  { slug: "animation", label: "Animation", plural: "Animation", singular: "animateur", icon: "/icons/party-popper.png", cover: "/photos/confetti.jpg", intro: "Photobooth, magiciens, jeux et surprises pour animer le cocktail et la soirée.", active: true },
+  { slug: "location", label: "Location", plural: "Location de mobilier & matériel", singular: "loueur", icon: "/icons/chiavari-chair.png", cover: "/photos/deco.jpg", intro: "Chaises, tables, vaisselle, lumières et tentes, livrés et installés sur votre lieu.", active: true },
+  { slug: "transport", label: "Transport", plural: "Transport", singular: "transporteur", icon: "/icons/wedding-car.png", cover: "/photos/hero.jpg", intro: "Voitures de collection pour les mariés, navettes pour vos invités, avec chauffeur.", active: true },
+  { slug: "papeterie", label: "Papeterie", plural: "Papeterie", singular: "papetier", icon: "/icons/envelope-seal.png", cover: "/photos/rings.jpg", intro: "Faire-part, menus, plans de table et marque-places, assortis à votre univers.", active: true },
 ];
+
+// Catégories visibles sur le site : seules les catégories actives sont proposées.
+export const categories = allCategories.filter((c) => c.active);
 
 export const getCategory = (slug: string) => categories.find((c) => c.slug === slug);
 
@@ -130,7 +142,6 @@ const seeds: Record<string, Seed[]> = {
   dj: [
     ["dj-solal", "DJ Solal", "Paris 13e", "Open format", "4,9", 103, 890, "dj"],
     ["groove-maison", "Groove Maison", "Saint-Denis", "Afro & Amapiano", "5,0", 72, 990, "dance"],
-    ["quatuor-opaline", "Quatuor Opaline", "Paris 6e", "Cérémonie classique", "4,9", 36, 750, "aisle", "50% 60%"],
   ],
   fleuristes: [
     ["atelier-pivoine", "Atelier Pivoine", "Paris 17e", "Romantique", "4,9", 88, 450, "florist", "50% 30%"],
@@ -145,6 +156,37 @@ const seeds: Record<string, Seed[]> = {
   patisserie: [
     ["sucre-dore", "Sucre Doré", "Paris 7e", "Pièce montée", "4,9", 71, 6, "cake"],
     ["maison-macaron", "Maison Macaron", "Paris 4e", "Wedding cake", "4,8", 44, 7, "rings"],
+  ],
+  musique: [
+    ["quatuor-opaline", "Quatuor Opaline", "Paris 6e", "Cérémonie classique", "4,9", 36, 750, "aisle", "50% 60%"],
+    ["les-voix-du-soir", "Les Voix du Soir", "Paris 10e", "Soirée", "4,8", 29, 1600, "dance"],
+    ["brass-et-kente", "Brass & Kente", "Montreuil", "Afro-fusion", "5,0", 21, 1900, "kente", "50% 30%"],
+  ],
+  "wedding-planners": [
+    ["maison-ceremonie", "Maison Cérémonie", "Paris 8e", "Intemporel", "4,9", 58, 3500, "chateau"],
+    ["l-atelier-des-maries", "L'Atelier des Mariés", "Paris 11e", "Bohème", "4,8", 41, 2800, "deco"],
+    ["sankofa-events", "Sankofa Events", "Saint-Denis", "Traditionnel", "4,9", 33, 3200, "kente", "50% 30%"],
+  ],
+  tenues: [
+    ["maison-blanche-couture", "Maison Blanche Couture", "Paris 2e", "Romantique", "4,9", 64, 1800, "bride"],
+    ["wax-et-soie", "Wax & Soie", "Paris 18e", "Wax chic", "5,0", 31, 1400, "kente", "50% 30%"],
+    ["le-vestiaire-du-marie", "Le Vestiaire du Marié", "Paris 9e", "Intemporel", "4,8", 27, 950, "groom"],
+  ],
+  animation: [
+    ["photobooth-lumiere", "Photobooth Lumière", "Boulogne", "Moderne", "4,7", 45, 450, "confetti"],
+    ["fete-foraine-chic", "Fête Foraine Chic", "Paris 12e", "Soirée", "4,8", 27, 900, "dance"],
+  ],
+  location: [
+    ["mobilier-et-lumiere", "Mobilier & Lumière", "Montreuil", "Bohème", "4,8", 34, 850, "deco"],
+    ["la-table-dressee", "La Table Dressée", "Paris 17e", "Intemporel", "4,9", 26, 1100, "aisle", "50% 60%"],
+  ],
+  transport: [
+    ["les-belles-de-route", "Les Belles de Route", "Versailles", "Intemporel", "4,9", 38, 690, "hero", "62% 50%"],
+    ["navettes-et-cie", "Navettes & Cie", "Paris 15e", "Moderne", "4,7", 22, 1200, "rain"],
+  ],
+  papeterie: [
+    ["papier-et-plume", "Papier & Plume", "Paris 3e", "Romantique", "4,9", 48, 320, "rings"],
+    ["atelier-letterpress", "Atelier Letterpress", "Paris 20e", "Moderne", "4,8", 19, 450, "deco"],
   ],
   beaute: [
     ["eclat-mariee", "Éclat Mariée", "Paris 8e", "Naturel", "4,9", 92, 280, "bride"],
@@ -178,6 +220,13 @@ const photosByCategory: Record<string, string[]> = {
   decoration: ["deco", "aisle", "chateau", "kente"],
   patisserie: ["cake", "rings", "deco"],
   beaute: ["bride", "bridesmaids", "groom", "kente"],
+  musique: ["aisle", "dance", "confetti", "kente"],
+  "wedding-planners": ["chateau", "deco", "aisle", "hero", "kente"],
+  tenues: ["bride", "groom", "bridesmaids", "kente", "rings"],
+  animation: ["confetti", "dance", "dj"],
+  location: ["deco", "aisle", "chateau"],
+  transport: ["hero", "rain", "beach", "field"],
+  papeterie: ["rings", "deco", "cake"],
 };
 
 export const vendors: Vendor[] = Object.entries(seeds).flatMap(([catSlug, list]) => {
@@ -301,7 +350,7 @@ export const stats = [
 export const testimonials = [
   { couple: "Aïcha & Kwame", place: "Château des Lys, juin 2026", photo: "/photos/kente.jpg", text: "Nous cherchions des prestataires capables de mêler nos deux cultures. En une semaine, tout était réservé, et nos familles ont adoré." },
   { couple: "Claire & Thomas", place: "Domaine les Tilleuls, mai 2026", photo: "/photos/field.jpg", text: "Les devis côte à côte nous ont fait gagner des soirées entières. On a enfin pu profiter des préparatifs." },
-  { couple: "Inès & Malik", place: "Paris 11e, septembre 2026", photo: "/photos/confetti.jpg", text: "Réponses rapides, prix clairs, et un paiement sécurisé qui nous a rassurés du début à la fin." },
+  { couple: "Inès & Malik", place: "Paris 11e, septembre 2026", photo: "/photos/confetti.jpg", text: "Réponses rapides, prix clairs, et un paiement en ligne qui nous a simplifié la vie du début à la fin." },
 ];
 
 export type Article = { slug: string; title: string; theme: string; read: string; photo: string; excerpt: string };

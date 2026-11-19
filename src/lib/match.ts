@@ -5,6 +5,7 @@
 
 import { categories, vendorsIn, type Vendor } from "./content";
 import { availabilityFor } from "./vendorDetail";
+import { BUDGET_SHARE, BUDGET_TOLERANCE, DEFAULT_BUDGET_SHARE, MATCH_WEIGHTS as W, MAX_SCORE, PRIORITY_BONUS } from "./settings";
 
 /* ---------- Wedding DNA ---------- */
 
@@ -20,6 +21,7 @@ export type Dna = {
   budget: number;
   priorities: string[];
   musts: string[]; // critères indispensables (§7.4)
+  uploads?: { name: string; tags: string[] }[]; // images personnelles importées et tags proposés (§6.2)
 };
 
 export const emptyDna: Dna = { ambiances: [], inspirations: [], tags: [], flexible: true, guests: 100, budget: 25000, priorities: [], musts: [] };
@@ -52,10 +54,11 @@ export const inspirationPool: { src: string; tags: string[] }[] = [
 ];
 
 export const seasons = [
-  { value: "printemps", label: "Printemps", sub: "Mars à juin", months: ["Mai 2027", "Juin 2027"] },
+  // Démo : saisons de 2027-2028, couvertes par le calendrier glissant de 24 mois des prestataires (§17).
+  { value: "printemps", label: "Printemps", sub: "Mars à juin", months: ["Mars 2027", "Avr. 2027", "Mai 2027", "Juin 2027"] },
   { value: "ete", label: "Été", sub: "Juin à septembre", months: ["Juin 2027", "Juil. 2027", "Août 2027", "Sept. 2027"] },
-  { value: "automne", label: "Automne", sub: "Septembre à novembre", months: ["Sept. 2027", "Oct. 2027"] },
-  { value: "hiver", label: "Hiver", sub: "Décembre à février", months: [] as string[] },
+  { value: "automne", label: "Automne", sub: "Septembre à novembre", months: ["Sept. 2027", "Oct. 2027", "Nov. 2027"] },
+  { value: "hiver", label: "Hiver", sub: "Décembre à février", months: ["Déc. 2027", "Janv. 2028", "Févr. 2028"] },
 ];
 
 export const zones = [
@@ -193,6 +196,79 @@ export const miniTests: Record<string, MiniQuestion[]> = {
       ],
     },
   ],
+  musique: [
+    {
+      key: "live",
+      label: "Pour quel moment ?",
+      options: [
+        { value: "ceremonie", label: "La cérémonie", sub: "Cordes, piano, voix", photo: "/photos/aisle.jpg", styles: ["Cérémonie classique"] },
+        { value: "soiree", label: "La soirée", sub: "Un groupe sur scène", photo: "/photos/dance.jpg", styles: ["Soirée"] },
+        { value: "afro", label: "Cuivres et rythmes afro", photo: "/photos/kente.jpg", styles: ["Afro-fusion"] },
+      ],
+    },
+  ],
+  "wedding-planners": [
+    {
+      key: "help",
+      label: "De quelle aide avez-vous besoin ?",
+      options: [
+        { value: "complet", label: "Tout organiser", sub: "Du premier rendez-vous au jour J", photo: "/photos/chateau.jpg", tier: 2 },
+        { value: "partiel", label: "Un coup de main", sub: "Quelques prestataires et le planning", photo: "/photos/deco.jpg", tier: 1 },
+        { value: "jourj", label: "Le jour J seulement", sub: "Pour profiter sans rien gérer", photo: "/photos/aisle.jpg", tier: 0 },
+      ],
+    },
+  ],
+  tenues: [
+    {
+      key: "outfit",
+      label: "Quelle tenue imaginez-vous ?",
+      options: [
+        { value: "romantique", label: "Romantique et fluide", photo: "/photos/bride.jpg", styles: ["Romantique"] },
+        { value: "tradition", label: "Traditionnelle ou wax", photo: "/photos/kente.jpg", styles: ["Wax chic", "Traditionnel"] },
+        { value: "classique", label: "Costume intemporel", photo: "/photos/groom.jpg", styles: ["Intemporel"] },
+      ],
+    },
+  ],
+  animation: [
+    {
+      key: "fun",
+      label: "Quelle animation pour vos invités ?",
+      options: [
+        { value: "photobooth", label: "Un photobooth", photo: "/photos/confetti.jpg", styles: ["Moderne"] },
+        { value: "jeux", label: "Jeux et surprises", photo: "/photos/dance.jpg", styles: ["Soirée"] },
+      ],
+    },
+  ],
+  location: [
+    {
+      key: "furniture",
+      label: "Quel mobilier pour votre réception ?",
+      options: [
+        { value: "boheme", label: "Bois et bohème", photo: "/photos/deco.jpg", styles: ["Bohème"] },
+        { value: "chic", label: "Chic et intemporel", photo: "/photos/aisle.jpg", styles: ["Intemporel"] },
+      ],
+    },
+  ],
+  transport: [
+    {
+      key: "ride",
+      label: "Qui faut-il transporter ?",
+      options: [
+        { value: "maries", label: "Les mariés", sub: "Une voiture de collection", photo: "/photos/hero.jpg", styles: ["Intemporel"] },
+        { value: "invites", label: "Les invités", sub: "Des navettes", photo: "/photos/rain.jpg", styles: ["Moderne"] },
+      ],
+    },
+  ],
+  papeterie: [
+    {
+      key: "paper",
+      label: "Quel faire-part vous ressemble ?",
+      options: [
+        { value: "romantique", label: "Romantique et doré", photo: "/photos/rings.jpg", styles: ["Romantique"] },
+        { value: "graphique", label: "Graphique et moderne", photo: "/photos/deco.jpg", styles: ["Moderne"] },
+      ],
+    },
+  ],
   beaute: [
     {
       key: "look",
@@ -206,19 +282,6 @@ export const miniTests: Record<string, MiniQuestion[]> = {
 };
 
 /* ---------- Moteur de score (déterministe, §7.7) ---------- */
-
-// Part indicative du budget global consacrée à chaque métier.
-const budgetShare: Record<string, number> = {
-  lieux: 0.3,
-  traiteurs: 0.3,
-  photographes: 0.1,
-  videastes: 0.07,
-  dj: 0.05,
-  fleuristes: 0.05,
-  decoration: 0.06,
-  patisserie: 0.02,
-  beaute: 0.02,
-};
 
 export type Match = {
   vendor: Vendor;
@@ -241,7 +304,7 @@ export function computeMatches(dna: Dna, category: string, answers: Record<strin
   const zone = zones.find((z) => z.value === dna.zone);
   const months = seasons.find((s) => s.value === dna.season)?.months ?? [];
   const perGuest = category === "traiteurs" || category === "patisserie";
-  const target = dna.budget * (budgetShare[category] ?? 0.05);
+  const target = dna.budget * (BUDGET_SHARE[category] ?? DEFAULT_BUDGET_SHARE);
   const answered = [dna.ambiances.length, dna.season, dna.zone, dna.budget, chosen.length].filter(Boolean).length;
 
   return vendorsIn(category)
@@ -259,13 +322,13 @@ export function computeMatches(dna: Dna, category: string, answers: Record<strin
       if (testHit && !styleHit) reasons.push(`${v.style} : ce que vous recherchez`);
       const sTest = testStyles.length ? (testHit ? 1 : 0.4) : 0.7;
 
-      // Budget (léger dépassement toléré jusqu'à 10 %, §7.6)
+      // Budget (léger dépassement toléré, paramètre administrable BUDGET_TOLERANCE, §7.6)
       const pack = v.packages[Math.min(tier, v.packages.length - 1)];
       const cost = perGuest ? pack.price * dna.guests : pack.price;
       let sBudget = 1;
       let withinBudget = true;
       if (cost <= target) reasons.push("Dans votre budget");
-      else if (cost <= target * 1.1) {
+      else if (cost <= target * (1 + BUDGET_TOLERANCE)) {
         sBudget = 0.75;
         withinBudget = false;
         gaps.push(`${Math.round(cost - target).toLocaleString("fr-FR")} € au-dessus de votre budget`);
@@ -278,12 +341,23 @@ export function computeMatches(dna: Dna, category: string, answers: Record<strin
       // Disponibilité (calendrier §17)
       const cal = availabilityFor(v);
       const inSeason = months.length ? cal.filter((c) => months.includes(c.month)) : [];
-      const free = inSeason.some((c) => c.status === "Disponible");
+      const free = inSeason.some((c) => c.status === "Disponible confirmé");
+      const likely = inSeason.some((c) => c.status === "Probablement disponible");
       const partly = inSeason.some((c) => c.status === "Capacité limitée" || c.status === "À confirmer");
-      const sDispo = !months.length ? 0.7 : free ? 1 : partly ? 0.65 : 0.2;
-      const availability = !months.length ? "À confirmer avec votre date" : free ? "Disponible à votre période" : partly ? "Places limitées à votre période" : "Complet à votre période";
+      // Saison hors du calendrier publié : disponibilité inconnue, et non « complet ».
+      const known = inSeason.length > 0;
+      const sDispo = !known ? 0.7 : free ? 1 : likely ? 0.85 : partly ? 0.65 : 0.2;
+      const availability = !known
+        ? "À confirmer avec votre date"
+        : free
+          ? "Disponible à votre période"
+          : likely
+            ? "Probablement disponible à votre période"
+            : partly
+              ? "Places limitées à votre période"
+              : "Complet à votre période";
       if (free) reasons.push("Disponible à votre période");
-      else if (months.length && !free) gaps.push(availability);
+      else if (known && !free) gaps.push(availability);
 
       // Zone
       const sZone = !zone ? 0.7 : zone.idf ? 1 : 0.5;
@@ -305,10 +379,10 @@ export function computeMatches(dna: Dna, category: string, answers: Record<strin
       if (sRep >= 0.98) reasons.push(`Noté ${v.rating} par les couples`);
 
       // Priorité du couple
-      const priority = dna.priorities.includes(category) ? 0.03 : 0;
+      const priority = dna.priorities.includes(category) ? PRIORITY_BONUS : 0;
 
       const score = Math.round(
-        Math.min(0.97, 0.28 * sStyle + 0.14 * sTest + 0.2 * sBudget + 0.15 * sDispo + 0.1 * sZone + 0.08 * sRep + 0.05 * sCap + priority) * 100,
+        Math.min(MAX_SCORE, W.style * sStyle + W.miniTest * sTest + W.budget * sBudget + W.availability * sDispo + W.zone * sZone + W.reputation * sRep + W.capacity * sCap + priority) * 100,
       );
 
       // Critères indispensables (§7.4) : ils excluent au lieu de seulement pénaliser.

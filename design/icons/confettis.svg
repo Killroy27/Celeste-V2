@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+  <!-- Cône à confettis (catégorie « Animation ») -->
+  <defs>
+    <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cone" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#b9772a"/>
+      <stop offset="0.35" stop-color="#f5c46a"/>
+      <stop offset="0.6" stop-color="#eeb048"/>
+      <stop offset="1" stop-color="#a5661e"/>
+    </linearGradient>
+    <linearGradient id="stripe" x1="0" x2="1">
+      <stop offset="0" stop-color="#b8384a"/>
+      <stop offset="0.4" stop-color="#f07e8c"/>
+      <stop offset="1" stop-color="#9c2b3c"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" x2="1">
+      <stop offset="0" stop-color="#8c8f95"/>
+      <stop offset="0.4" stop-color="#f4f5f7"/>
+      <stop offset="1" stop-color="#6b6e74"/>
+    </linearGradient>
+    <clipPath id="coneClip">
+      <path d="M82 262 L150 118 L216 170 Z"/>
+    </clipPath>
+    <radialGradient id="ball" cx="35%" cy="30%" r="70%">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.8"/>
+      <stop offset="0.5" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <ellipse cx="150" cy="290" rx="92" ry="11" fill="url(#shadow)"/>
+
+  <!-- Confettis et serpentins -->
+  <g stroke-linecap="round" fill="none">
+    <path d="M196 120 C214 92, 238 112, 252 86 S288 70, 290 52" stroke="#f07e8c" stroke-width="7"/>
+    <path d="M170 104 C172 78, 196 74, 192 48 S214 22, 230 24" stroke="#eeb048" stroke-width="7"/>
+    <path d="M214 150 C240 146, 246 170, 272 162 S300 176, 304 192" stroke="#6fb7a8" stroke-width="7"/>
+  </g>
+  <g>
+    <rect x="236" y="120" width="14" height="9" rx="2" fill="#eeb048" transform="rotate(24 243 124)"/>
+    <rect x="262" y="104" width="13" height="8" rx="2" fill="#7f8de0" transform="rotate(-30 268 108)"/>
+    <rect x="216" y="70" width="12" height="8" rx="2" fill="#f07e8c" transform="rotate(40 222 74)"/>
+    <rect x="280" y="138" width="12" height="8" rx="2" fill="#eeb048" transform="rotate(-12 286 142)"/>
+    <rect x="150" y="62" width="12" height="8" rx="2" fill="#6fb7a8" transform="rotate(-38 156 66)"/>
+    <rect x="248" y="40" width="12" height="8" rx="2" fill="#eeb048" transform="rotate(18 254 44)"/>
+    <rect x="226" y="196" width="12" height="8" rx="2" fill="#f07e8c" transform="rotate(52 232 200)"/>
+    <circle cx="204" cy="40" r="6" fill="#7f8de0"/>
+    <circle cx="276" cy="80" r="5" fill="#f07e8c"/>
+    <circle cx="300" cy="118" r="5" fill="#6fb7a8"/>
+    <circle cx="186" cy="80" r="4.5" fill="#eeb048"/>
+    <circle cx="258" cy="182" r="5" fill="#7f8de0"/>
+    <circle cx="232" cy="96" r="4" fill="#fff" stroke="#e7e7e7"/>
+  </g>
+  <!-- Étoiles dorées -->
+  <path d="M120 70 l5 12 13 1 -10 8 3 13 -11 -7 -11 7 3 -13 -10 -8 13 -1z" fill="#eeb048" stroke="#c98a1c" stroke-width="1.5"/>
+  <path d="M290 222 l3.5 8 9 1 -7 5.5 2 9 -7.5 -5 -7.5 5 2 -9 -7 -5.5 9 -1z" fill="#eeb048" stroke="#c98a1c" stroke-width="1.2"/>
+
+  <!-- Cône -->
+  <path d="M82 262 L150 118 L216 170 Z" fill="url(#cone)"/>
+  <g clip-path="url(#coneClip)">
+    <path d="M60 210 L250 120 L250 140 L60 232 Z" fill="url(#stripe)"/>
+    <path d="M60 160 L250 70 L250 88 L60 178 Z" fill="url(#stripe)"/>
+    <path d="M40 264 L250 168 L250 186 L40 284 Z" fill="url(#stripe)"/>
+    <path d="M82 262 L150 118 L130 230 Z" fill="#fff" opacity="0.18"/>
+  </g>
+  <!-- Ouverture -->
+  <ellipse cx="183" cy="144" rx="38" ry="15" transform="rotate(38 183 144)" fill="#3d2a12"/>
+  <ellipse cx="183" cy="144" rx="38" ry="15" transform="rotate(38 183 144)" fill="none" stroke="url(#rim)" stroke-width="6"/>
+  <!-- Pointe -->
+  <circle cx="84" cy="260" r="6" fill="#a5661e"/>
+</svg>

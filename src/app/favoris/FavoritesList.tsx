@@ -6,12 +6,12 @@ import { VendorGrid } from "@/components/VendorCard";
 import { vendors } from "@/lib/content";
 import { useFavorites } from "@/lib/favorites";
 
-export function FavoritesList() {
+export function FavoritesList({ embedded = false }: { embedded?: boolean }) {
   const { favorites } = useFavorites();
   const list = vendors.filter((v) => favorites.includes(v.slug));
 
   return (
-    <div className="container" style={{ paddingBottom: 96 }}>
+    <div className={embedded ? undefined : "container"} style={{ paddingBottom: embedded ? 0 : 96 }}>
       {list.length ? (
         <VendorGrid vendors={list} showCategory />
       ) : (

@@ -3,16 +3,19 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
+import { formatDay, isoDate } from "@/lib/format";
+import { isSelectPublic } from "@/lib/select";
 import { getCategory, priceLabel, type Vendor } from "@/lib/content";
 import { useDna } from "@/lib/dna";
 import { computeMatches } from "@/lib/match";
-import { personFor, pinFor } from "@/lib/vendorDetail";
+import { personFor, pinFor, availabilityOn } from "@/lib/vendorDetail";
 import { CardPhotos } from "../CardPhotos";
 import { SaveButton } from "../SaveButton";
 import { Dropdown } from "./Dropdown";
 import type { Pin } from "./ResultsMap";
 import styles from "./Results.module.css";
+import { WhyOrder } from "./WhyOrder";
 
 const ResultsMap = dynamic(() => import("./ResultsMap"), { ssr: false, loading: () => <div className={styles.mapLoading} /> });
 
@@ -30,14 +33,23 @@ function Check() {
   );
 }
 
+const noop = () => () => {};
+
 // Résultats façon Airbnb : filtres en pastilles, grille à gauche, carte à droite.
 // La carte n'apparaît que si au moins un prestataire est localisé (docs/recherche.md).
-export function Results({ vendors, category, showCategory = false }: { vendors: Vendor[]; category?: string; showCategory?: boolean }) {
+export function Results({ vendors, category, showCategory = false, initialDate = "" }: { vendors: Vendor[]; category?: string; showCategory?: boolean; initialDate?: string }) {
   const { dna } = useDna();
+  // Badge Select : seuils administrables lus côté navigateur, affiché après l'hydratation.
+  const mounted = useSyncExternalStore(noop, () => true, () => false);
   const [styleSel, setStyleSel] = useState<string[]>([]);
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
   const [minRating, setMinRating] = useState(0);
   const [verified, setVerified] = useState(false);
+  // Date choisie dans la barre de recherche (Jour J) : le filtre « libres ce jour-là » part déjà réglé.
+  const [onDate, setOnDate] = useState(initialDate);
+  const [zonesSel, setZonesSel] = useState<string[]>([]);
+  const [servicesSel, setServicesSel] = useState<string[]>([]);
+  const [selectOnly, setSelectOnly] = useState(false);
   const [sort, setSort] = useState<Sort>("best");
   const [hover, setHover] = useState<string | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
@@ -56,6 +68,17 @@ export function Results({ vendors, category, showCategory = false }: { vendors: 
     vendors.forEach((v) => count.set(v.style, (count.get(v.style) ?? 0) + 1));
     return [...count.entries()].sort((a, b) => b[1] - a[1]);
   }, [vendors]);
+  const zoneOptions = useMemo(() => {
+    const count = new Map<string, number>();
+    vendors.forEach((v) => count.set(v.area, (count.get(v.area) ?? 0) + 1));
+    return [...count.entries()].sort((a, b) => b[1] - a[1]);
+  }, [vendors]);
+  // Services : ce que les formules incluent, les plus fréquents d'abord.
+  const serviceOptions = useMemo(() => {
+    const count = new Map<string, number>();
+    vendors.forEach((v) => new Set(v.packages.flatMap((p) => p.includes)).forEach((s) => count.set(s, (count.get(s) ?? 0) + 1)));
+    return [...count.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
+  }, [vendors]);
   const [pMin, pMax] = useMemo(() => {
     const ps = vendors.map((v) => v.price);
     return [Math.min(...ps), Math.max(...ps)];
@@ -63,14 +86,22 @@ export function Results({ vendors, category, showCategory = false }: { vendors: 
 
   const list = useMemo(() => {
     const out = vendors.filter(
-      (v) => (!styleSel.length || styleSel.includes(v.style)) && (maxPrice === null || v.price <= maxPrice) && num(v.rating) >= minRating && (!verified || v.verified),
+      (v) =>
+        (!styleSel.length || styleSel.includes(v.style)) &&
+        (maxPrice === null || v.price <= maxPrice) &&
+        num(v.rating) >= minRating &&
+        (!verified || v.verified) &&
+        (!onDate || availabilityOn(v, onDate) !== "Complet") &&
+        (!zonesSel.length || zonesSel.includes(v.area)) &&
+        (!servicesSel.length || servicesSel.every((s) => v.packages.some((p) => p.includes.includes(s)))) &&
+        (!selectOnly || isSelectPublic(v.slug)),
     );
     const reco = (v: Vendor) => num(v.rating) * Math.log10(10 + v.reviewsCount);
     if (sort === "best") out.sort((a, b) => (scores.size ? (scores.get(b.slug) ?? 0) - (scores.get(a.slug) ?? 0) : reco(b) - reco(a)));
     if (sort === "rating") out.sort((a, b) => num(b.rating) - num(a.rating) || b.reviewsCount - a.reviewsCount);
     if (sort === "price") out.sort((a, b) => a.price - b.price);
     return out;
-  }, [vendors, styleSel, maxPrice, minRating, verified, sort, scores]);
+  }, [vendors, styleSel, maxPrice, minRating, verified, onDate, zonesSel, servicesSel, selectOnly, sort, scores]);
 
   const pins: Pin[] = useMemo(
     () =>
@@ -83,19 +114,23 @@ export function Results({ vendors, category, showCategory = false }: { vendors: 
   const hasMap = pins.length > 0;
   const picked = selected ? list.find((v) => v.slug === selected) : undefined;
 
-  const filtersOn = styleSel.length + (maxPrice !== null ? 1 : 0) + (minRating ? 1 : 0) + (verified ? 1 : 0);
+  const filtersOn = styleSel.length + (maxPrice !== null ? 1 : 0) + (minRating ? 1 : 0) + (verified ? 1 : 0) + (onDate ? 1 : 0) + zonesSel.length + servicesSel.length + (selectOnly ? 1 : 0);
   const reset = () => {
     setStyleSel([]);
     setMaxPrice(null);
     setMinRating(0);
     setVerified(false);
+    setOnDate("");
+    setZonesSel([]);
+    setServicesSel([]);
+    setSelectOnly(false);
   };
 
   const cat = category ? getCategory(category) : undefined;
   const noun = cat ? cat.plural.toLowerCase() : "prestataires";
   const sortLabel: Record<Sort, string> = { best: dna ? "Meilleur match" : "Recommandés", rating: "Mieux notés", price: "Prix croissant" };
 
-  const cards = list.map((v) => <ResultCard key={v.slug} v={v} score={scores.get(v.slug)} showCategory={showCategory} active={hover === v.slug || selected === v.slug} onHover={setHover} />);
+  const cards = list.map((v) => <ResultCard key={v.slug} v={v} score={scores.get(v.slug)} select={mounted && isSelectPublic(v.slug)} showCategory={showCategory} active={hover === v.slug || selected === v.slug} onHover={setHover} />);
   // Sans Wedding DNA : une invitation à faire trier la liste, glissée dans la grille.
   if (!dna && list.length) cards.splice(Math.min(3, list.length), 0, <Invite key="invite" category={category} />);
 
@@ -103,6 +138,21 @@ export function Results({ vendors, category, showCategory = false }: { vendors: 
     <div className={styles.results} data-map={hasMap || undefined} data-view={mapView ? "map" : "list"}>
       <div className={styles.filters}>
         <div className={styles.filterRow}>
+          <Dropdown label={onDate ? `Libres le ${formatDay(onDate)}` : "Date"} active={!!onDate} width={300}>
+            {(close) => (
+              <>
+                <p className={styles.popTitle}>Disponibles à votre date</p>
+                <input className={styles.dateInput} type="date" min={isoDate()} value={onDate} onChange={(e) => setOnDate(e.target.value)} aria-label="Date du mariage" />
+                {dna?.date && dna.date !== onDate && (
+                  <button type="button" className={styles.dnaLink} onClick={() => setOnDate(dna.date!)}>
+                    Utiliser la date de mon mariage ({formatDay(dna.date)})
+                  </button>
+                )}
+                <PopFoot onClear={() => setOnDate("")} canClear={!!onDate} onDone={close} count={list.length} />
+              </>
+            )}
+          </Dropdown>
+
           <Dropdown label={styleSel.length ? `Style · ${styleSel.length}` : "Style"} active={styleSel.length > 0}>
             {(close) => (
               <>
@@ -187,9 +237,60 @@ export function Results({ vendors, category, showCategory = false }: { vendors: 
             )}
           </Dropdown>
 
+          {zoneOptions.length > 1 && (
+            <Dropdown label={zonesSel.length ? `Zone · ${zonesSel.length}` : "Zone"} active={zonesSel.length > 0}>
+              {(close) => (
+                <>
+                  <p className={styles.popTitle}>Zone</p>
+                  <div className={styles.options}>
+                    {zoneOptions.map(([z, n]) => {
+                      const on = zonesSel.includes(z);
+                      return (
+                        <button key={z} type="button" role="checkbox" aria-checked={on} className={styles.option} onClick={() => setZonesSel((p) => (on ? p.filter((x) => x !== z) : [...p, z]))}>
+                          <span className={styles.box}>{on && <Check />}</span>
+                          <span className={styles.optLabel}>{z}</span>
+                          <span className={styles.optCount}>{n}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <PopFoot onClear={() => setZonesSel([])} canClear={zonesSel.length > 0} onDone={close} count={list.length} />
+                </>
+              )}
+            </Dropdown>
+          )}
+
+          {category && serviceOptions.length > 0 && (
+            <Dropdown label={servicesSel.length ? `Services · ${servicesSel.length}` : "Services"} active={servicesSel.length > 0} width={320}>
+              {(close) => (
+                <>
+                  <p className={styles.popTitle}>Services inclus</p>
+                  <div className={styles.options}>
+                    {serviceOptions.map(([sv, n]) => {
+                      const on = servicesSel.includes(sv);
+                      return (
+                        <button key={sv} type="button" role="checkbox" aria-checked={on} className={styles.option} onClick={() => setServicesSel((p) => (on ? p.filter((x) => x !== sv) : [...p, sv]))}>
+                          <span className={styles.box}>{on && <Check />}</span>
+                          <span className={styles.optLabel}>{sv}</span>
+                          <span className={styles.optCount}>{n}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <PopFoot onClear={() => setServicesSel([])} canClear={servicesSel.length > 0} onDone={close} count={list.length} />
+                </>
+              )}
+            </Dropdown>
+          )}
+
           <button type="button" className={styles.pill} aria-pressed={verified} data-active={verified || undefined} onClick={() => setVerified((x) => !x)}>
             {verified && <Check />}
             Vérifiés
+          </button>
+
+          <button type="button" className={styles.pill} aria-pressed={selectOnly} data-active={selectOnly || undefined} onClick={() => setSelectOnly((x) => !x)}>
+            {selectOnly && <Check />}
+            Céleste Select
           </button>
 
           {filtersOn > 0 && (
@@ -248,6 +349,10 @@ export function Results({ vendors, category, showCategory = false }: { vendors: 
                 </Link>
               </span>
             )}
+            <span className={styles.dnaNote}>
+              {" · "}
+              <WhyOrder mode={sort === "best" ? (scores.size ? "dna" : "reco") : sort} />
+            </span>
           </p>
 
           {list.length ? (
@@ -304,7 +409,7 @@ function PopFoot({ onClear, canClear, onDone, count }: { onClear: () => void; ca
   );
 }
 
-function ResultCard({ v, score, showCategory, active, onHover }: { v: Vendor; score?: number; showCategory: boolean; active: boolean; onHover: (s: string | null) => void }) {
+function ResultCard({ v, score, select, showCategory, active, onHover }: { v: Vendor; score?: number; select: boolean; showCategory: boolean; active: boolean; onHover: (s: string | null) => void }) {
   const cat = getCategory(v.category)!;
   const person = personFor(v);
   return (
@@ -334,6 +439,11 @@ function ResultCard({ v, score, showCategory, active, onHover }: { v: Vendor; sc
         <span className={styles.meta}>
           Avec {person.firstName} · répond en {v.responseTime}
         </span>
+        {select && (
+          <span className={styles.selectTag}>
+            <i aria-hidden="true">◆</i> Céleste Select
+          </span>
+        )}
         <span className={styles.price}>
           dès <strong>{priceLabel(v)}</strong>
         </span>
@@ -368,7 +478,7 @@ function MapCard({ v, onClose }: { v: Vendor; onClose: () => void }) {
   );
 }
 
-function Invite({ category }: { category?: string }) {
+export function Invite({ category }: { category?: string }) {
   const cat = category ? getCategory(category) : undefined;
   return (
     <aside className={styles.invite}>

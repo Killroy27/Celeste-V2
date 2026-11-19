@@ -24,7 +24,7 @@ export default function AboutPage() {
           <h2 className="display h2">Notre mission</h2>
           <p className="lead">
             Trop de couples passent leurs soirées entre tableurs, e-mails sans réponse et devis impossibles à comparer. Céleste réunit les meilleurs prestataires de mariage au même endroit, avec des prix clairs, des
-            devis côte à côte et des paiements sécurisés.
+            devis côte à côte et des paiements en ligne.
           </p>
           <p className="lead">
             Pour les prestataires, c&apos;est la promesse de demandes qualifiées, d&apos;outils simples pour vendre et d&apos;une vitrine à la hauteur de leur talent.
@@ -52,7 +52,7 @@ export default function AboutPage() {
           ))}
         </div>
         <div style={{ display: "flex", justifyContent: "center", gap: 14, flexWrap: "wrap", marginTop: 48 }}>
-          <Link href="/matchs" className="btn">
+          <Link href="/matchs" className="btn btn-signature">
             Trouver mon Best Match
           </Link>
           <Link href="/contact" className="btn btn-outline">

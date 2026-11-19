@@ -3,7 +3,7 @@
   top: var(--header-h);
   z-index: 40;
   background: #fff;
-  border-bottom: 1px solid #ebe5dc;
+  border-bottom: 1px solid var(--line);
 }
 
 .inner {
@@ -42,7 +42,7 @@
   justify-content: center;
   gap: 4px;
   padding: 0 2px;
-  color: #6f6259;
+  color: var(--ink-3);
   font-size: 13px;
   font-weight: 500;
   transition: color 0.2s, border-color 0.2s;
@@ -66,9 +66,9 @@
 
 .on,
 .on:hover {
-  color: #1f1408;
-  font-weight: 600;
-  border-bottom-color: #1f1408;
+  color: var(--ink);
+  font-weight: 500;
+  border-bottom-color: var(--ink);
 }
 
 .filters {
@@ -83,7 +83,7 @@
   background: var(--outline-bg);
   box-shadow: var(--outline-shadow);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: border-color 0.2s;
 }
